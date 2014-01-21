@@ -84,7 +84,35 @@
 _reset: 
 	      b .  // do nothing
 	
-	/////////////////////////////////////////////////////////////////////////////
+		.thumb_func
+setup_gpio:
+		 //Load CPU base address
+		 ldr r1, cmu_base_address
+
+		 //load current value of HFPERCLK ENBALE
+		 ldr r2, [r1, #CMU_HFPERCLKEN0]
+
+		 //Set bit for GPIO clk
+		 mov r3, #1, 
+		 lsl r3, r3, #CMU_HFPERCLKEN0_GPIO
+		 orr r2, r2, r3
+
+		 //Store new value 
+		 str r2, [r1, #CMU_HFPERCLKEN0]
+
+
+
+cmu_base_addr: 
+			.long CMU_BASE
+
+
+
+	
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////
 	//
   // GPIO handler
   // The CPU will jump here when there is a GPIO interrupt
