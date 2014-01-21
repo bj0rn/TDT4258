@@ -115,7 +115,8 @@ setup_leds:
 		str r2, [r1, #GPIO_MODEH]
 
 		//set pins high
-		mov r2, #0x100
+		mov r2, #0x7f
+		lsl r2, r2, #8
 		str r2, [r1, #GPIO_DOUT]
 		
 		
