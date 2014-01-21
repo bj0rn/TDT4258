@@ -118,12 +118,11 @@ setup_leds:
 		str r2, [r1, #GPIO_MODEH]
 
 		//set pins high
-	   //mov r2, #0x7f
-		//lsl r2, r2, #8
-   		//str r2, [r1, #GPIO_DOUT]
+	    mov r2, #0xff
+		lsl r2, r2, #8
+   		str r2, [r1, #GPIO_DOUT]
 
 		.thumb_func
-
 setup_buttons:
 		ldr r1, gpio_pc_base_addr
  		ldr r2, gpio_output
@@ -135,13 +134,13 @@ setup_buttons:
 
 	   .thumb_func
 polling_loop:
-		ldr r1, gpio_pa_base_addr
-		ldr r2, gpio_pc_base_addr
+		ldr r1, gpio_pc_base_addr
+		ldr r2, gpio_pa_base_addr
 while: 	
-		ldr r3, [r2, #GPIO_DIN]
+		ldr r3, [r1, #GPIO_DIN]
 		lsl r3, r3, #8
-		str r3, [r1, #GPIO_DOUT]
-		B while
+		str r3, [r2, #GPIO_DOUT]
+		b while
 
 
 
