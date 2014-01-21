@@ -118,14 +118,28 @@ setup_leds:
 		mov r2, #0x7f
 		lsl r2, r2, #8
 		str r2, [r1, #GPIO_DOUT]
-		
-		
+
+	   .thumb_func
+polling_loop:
+		ldr r1, gpio_pa_base_addr
+		ldr r2, gpio_pa_base_addr
+while: 	
+		ldr r3, [r2, #GPIO_DIN]
+		lsl r3, r3, #8
+		str r3, [r2, #GPIO_DOUT]
+		B while
+
+
+
 
 gpio_output:
 			.long 0x55555555
 	
 gpio_pa_base_addr:
 			.long GPIO_PA_BASE
+
+gpio_pc_base_addr:
+			.long GPIO_PC_BASE
 
 cmu_base_addr: 
 			.long CMU_BASE
