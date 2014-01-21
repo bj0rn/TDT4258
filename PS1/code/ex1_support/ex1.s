@@ -82,7 +82,8 @@
 	      .type   _reset, %function
         .thumb_func
 _reset: 
-	      b .  // do nothing
+	      BL setup_gpio_clk
+		BL setup_leds
 	
 		.thumb_func
 setup_gpio_clk:
@@ -100,7 +101,30 @@ setup_gpio_clk:
 		 //Store new value 
 		 str r2, [r1, #CMU_HFPERCLKEN0]
 
+		.thumb_func
+setup_leds:
+		//load gpio pa base address
+		ldr r1, gpio_pa_base_addr
+		
+		//set high drive strength
+		mov r2, #0x2
+		str r2, [r1, #GPIO_CTRL]
+		
+		//set pins 8-15 output
+		ldr r2, gpio_output
+		str r2, [r1, #GPIO_MODEH]
 
+		//set pins high
+		mov r2, #0x100
+		str r2, [r1, #GPIO_DOUT]
+		
+		
+
+gpio_output:
+			.long 0x55555555
+	
+gpio_pa_base_addr:
+			.long GPIO_PA_BASE
 
 cmu_base_addr: 
 			.long CMU_BASE
