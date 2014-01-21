@@ -85,7 +85,7 @@ _reset:
 	      b .  // do nothing
 	
 		.thumb_func
-setup_gpio:
+setup_gpio_clk:
 		 //Load CPU base address
 		 ldr r1, cmu_base_addr
 
