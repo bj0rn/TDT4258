@@ -87,13 +87,13 @@ _reset:
 		.thumb_func
 setup_gpio:
 		 //Load CPU base address
-		 ldr r1, cmu_base_address
+		 ldr r1, cmu_base_addr
 
 		 //load current value of HFPERCLK ENBALE
 		 ldr r2, [r1, #CMU_HFPERCLKEN0]
 
 		 //Set bit for GPIO clk
-		 mov r3, #1, 
+		 mov r3, #1 
 		 lsl r3, r3, #CMU_HFPERCLKEN0_GPIO
 		 orr r2, r2, r3
 
