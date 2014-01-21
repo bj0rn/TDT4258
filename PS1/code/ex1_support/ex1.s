@@ -85,9 +85,10 @@ _reset:
 	      BL setup_gpio_clk
 	      BL setup_leds
 	      BL setup_buttons
-	      BL polling_loop
-
-
+	      BL polling
+          
+		 // B .
+          
 		.thumb_func
 setup_gpio_clk:
 		 //Load CPU base address
@@ -111,33 +112,34 @@ setup_leds:
 		
 		//set high drive strength
 		mov r2, #0x2
-		str r2, [r1, #GPIO_CTRL]
+		str r2, [r1]
 		
 		//set pins 8-15 output
 		ldr r2, gpio_output
 		str r2, [r1, #GPIO_MODEH]
 
 		//set pins high
-	    mov r2, #0xff
-		lsl r2, r2, #8
-   		str r2, [r1, #GPIO_DOUT]
+	   // mov r2, #0xff
+		//lsl r2, r2, #8
+   		//str r2, [r1, #GPIO_DOUT]
 
 		.thumb_func
 setup_buttons:
 		ldr r1, gpio_pc_base_addr
- 		ldr r2, gpio_output
-		str r2, [r1, #GPIO_MODEH]
+ 		ldr r2, gpio_input
+		str r2, [r1, #GPIO_MODEL]
 		mov r2, #0xff
 		str r2, [r1, #GPIO_DOUT]
 
 
 
-	   .thumb_func
-polling_loop:
+	  .thumb_func
+polling:
 		ldr r1, gpio_pc_base_addr
 		ldr r2, gpio_pa_base_addr
 while: 	
 		ldr r3, [r1, #GPIO_DIN]
+		//mov r3, 0xDF
 		lsl r3, r3, #8
 		str r3, [r2, #GPIO_DOUT]
 		b while
@@ -146,10 +148,10 @@ while:
 
 
 gpio_output:
-			.long 0x55555555
+			.word 0x55555555
 
 gpio_input: 
-			.long 0x33333333
+			.word 0x33333333
 
 gpio_pa_base_addr:
 			.long GPIO_PA_BASE
@@ -177,11 +179,11 @@ cmu_base_addr:
         .thumb_func
 gpio_handler:  
 
-	      b .  // do nothing
+	     // b .  // do nothing
 	
 	/////////////////////////////////////////////////////////////////////////////
 	
         .thumb_func
 dummy_handler:  
-        b .  // do nothing
+       // b .  // do nothing
 
