@@ -83,8 +83,11 @@
         .thumb_func
 _reset: 
 	      BL setup_gpio_clk
-		BL setup_leds
-	
+	      BL setup_leds
+	      BL setup_buttons
+	      BL polling_loop
+
+
 		.thumb_func
 setup_gpio_clk:
 		 //Load CPU base address
@@ -115,18 +118,29 @@ setup_leds:
 		str r2, [r1, #GPIO_MODEH]
 
 		//set pins high
-		mov r2, #0x7f
-		lsl r2, r2, #8
+	   //mov r2, #0x7f
+		//lsl r2, r2, #8
+   		//str r2, [r1, #GPIO_DOUT]
+
+		.thumb_func
+
+setup_buttons:
+		ldr r1, gpio_pc_base_addr
+ 		ldr r2, gpio_output
+		str r2, [r1, #GPIO_MODEH]
+		mov r2, #0xff
 		str r2, [r1, #GPIO_DOUT]
+
+
 
 	   .thumb_func
 polling_loop:
 		ldr r1, gpio_pa_base_addr
-		ldr r2, gpio_pa_base_addr
+		ldr r2, gpio_pc_base_addr
 while: 	
 		ldr r3, [r2, #GPIO_DIN]
 		lsl r3, r3, #8
-		str r3, [r2, #GPIO_DOUT]
+		str r3, [r1, #GPIO_DOUT]
 		B while
 
 
@@ -134,7 +148,10 @@ while:
 
 gpio_output:
 			.long 0x55555555
-	
+
+gpio_input: 
+			.long 0x33333333
+
 gpio_pa_base_addr:
 			.long GPIO_PA_BASE
 
