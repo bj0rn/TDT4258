@@ -85,9 +85,10 @@ _reset:
 	      BL setup_gpio_clk
 	      BL setup_leds
 	      BL setup_buttons
-	      BL polling
+	      BL setup_interrupts
+		 ////// BL polling
           
-		 // B .
+		  B .
           
 		.thumb_func
 setup_gpio_clk:
@@ -144,8 +145,43 @@ while:
 		str r3, [r2, #GPIO_DOUT]
 		b while
 
+	.thumb_func
+setup_interrupts:
+	  //LOAD base address for port C
+	  ldr r1, gpio_pc_base_addr
+	 
+	 //Load interrupt enable value
+	  ldr r2, gpio_pc_interrupt
+	 
+	 //Store value
+	  ldr r2, [r1, #GPIO_EXTIPSELL]
+	 
+	 //Setup interrupt falling edge
+	  mov r2, #0xff
+	  str r2, [r1, GPIO_EXTIFALL]
+	 
+	 //setup interrupt on rising edge
+	  mov r2, #0xff
+	  str r2, [r1, GPIO_EXTIRISE]
+	  
+	 //Enable interrupt generation
+	  mov r2, #0xff
+	  str r2, [r1, GPIO_IEN]
 
+     //Enable interrupt handling
+     ldr r1, iser0
+	 ldr r2, enable_interrupt_handling
+	 str r2, [r1]
+	  
 
+enable_interrupt_handling:
+		.word 0x802
+
+iser0: 
+	   .word ISER0
+
+gpio_pc_interrupt:
+		.word 0x22222222
 
 gpio_output:
 			.word 0x55555555
@@ -178,8 +214,17 @@ cmu_base_addr:
 	
         .thumb_func
 gpio_handler:  
+		 ldr r1, gpio_pa_base_addr
+		 ldr r2, gpio_pc_base_addr
+	     
+		 ldr r3, [r2, #GPIO_DIN]
+		 lsl r3, r3, #8
+		 str r3, [r1, #GPIO_DOUT]
 
-	     // b .  // do nothing
+         mov r3, #0xff
+		 str r3, [r2, GPIO_IFC]
+
+	    //  b .  // do nothing
 	
 	/////////////////////////////////////////////////////////////////////////////
 	
