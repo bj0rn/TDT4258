@@ -4,4 +4,10 @@
 *.bin
 *.elf
 *.pdf
-
+.textpadtmp
+*.log
+*.blb
+*.out
+*.blg
+*.aux
+*.bbl
