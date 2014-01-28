@@ -83,15 +83,22 @@
         .thumb_func
 _reset: 
 	      BL setup_gpio_clk
+
+//	      ldr r1, =CMU_BASE
+//	      mov r2, #9
+
+//	      str r2, [r1, #CMU_HFPERCLKDIV]	      
+
 	      BL setup_leds
 	      BL setup_buttons
-	      BL setup_interrupts
-		  BL setup_energy_mode
-		 // BL polling
-          WFI
-		  B . //just in case
+//	      BL powerdown_ram3
+              BL setup_interrupts
+	      BL setup_energy_mode
+	      
+//	      BL polling
+             WFI
           
-		.thumb_func
+	     .thumb_func
 setup_gpio_clk:
 		 //Load CMU base address
 		 ldr r1, =CMU_BASE
@@ -119,7 +126,7 @@ setup_leds:
 		str r2, [r1]
 		
 		//set pins 8-15 output
-		ldr r2, gpio_output
+		ldr r2, =0x55555555
 		str r2, [r1, #GPIO_MODEH]
 
 	   //set pins high
@@ -132,7 +139,7 @@ setup_leds:
 		.thumb_func
 setup_buttons:
 		ldr r1, =GPIO_PC_BASE 
- 		ldr r2, gpio_input
+ 		ldr r2, =0x33333333
 		str r2, [r1, #GPIO_MODEL]
 		mov r2, #0xff
 		str r2, [r1, #GPIO_DOUT]
@@ -144,8 +151,8 @@ setup_energy_mode:
 		ldr r1, =SCR
 		mov r2, #6
 		str r2, [r1]
-       
-	    BX LR
+		       
+	        BX LR
 
 
 	  .thumb_func
@@ -156,7 +163,7 @@ while:
 		ldr r3, [r1, #GPIO_DIN]
 		lsl r3, r3, #8
 		str r3, [r2, #GPIO_DOUT]
-		b while
+//		b while
 
 	.thumb_func
 setup_interrupts:
@@ -164,7 +171,7 @@ setup_interrupts:
 	  ldr r1, =GPIO_BASE
 	 
 	 //Load interrupt enable value
-	  ldr r2, gpio_pc_interrupt
+	  ldr r2, =0x22222222 //gpio_output
 	 
 	 //Store value
 	  str r2, [r1, #GPIO_EXTIPSELL]
@@ -182,34 +189,11 @@ setup_interrupts:
 	  str r2, [r1, #GPIO_IEN]
 
      //Enable interrupt handling
-     ldr r1, =ISER0
-	 ldr r2, enable_interrupt_handling
+    	 ldr r1, =ISER0
+	 ldr r2, =0x802 //enable_interrupt_handling
 	 str r2, [r1]
 	 
 	 BX LR
-
-
-
-enable_interrupt_handling:
-		.word 0x802
-
-
-gpio_pc_interrupt:
-		.word 0x22222222
-
-gpio_output:
-			.word 0x55555555
-
-gpio_input: 
-			.word 0x33333333
-
-
-
-
-	
-
-
-
 
 /////////////////////////////////////////////////////////////////////////////
 	//
@@ -221,24 +205,29 @@ gpio_input:
         .thumb_func
 gpio_handler:  
 		//Clear interrupt handler
-		ldr r1, =GPIO_BASE
-		mov r2, #0xff
-		str r2, [r1, #GPIO_IFC]
+	    ldr r1, =GPIO_BASE
+	    mov r2, #0xff
+	    str r2, [r1, #GPIO_IFC]
 		
         //Turn on buttons
-		ldr r1, =GPIO_PC_BASE
+	    ldr r1, =GPIO_PC_BASE
 	    ldr r2, =GPIO_PA_BASE
 
 	    ldr r3, [r1, #GPIO_DIN]
 	    lsl r3, r3, #8
-		str r3, [r2, #GPIO_DOUT]
+	    str r3, [r2, #GPIO_DOUT]
         
-		BX LR
-		NOP 
-	
+	    BX LR	
 	
 	/////////////////////////////////////////////////////////////////////////////
-
+	.thumb_func
+powerdown_ram3:
+	ldr r1, =EMU_BASE
+	mov r2, #4
+	
+	str r2, [r1, #EMU_MEMCTRL]
+	BX LR		
+	
 	.thumb_func
 delay:
 	movw r3, #0xFFFF
