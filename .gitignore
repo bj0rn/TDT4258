@@ -3,7 +3,7 @@
 *.o
 *.bin
 *.elf
-*.pdf
+report.pdf
 .textpadtmp/
 *.log
 *.blb
