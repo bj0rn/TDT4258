@@ -151,8 +151,18 @@ setup_energy_mode:
 		ldr r1, =SCR
 		mov r2, #6
 		str r2, [r1]
-		       
-	        BX LR
+		 BX LR
+
+
+	.thumb_func
+delay:
+	ldr r1, =0x00000FFF
+
+do_wait: 
+	subs r1, #1
+	bne do_wait
+	
+	BX LR
 
 
 	  .thumb_func
