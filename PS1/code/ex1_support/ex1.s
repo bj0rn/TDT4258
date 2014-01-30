@@ -91,13 +91,12 @@ _reset:
 
 	      BL setup_leds
 	      BL setup_buttons
-	      B test_delay
-//	      BL test_delay 
+//	      BL powerdown_ram3
               BL setup_interrupts
 	      BL setup_energy_mode
-	     
+	      
 //	      BL polling
-              WFI
+             WFI
           
 	     .thumb_func
 setup_gpio_clk:
@@ -204,14 +203,10 @@ setup_interrupts:
 	/////////////////////////////////////////////////////////////////////////////
 	
         .thumb_func
-gpio_handler: 
-	    	//Store register state
-	    push {r1, r2, r3}
-	    
-  
+gpio_handler:  
 		//Clear interrupt handler
 	    ldr r1, =GPIO_BASE
-	    mov r2, #0xff
+	    ldr r2, [r1, #GPIO_IF]
 	    str r2, [r1, #GPIO_IFC]
 		
         //Turn on buttons
@@ -221,38 +216,10 @@ gpio_handler:
 	    ldr r3, [r1, #GPIO_DIN]
 	    lsl r3, r3, #8
 	    str r3, [r2, #GPIO_DOUT]
-
-		//restore registers
-	    pop {r1, r2, r3}
-
+        
 	    BX LR	
 	
 	/////////////////////////////////////////////////////////////////////////////
-
-
-do_other:
-
-	mov r2, #0xF0
-	lsl r2, r2, #8
-	str r2, [r1, #GPIO_DOUT]
-
-
-test_delay:
-//	   mov r2, #0xff
- 	 ldr r1, =GPIO_PA_BASE
-
-       	 mov r2, #0x0F
-  	 lsl r2, r2, #8
-	 str r2, [r1, #GPIO_DOUT]
-	 ldr r3, =0x00A00000
-	
-delay_loop:
-	 subs r3, #1
-	 bne delay_loop
-	 B do_other
-	
-
-
 	.thumb_func
 powerdown_ram3:
 	ldr r1, =EMU_BASE
@@ -262,7 +229,18 @@ powerdown_ram3:
 	BX LR		
 	
 	.thumb_func
+delay:
+	movw r3, #0xFFFF
+	movt r3, #0x0000
+delay_loop:
+	cbz r3, delay_exit
+	sub r3, r3, #1
+	B delay_loop
+delay_exit:
+	BX LR
+
 
         .thumb_func
 dummy_handler:  
      b .  // do nothing
+
