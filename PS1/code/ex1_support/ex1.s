@@ -91,13 +91,14 @@ _reset:
 
 	      BL setup_leds
 	      BL setup_buttons
-		  BL blink
+//		  BL wave_left
+//		  BL blink
 //	      BL powerdown_ram3
-//              BL setup_interrupts
-//	      BL setup_energy_mode
+          BL setup_interrupts
+          BL setup_energy_mode
 	      
 //	      BL polling
-//             WFI
+            WFI
           
 	     .thumb_func
 setup_gpio_clk:
@@ -169,16 +170,43 @@ while_loop:
 	str r4, [r1,#GPIO_DOUT]
 	BL delay
 	B while_loop
-	
+
+	.thumb_func
+wave_left:
+	mov r12, lr
+	ldr r1, =GPIO_PA_BASE
+	ldr r2, =GPIO_PC_BASE
+	ldr r3, [r2, #GPIO_DIN] 
+	mov r4, #0xff
+	eor r5, r3, r4
+	mov r9, #0
+
+light:
+	eor r3, r5, r3
+    BL delay 
+	lsl r11, r3, #8
+	str r11, [r1, #GPIO_DOUT]
+	BL delay
+	lsr r5, r5, #1
+	cmp r9, r5
+	bne light
+
+	BX r12
+
+
+
+
+
+
 	.thumb_func
 delay:
+	push {r6}
 	ldr r6, =0x000fffff
-	mov r7, lr
 do_wait: 
 	subs r6, #1
 	bne do_wait
-	
-	BX r7
+	pop {r6}
+	BX lr
 
 
 	  .thumb_func
@@ -233,17 +261,19 @@ gpio_handler:
 		//Clear interrupt handler
 	    ldr r1, =GPIO_BASE
 	    ldr r2, [r1, #GPIO_IF]
-
 	    str r2, [r1, #GPIO_IFC]
 		
         //Turn on buttons
-	    ldr r1, =GPIO_PC_BASE
-	    ldr r2, =GPIO_PA_BASE
+	   // ldr r1, =GPIO_PC_BASE
+	   // ldr r2, =GPIO_PA_BASE
 
-	    ldr r3, [r1, #GPIO_DIN]
-	    lsl r3, r3, #8
-	    str r3, [r2, #GPIO_DOUT]
-        
+	   // ldr r3, [r1, #GPIO_DIN]
+	   // lsl r3, r3, #8
+	   // str r3, [r2, #GPIO_DOUT]
+        push {lr}
+	    BL wave_left
+        NOP
+		pop {lr}
 	    BX LR	
 	
 	/////////////////////////////////////////////////////////////////////////////
