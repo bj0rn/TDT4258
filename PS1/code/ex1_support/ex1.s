@@ -207,6 +207,7 @@ gpio_handler:
 		//Clear interrupt handler
 	    ldr r1, =GPIO_BASE
 	    ldr r2, [r1, #GPIO_IF]
+
 	    str r2, [r1, #GPIO_IFC]
 		
         //Turn on buttons
@@ -228,17 +229,6 @@ powerdown_ram3:
 	str r2, [r1, #EMU_MEMCTRL]
 	BX LR		
 	
-	.thumb_func
-delay:
-	movw r3, #0xFFFF
-	movt r3, #0x0000
-delay_loop:
-	cbz r3, delay_exit
-	sub r3, r3, #1
-	B delay_loop
-delay_exit:
-	BX LR
-
 
         .thumb_func
 dummy_handler:  
