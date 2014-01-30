@@ -91,12 +91,13 @@ _reset:
 
 	      BL setup_leds
 	      BL setup_buttons
+		  BL blink
 //	      BL powerdown_ram3
-              BL setup_interrupts
-	      BL setup_energy_mode
+//              BL setup_interrupts
+//	      BL setup_energy_mode
 	      
 //	      BL polling
-             WFI
+//             WFI
           
 	     .thumb_func
 setup_gpio_clk:
@@ -155,13 +156,32 @@ setup_energy_mode:
 
 
 	.thumb_func
+blink:
+	ldr r1, =GPIO_PA_BASE
+	
+while_loop:
+	mov r2, #0x0f
+	mov r3, #0xf0
+	lsl r2, r2, #8
+	lsl r3, r3, #8
+	str r2, [r1, #GPIO_DOUT]
+	BL delay
+	str r3, [r1,#GPIO_DOUT]
+	B while_loop
+	
+	BX LR
+
+
+
+	.thumb_func
 delay:
-	ldr r1, =0x00000FFF
+	push {r1}
+	ldr r1, =0x00000002
 
 do_wait: 
 	subs r1, #1
 	bne do_wait
-	
+	pop {r1}
 	BX LR
 
 
