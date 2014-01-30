@@ -161,28 +161,24 @@ blink:
 	
 while_loop:
 	mov r2, #0x0f
-	mov r3, #0xf0
+	mov r4, #0xf0
 	lsl r2, r2, #8
-	lsl r3, r3, #8
+	lsl r4, r4, #8
 	str r2, [r1, #GPIO_DOUT]
 	BL delay
-	str r3, [r1,#GPIO_DOUT]
+	str r4, [r1,#GPIO_DOUT]
+	BL delay
 	B while_loop
 	
-	BX LR
-
-
-
 	.thumb_func
 delay:
-	push {r1}
-	ldr r1, =0x00000002
-
+	ldr r6, =0x000fffff
+	mov r7, lr
 do_wait: 
-	subs r1, #1
+	subs r6, #1
 	bne do_wait
-	pop {r1}
-	BX LR
+	
+	BX r7
 
 
 	  .thumb_func
@@ -193,7 +189,7 @@ while:
 		ldr r3, [r1, #GPIO_DIN]
 		lsl r3, r3, #8
 		str r3, [r2, #GPIO_DOUT]
-//		b while
+		b while
 
 	.thumb_func
 setup_interrupts:
