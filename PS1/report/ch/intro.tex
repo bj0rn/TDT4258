@@ -1,17 +1,5 @@
 \section{Introduction}
-{\bf What is a microcontroller?}
 
-	A microcontroller is basically a small computer designed for embedded purposes, such controlling appliances like washing machines, temperature regulation systems, motion sensors, etc... In other words, the main difference between 
+The description of the exercise was to write an assembly program to enable a user to control the behaviour of LEDs in some way by pressing buttons on a gamepad attached to an EFM32GG-DK3750 development board containing an EFM32GG microcontroller. Other than having a couple of requirements on implementing certain routines, the design of LED behaviour as well as energy optimization techniques was mostly left to the creativity of the programmer.
 
-
-The goal of the exercise is to design and implement a program that interfaces a gamepad controller. The game pad is connected to the micro controller through the GPIO pins.  
-
-
-
-
-
-This report takes an iterative approach to achieve energy efficiency. Different methods are evaluated based on their energy consumption. 
-
-The program is implemented on the \emph EFM32GG-DK3750 development board containing an EFM32GG micro controller. This is an ARM based micro controller the designed for low energy consumption. The micro controller allows for many different energy optimizations techniques.    
-
-
+The main goals were to learn the basics of assembly programming and how to implement routines such as polling and interrupts, as well as become familiar with the GNU toolchain to compile assembly files and flash them onto the EMF32GG. An iterative design approach was taken in order to test the program as frequently as possible and make good use of the GNU Debugger (GDB) in order to avoid a complex debugging task at the end of the implementation.
