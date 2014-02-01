@@ -81,7 +81,8 @@
 	      .globl  _reset
 	      .type   _reset, %function
         .thumb_func
-_reset: 
+_reset:
+	      DELAY = 2500
 	      BL setup_gpio_clk
 
 //	      ldr r1, =CMU_BASE
@@ -91,14 +92,16 @@ _reset:
 
 	      BL setup_leds
 	      BL setup_buttons
-		  BL blink
+		  BL convert_to_ms
 //	      BL powerdown_ram3
 //              BL setup_interrupts
 //	      BL setup_energy_mode
 	      
 //	      BL polling
 //             WFI
-          
+
+      
+ 
 	     .thumb_func
 setup_gpio_clk:
 		 //Load CMU base address
@@ -153,7 +156,14 @@ setup_energy_mode:
 		mov r2, #6
 		str r2, [r1]
 		 BX LR
+	
+	.thumb_func
+convert_to_ms:
 
+	ldr r5, =DELAY
+	ldr r3, =5000
+	mul r6, r5, r3
+//	DELAY_MS = r6
 
 	.thumb_func
 blink:
@@ -172,10 +182,10 @@ while_loop:
 	
 	.thumb_func
 delay:
-	ldr r6, =0x000fffff
+	mov r3, r6
 	mov r7, lr
 do_wait: 
-	subs r6, #1
+	subs r3, #1
 	bne do_wait
 	
 	BX r7
