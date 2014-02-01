@@ -1,5 +1,5 @@
 \section{Description And Methodology}
-This sections presents the description of the problem and the methodology. The initial setup of the micro controller regarding GPIO, buttons and leds are explained in section \ref{ch:initial_setup}. 
+This sections presents the description of the problem and the methodology. The initial setup of the micro controller regarding GPIO, buttons and LEDs are explained in section \ref{ch:initial_setup}. 
 
 
 \subsection{Initial setup} \label{ch:initial_setup}
@@ -40,21 +40,23 @@ If not, it will cause the interrupt handler to be called repeatedly. In order to
 
 
 
-
-
 "The GPIO can generate an interrupt from the input of any GPIO pin on a device. The interrupts have asynchronous sense capability, enabling wake-up from energy modes as low as EM3" 
-
-
 
 
 {\bf need more details here}
 
 
-
-
-
-
 \subsection{Energy modes}\label{ch:energy_modes} 
+The EFM32GG micro controller has rich set of features regarding improving energy efficiency. For instance the EFM32GG contains several different energy levels. Where each level corresponds to some features being turned off. The main idea behind improving energy efficiency is turning of components that are not in use, or when they are not needed. However, it is also possible to modify the components themselves to use less energy. For instance, the clock manager is very powerful and allows the code to scale the clock to different frequencies. It is also possible to setup different clocks for different purposes. It is also possible to turn off parts of the RAM in order to improve energy efficiency. {\bf not enough details}
+
+
+When waiting for an interrupt to occur there is really nothing going on in the system. This makes it possible to enter deep sleep mode during this time. There no point in wasting energy while waiting for interrupts, the processor is idle any way. In order to save this energy, EFM32GG allows the micro controller to enter energy mode very easily. The EFM32GG is still able to handle interrupts during this time. By entering deep sleep mode stops the high frequency oscillators and the HFPERCLK/HFCORECLK as well as the flash memory(cite EFM32GG side 30). During deep sleep mode it is possible to achieve energy consumption as low as, 900 nA(cite EFM32 energy efficiency page 2). The CPU will wake up when it receive an interrupt and go back to sleep when it is finished handling the interrupt. It is able to wake up in only 2micro seconds. (same cite). This is very beneficial when considering energy efficiency.   
+
+Entering deep sleep mode can be achieved by writing to the System Control Register(SCR). This register contains to bits of particular interest: \emph DEEPSLEEP and \emph SLEEPONEXIT. When enable, the DEEPSLEEP bit allows the CPU to enter deep sleep mode. SLEEPONEXIT, when enabled, allows the CPU to enter deep sleep mode when finished handling an interrupt. Both bits can be set by writing the value 6 to the \emph SCR register. When the \emph SCR register is configured, deep sleep mode can be achieved by calling the \emph WFI instructions. This instruction causes immediate entry to sleep mode. 
+
+
+   
+
 
 
 
