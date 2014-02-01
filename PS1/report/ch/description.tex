@@ -1,12 +1,28 @@
 \section{Description And Methodology}
-
-\subsection{Polling}
-
-
-\subsection{Interrupts}
+This sections presents the description of the problem and the methodology. The initial setup of the micro controller regarding GPIO, buttons and leds are explained in section \ref{ch:initial_setup}. 
 
 
-\subsection{Energy modes} 
+
+
+\subsection{Initial setup} \label{ch:initial_setup}
+The EFM32GG micro controller is memory mapped. I/O devices is accessed by reading and writing to specific memory locations. The CPU uses normal read and write instructions to communicate with the devices. Each I/O device is given a specific address in the memory map of the device. To save memory only the I/O controller used are clocked. This implies that the the I/O controller needs to be enabled before it can be used. Fortunately, the EFM32GG has a dedicated I/O controller for handling the different clocks, the clock management unit(CMU). A specific can be enabled by writing to the \emph CMU\_HFPERCLKEN0 register. This register consists of 32 bits where each bit correspond to an I/O controller. 
+
+In case of interfacing the gamepad to the EFM32GG, the GPIO pins are used. These pins are controlled through the GPIO controller. To enable an I/O the clock of an I/0 controller simply write 1 to it corresponding position. In case of enabling the GPIO clock position 13 is written. 
+
+The GPIO pins are divided into several different ports on the EFM32GG-DK3750 development board. Each port corresponds to a different location in memory. For each port there exist a set of special registers in order to configure the pins. These pins can be configured to be either input or output, or both. Det input portion can be accessed by reading the $GPIO_DIN$ register, output to the pins can be set by writing to the $GPIO_DOUT$ register.   
+
+
+
+
+
+\subsection{Polling}\label{ch:polling}
+The simplest way of communicate with an I/O device is what is known as busy waiting\cite{micro}. In this scheme the CPU constantly checks the device to check if the state have changed. This is accomplished by constantly checking if the value of some register has changed. In the context of the gamepad this involves checking the status of the buttons. If the button is toggled the program responds with performs by writing something to the leds. This is accomplished by reading the input registers of the buttons to check whether the buttons are pushed or not. 
+
+\subsection{Interrupts}\label{ch:interrupts}
+Continuously polling the status of some I/0 register is very inefficient. A lot of computational resources are wasted. A far better approach is to use interrupts. In interrupt the I/O controller is responsible of informing the CPU when change has occurred. When an interrupt occur the flow of execution is changed, and the CPU changes the program counter to point to an interrupt handler. The interrupt handler contains the code that should run in case of an interrupt.  
+
+
+\subsection{Energy modes}\label{ch:energy_modes} 
 
 
 
