@@ -92,26 +92,18 @@ _reset:
 
 	      BL setup_leds
 	      BL setup_buttons
-<<<<<<< HEAD
-		  BL convert_to_ms
-=======
+//		  BL convert_to_ms
 //		  BL wave_left
 //		  BL blink
->>>>>>> f0d90fde020d5d7986cf333353f97159ac7e6513
 //	      BL powerdown_ram3
           BL setup_interrupts
           BL setup_energy_mode
 	      
 //	      BL polling
-<<<<<<< HEAD
-//             WFI
+             WFI
 
-      
  
-=======
-            WFI
           
->>>>>>> f0d90fde020d5d7986cf333353f97159ac7e6513
 	     .thumb_func
 setup_gpio_clk:
 		 //Load CMU base address
@@ -219,13 +211,8 @@ light:
 
 	.thumb_func
 delay:
-<<<<<<< HEAD
 	mov r3, r6
 	mov r7, lr
-=======
-	push {r6}
-	ldr r6, =0x000fffff
->>>>>>> f0d90fde020d5d7986cf333353f97159ac7e6513
 do_wait: 
 	subs r3, #1
 	bne do_wait
@@ -288,16 +275,16 @@ gpio_handler:
 	    str r2, [r1, #GPIO_IFC]
 		
         //Turn on buttons
-	   // ldr r1, =GPIO_PC_BASE
-	   // ldr r2, =GPIO_PA_BASE
+	    ldr r1, =GPIO_PC_BASE
+	    ldr r2, =GPIO_PA_BASE
 
-	   // ldr r3, [r1, #GPIO_DIN]
-	   // lsl r3, r3, #8
-	   // str r3, [r2, #GPIO_DOUT]
-        push {lr}
-	    BL wave_left
-        NOP
-		pop {lr}
+	     ldr r3, [r1, #GPIO_DIN]
+	     lsl r3, r3, #8
+	     str r3, [r2, #GPIO_DOUT]
+        // push {lr}
+	    // BL wave_left
+       // NOP
+	   // pop {lr}
 	    BX LR	
 	
 	/////////////////////////////////////////////////////////////////////////////
