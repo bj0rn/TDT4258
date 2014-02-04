@@ -1,11 +1,12 @@
 \section{Description And Methodology}
-This sections presents the description of the problem and the methodology. The initial setup of the micro controller regarding GPIO, buttons and LEDs are explained in section \ref{ch:initial_setup}. 
+
+The following section explains the setup of the microcontroller regarding GPIO, buttons and LEDs step by step. \ref{ch:initial_setup}. 
 
 
 \subsection{GPIO clock setup} \label{ch:initial_setup}
-The EFM32GG micro controller is memory mapped. I/O devices is accessed by reading and writing to specific memory locations. The CPU uses normal read and write instructions to communicate with the devices. Each I/O device is given a specific address in the memory map of the device. To save memory only the I/O controller used are clocked. This implies that the the I/O controller needs to be enabled before it can be used. Fortunately, the EFM32GG has a dedicated I/O controller for handling the different clocks, the clock management unit(CMU). A specific can be enabled by writing to the \emph CMU\_HFPERCLKEN0 register. This register consists of 32 bits where each bit correspond to an I/O controller. 
+The EFM32GG microcontroller is memory mapped, and the I/O devices are accessed by reading and writing to specific memory locations. The CPU uses normal read- and write instructions to communicate with the devices. Each I/O device is given a specific address in the memory map of the device, and to save memory, only the specific I/O controllers used are clocked. This implies that the the I/O controller needs to be enabled before it can be used. Fortunately, the EFM32GG has a dedicated I/O controller for handling the different clocks, called the Clock Management Unit(CMU). A specific controller can be enabled by writing to the \emph CMU\_HFPERCLKEN0 register. This register consists of 32 bits where each bit corresponds to an I/O controller. 
 
-In case of interfacing the gamepad to the EFM32GG, the GPIO pins are used. These pins are controlled through the GPIO controller. To enable an I/O the clock of an I/0 controller simply write 1 to its corresponding position. In case of enabling the GPIO clock position 13 is written. The following instructions give an example how this can be achieved: 
+To interface the gamepad to the EFM32GG, the GPIO pins are used. These pins are controlled through the GPIO controller. To enable an I/O controller, the value 1 is written to its corresponding register position. In case of enabling the GPIO clock position, bit 13 is set to 1. The following instructions gives an example how this can be achieved: 
 
 \begin{lstlisting}
 ldr r1, =CMU_BASE                //r1 = CMU_BASE
@@ -18,12 +19,12 @@ orr r3, r2, r3                   //Enable the GPIO clock
 str r2, [r1, #CMU_HFPERCLKEN0]   //Store the register back 
 \end{lstlisting}
 
-
+%Se mer på!!
 \subsection{LED setup}
 
-The GPIO pins are divided into several different ports on the EFM32GG-DK3750 development board. Each port corresponds to a different location in memory.  The pins are configured by writing to the $GPIO\_MODEL$ and $GPIO\_MODEH$ registers. These can be accessed by using their position relative to the GPIO base to the specific port. These registers contains 8 bit fields that can be used to configure pins.  "$GPIO\_Px\_Model$ contains 8 bit fields named MODEn (n=0,1, .., 7) which controls pins 0-7 which controls pins 0-7, while $GPIO\_Px\_MODEH$ contains 8 bit fields named MODEn (n=8, 9, ..15) which controls pins 8-15." The different configurations can be found in \cite[p.758-759]{EFM32GG-rm}.    
+The GPIO pins are divided into several different ports on the EFM32GG-DK3750 development board. Each port corresponds to a different location in memory.  The pins are configured by writing to the $GPIO\_MODEL$ and $GPIO\_MODEH$ registers. These can be accessed by using their position relative to the GPIO base of the specific port. These registers contain 8-bit fields that can be used to configure the pins.  "$GPIO\_Px\_Model$ contains 8 bit fields named MODEn (n=0,1, .., 7) which controls pins 0-7 which controls pins 0-7, while $GPIO\_Px\_MODEH$ contains 8 bit fields named MODEn (n=8, 9, ..15) which controls pins 8-15." The different configurations can be found in \cite[p.758-759]{EFM32GG-rm}.    
 
-In case of the gamepad controller the pins to the LEDs are connected to port A. These are assigned to output by writing {\emph 0x55555555} to  the $GPIO\_PA\_MODEH$ register. This corresponds to setting the pins 8-15 to an "open drain with pull-up" configuration\cite[p.758-759]{EFM32GG-rm}. This means that the transistors connect to low and the resistor connects to high. This is configuration specific to the gamepad controller, and can be viewed in the schematics of the gamepad\cite{compendium}. Additionally, the drive strength of the pins are set to high. This is the current capabilities of the device. This is accomplished by writing 0x02 to the $GPIO\_PA\_CTRL$ register. Now, it is possible to toggle the LEDs by writing writing 0 to the upper level of the $GPIO\_PA\_DOUT$ registers. Note that the responds to active low signals. This can be seen by the gamepad schematics\cite{compendium}. The following instructions give an example on how this can be achieved:
+In the case of the gamepad controller, the pins to the LEDs are connected to port A. These are assigned to output by writing {\emph 0x55555555} to  the $GPIO\_PA\_MODEH$ register. This corresponds to setting the pins 8-15 to an "open drain with pull-up" configuration\cite[p.758-759]{EFM32GG-rm}. As a result, the transistors connect to low, and the resistor connects to high. These are the specific configurations of the gamepad controller, and can be viewed in the schematics of the gamepad\cite{compendium}. Additionally, the drive strength of the pins are set to high. This is the current capabilities of the device. This is accomplished by writing 0x02 to the $GPIO\_PA\_CTRL$ register. Now, it is possible to toggle the LEDs by writing writing 0 to the upper level of the $GPIO\_PA\_DOUT$ registers. Note that the responds to active low signals. This can be seen by the gamepad schematics\cite{compendium}. The following instructions gives an example on how this can be achieved:
 
 
 \begin{lstlisting}
@@ -39,8 +40,7 @@ str r2, [r1, #GPIO_PA_CTRL]  // GPIO_PA_CTRL=0x2
  
 
 \subsection{Button setup}
-The buttons are configured very similar with the configurations of the LEDs. However, with some differences. The buttons are configured by writing the configuration the $GPIO\_PC\_MODEL$ register. This register corresponds to pin numbers ranging from 0 to 7. The pins are set to input by writing {\emph 0x33333333} to the $GPIO\_PC\_MODEL$ register. This corresponds to configuring each pin to "open drain with alternating drive strength"\cite[p.758-759]{EFM32GG-rm}. The a internal pull-up is enabled by writing 
-Then internal pull-up is enabled by writing 0xff to the $GPIO\_PC\_DOUT$ register. The state of the buttons can be read by reading the $GPIO\_PC\_DIN$. An example of the configuration can be viewed in the following code snippet. 
+The buttons are configured in a similar way to the configurations of the LEDs, with some minor differences. The pins are set to input by writing {\emph 0x33333333} to the $GPIO\_PC\_MODEL$ register. This corresponds to configuring each pin to "open drain with alternating drive strength"\cite[p.758-759]{EFM32GG-rm}. Then internal pull-up is enabled by writing 0xff to the $GPIO\_PC\_DOUT$ register. The state of the buttons can be seen by reading the $GPIO\_PC\_DIN$. An example of the configuration can be viewed in the following code snippet: 
 
 \begin{lstlisting}
 ldr r1, =GPIO_PC_BASE        //r1 = GPIO_PC_BASE
@@ -56,8 +56,7 @@ str r2, [r1, #GPIO_DOUT]     // Internal pull-up
 
 
 \subsection{Polling}\label{ch:polling}
-The simplest way of communicate with an I/O device is what is known as busy waiting\cite[p. ]{wolf}. In this scheme the CPU constantly checks the device to check if the state have changed. This is accomplished by polling some register to check whether the state has changed. In context of the gamepad this involves checking the status of the buttons. This can be accomplished by a loop continuously checking the  
-the $GPIO\_PC\_DIN$ register. If one of the bits in range 0-7 is set, the button is pushed. Note that a button is active low. An example of polling is provided in the following code snippet:
+The simplest way of communicating with an I/O device is what is known as busy waiting\cite[p. ]{wolf}. In this way, the CPU constantly checks the device to see if some register value has changed. In this context, the status of the buttons are checked by reading the button input registers. If the button is toggled, the program responds by writing a certain value to the LEDs. In the specific case of the gamepad used, this is accomplished by a loop continuously checking the $GPIO\_PC\_DIN$ register. If one of the bits in range 0-7 is set, the button is pushed. Note that a button is active low. An example of polling is provided in the following code snippet:
 
 \begin{lstlisting}
      ldr r1, =GPIO_PC_BASE   // r1 = GPIO_PC_BASE
@@ -69,8 +68,7 @@ while:
     b while                  // loop
 \end{lstlisting}
 
-In this code example the buttons are continuously polled. The result from the read is written to the $GPIO\_PA\_DOUT$ register. Since the buttons are located at the lower pins, and the buttons are located at the higher addresses, the value is shifted 8 positions to the left before it is written to the $GPIO\_PA\_DOUT$ register. 
-
+In this code example, the buttons are continuously polled. The result from each read-cycle is written to the $GPIO\_PA\_DOUT$ register. Since the buttons are located at the lower pins, and the buttons are located at the higher addresses, the value is shifted 8 positions to the left before it is written to the $GPIO\_PA\_DOUT$ register. 
 
 \subsection{GPIO interrupts}\label{ch:interrupts}
 The busy waiting approach is very inefficient, a lot of computational resources are wasted. A far better approach is to use interrupts. With interrupts the I/O controller itself are responsible of informing the CPU when changes has occurred. When interrupts occur I/O controller will send some information regarding what type of interrupt that has occurred. When the interrupt is handled by the CPU, the CPU stores all relevant state, and changes the flow of execution. The program counter is set to point to the relevant interrupt handler.  The interrupt handler contains the code that should run in case of an interrupt. 
@@ -124,23 +122,3 @@ The EFM32GG micro controller has rich set of features regarding improving energy
 When waiting for an interrupt to occur there is really nothing going on in the system. This makes it possible to enter deep sleep mode during this time. There no point in wasting energy while waiting for interrupts, the processor is idle any way. In order to save this energy, EFM32GG allows the micro controller to enter energy mode very easily. The EFM32GG is still able to handle interrupts during this time. By entering deep sleep mode stops the high frequency oscillators and the HFPERCLK/HFCORECLK as well as the flash memory(cite EFM32GG side 30). During deep sleep mode it is possible to achieve energy consumption as low as, 900 nA(cite EFM32 energy efficiency page 2). The CPU will wake up when it receive an interrupt and go back to sleep when it is finished handling the interrupt. It is able to wake up in only 2micro seconds. (same cite). This is very beneficial when considering energy efficiency.   
 
 Entering deep sleep mode can be achieved by writing to the System Control Register(SCR). This register contains to bits of particular interest: \emph DEEPSLEEP and \emph SLEEPONEXIT. When enable, the DEEPSLEEP bit allows the CPU to enter deep sleep mode. SLEEPONEXIT, when enabled, allows the CPU to enter deep sleep mode when finished handling an interrupt. Both bits can be set by writing the value 6 to the \emph SCR register. When the \emph SCR register is configured, deep sleep mode can be achieved by calling the \emph WFI instructions. This instruction causes immediate entry to sleep mode. 
-
-
-   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
