@@ -12,7 +12,42 @@
 \usetikzlibrary{arrows, automata}
 %\usetikzlibrary{arrows,automata}   % FSM-bibliotek for tikz
 \usepackage{url}
+\usepackage{thumbs}
+
+
+% Fargedefinisjoner for bruk i syntax highlighting i listings
+\definecolor{commentClr}{rgb}{0,0.6,0}
+\definecolor{keywordClr}{rgb}{0.58,0,0.82}
+\definecolor{numberClr}{rgb}{0.4,0.4,0.4}
+
+
 
 
 %%Section numbering
 \renewcommand\thesection{\arabic{section}}
+
+%%Instillinger for listings
+
+% Innstillinger for listings
+\lstset{
+    language=[thumbs]{Assembler},     % language of the code
+    basicstyle=\footnotesize,       % the size of the fonts that are used for the code
+    numbers=left,                   % where to put the line-numbers
+    numberstyle=\footnotesize,      % the size of the fonts that are used for the line-numbers
+    stepnumber=0,                   % the step between two line-numbers. If it is 1 each line will be numbered
+    numbersep=8pt,                  % how far the line-numbers are from the code
+    backgroundcolor=\color{white},  % choose the background color. 
+    showspaces=false,               % show spaces adding particular underscores
+    commentstyle=\color{commentClr},% color of comments
+    keywordstyle=\color{keywordClr},% color of keywords
+    numberstyle=\color{numberClr},  % color of line-numbers
+    stringstyle=\color{blue},       % color of strings
+    showstringspaces=false,         % underline spaces within strings
+    showtabs=false,                 % show tabs within strings adding particular underscores
+    tabsize=2,                      % sets default tabsize to 2 spaces
+    captionpos=b,                   % sets the caption-position to bottom
+    breaklines=true,                % sets automatic line breaking
+    breakatwhitespace=false,        % sets if automatic breaks should only happen at whitespace
+    escapeinside={\%*}{*)},          % if you want to add a comment within your code
+    xleftmargin=0.5cm
+}
