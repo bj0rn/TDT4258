@@ -89,13 +89,13 @@ ldr r1, =ISER0                //r1 = ISERO
 ldr r2, =0x802                //r2 = 0x802  
 str r2, r1                    //store pins
 
-ldr r1, =GPIO_BASE            // r1 = GPIO_BASE
-ldr r2, =0x222222222          // r2 = 0x222222222
-str r2, [r1, #GPIO_EXTIPSELL] // store config
+ldr r1, =GPIO_BASE            //r1 = GPIO_BASE
+ldr r2, =0x222222222          //r2 = 0x222222222
+str r2, [r1, #GPIO_EXTIPSELL] //store config
 
-mov r2, 0xff                  // r2 = 0xff 
-str r2, [r1, #GPIO_EXTIFALL]  // sense falling
-str r2, [r1, #GPIO_EXTIRISE]  // sense rising
+mov r2, 0xff                  //r2 = 0xff 
+str r2, [r1, #GPIO_EXTIFALL]  //sense falling edge
+str r2, [r1, #GPIO_EXTIRISE]  //sense rising edge
 str r2, [r1, #GPIO_IEN]       //Enable interrupt handling 
 
 \end{lstlisting}
@@ -114,7 +114,9 @@ str r2, [r2, GPIO_IFC]
 
 
 \subsection{Energy modes}\label{ch:energy_modes} 
-The EFM32GG micro controller has rich set of features regarding improving energy efficiency. For instance the EFM32GG contains several different energy levels. Where each level corresponds to some features being turned off. The main idea behind improving energy efficiency is turning of components that are not in use, or when they are not needed. However, it is also possible to modify the components themselves to use less energy. For instance, the clock manager is very powerful and allows the code to scale the clock to different frequencies. It is also possible to setup different clocks for different purposes. It is also possible to turn off parts of the RAM in order to improve energy efficiency. {\bf not enough details}
+The EFM32GG micro controller has rich set of features regarding improving energy efficiency. For instance the EFM32GG contains several different energy levels. Where each level corresponds to some features being turned off. The main idea behind improving energy efficiency is turning of components that are not in use, or when they are not needed. However, it is also possible to modify the components themselves to use less energy. For instance, the clock manager is very powerful and allows the code to scale the clock to different frequencies. It is also possible to setup different clocks for different purposes. It is also possible to turn off parts of the RAM in order to improve energy efficiency. 
+
+{\bf not enough details}
 
 
 When waiting for an interrupt to occur there is really nothing going on in the system. This makes it possible to enter deep sleep mode during this time. There no point in wasting energy while waiting for interrupts, the processor is idle any way. In order to save this energy, EFM32GG allows the micro controller to enter energy mode very easily. The EFM32GG is still able to handle interrupts during this time. By entering deep sleep mode stops the high frequency oscillators and the HFPERCLK/HFCORECLK as well as the flash memory(cite EFM32GG side 30). During deep sleep mode it is possible to achieve energy consumption as low as, 900 nA(cite EFM32 energy efficiency page 2). The CPU will wake up when it receive an interrupt and go back to sleep when it is finished handling the interrupt. It is able to wake up in only 2micro seconds. (same cite). This is very beneficial when considering energy efficiency.   
