@@ -20,7 +20,7 @@ str r2, [r1, #CMU_HFPERCLKEN0]   //Store the register back
 \end{lstlisting}
 
 %Se mer på!!
-\subsection{LED setup}
+\subsection{LED setup}\label{led-setup}
 
 The GPIO pins are divided into several different ports on the EFM32GG-DK3750 development board. Each port corresponds to a different location in memory.  The pins are configured by writing to the $GPIO\_MODEL$ and $GPIO\_MODEH$ registers. These can be accessed by using their position relative to the GPIO base of the specific port. These registers contain 8-bit fields that can be used to configure the pins.  "$GPIO\_Px\_Model$ contains 8 bit fields named MODEn (n=0,1, .., 7) which controls pins 0-7 which controls pins 0-7, while $GPIO\_Px\_MODEH$ contains 8 bit fields named MODEn (n=8, 9, ..15) which controls pins 8-15." The different configurations can be found in \cite[p.758-759]{EFM32GG-rm}.    
 
@@ -39,7 +39,7 @@ str r2, [r1, #GPIO_PA_CTRL]  // GPIO_PA_CTRL=0x2
 
  
 
-\subsection{Button setup}
+\subsection{Button setup}\label{ch:buttons}
 The buttons are configured in a similar way to the configurations of the LEDs, with some minor differences. The pins are set to input by writing {\emph 0x33333333} to the $GPIO\_PC\_MODEL$ register. This corresponds to configuring each pin to "open drain with alternating drive strength"\cite[p.758-759]{EFM32GG-rm}. Then internal pull-up is enabled by writing 0xff to the $GPIO\_PC\_DOUT$ register. The state of the buttons can be seen by reading the $GPIO\_PC\_DIN$. An example of the configuration can be viewed in the following code snippet: 
 
 \begin{lstlisting}
@@ -110,14 +110,23 @@ str r2, [r2, GPIO_IFC]
 {\bf need more cleanup}
 
 
+\subsection{Energy Optimization}\label{ch:energy_optimization} 
+The EFM32GG microcontroller has a rich set of features regarding improving energy efficiency. In most of these focuses on turing off components that are not used, or simply decrease their power consumption by tuning their performance. When performing these optimization one must be careful considering different trade-offs. \cite{EFM32GG-energy}. However, to fully utilise the power on energy optimizations one must also consider the code. A lot of energy can actually be saved by careful structuring of code. How the code is written and which methods used directly affect the CPU and memory system of the microcontroller. For instance, it is far better to replace wait loops with interrupts. It is also possible to optimize the memory access. If a program is able to finish earlier, the clock cycles saved can be used in further optimizations. Note that accessing external memory requires more cycles than accessing registers and caches. The EFM32GG is actually delivered with an instruction cache to increase performance while fetching instructions. It is possible to turn this cached off. However, when using a small number of instructions. A far better approach is to leave this turned on. With small programs like the one presented in this exercise, a chance of a cache hit it is increasingly large. 
+
+However, the gains from performing these optimizations are limited without combining them with other energy optimizations.  For convenience the EFM32GG microcontroller contains a set of different energy levels. Each energy level provide to different functionality of the microcontroller be available, thus varying the power consumption. This energy modes are numbered from EM0 to EM4.        
 
 
-\subsection{Energy modes}\label{ch:energy_modes} 
-The EFM32GG micro controller has rich set of features regarding improving energy efficiency. For instance the EFM32GG contains several different energy levels. Where each level corresponds to some features being turned off. The main idea behind improving energy efficiency is turning of components that are not in use, or when they are not needed. However, it is also possible to modify the components themselves to use less energy. For instance, the clock manager is very powerful and allows the code to scale the clock to different frequencies. It is also possible to setup different clocks for different purposes. It is also possible to turn off parts of the RAM in order to improve energy efficiency.
-
-{\bf not enough details}
 
 
-When waiting for an interrupt to occur there is really nothing going on in the system. This makes it possible to enter deep sleep mode during this time. There no point in wasting energy while waiting for interrupts, the processor is idle any way. In order to save this energy, EFM32GG allows the micro controller to enter energy mode very easily. The EFM32GG is still able to handle interrupts during this time. By entering deep sleep mode stops the high frequency oscillators and the HFPERCLK/HFCORECLK as well as the flash memory(cite EFM32GG side 30). During deep sleep mode it is possible to achieve energy consumption as low as, 900 nA(cite EFM32 energy efficiency page 2). The CPU will wake up when it receive an interrupt and go back to sleep when it is finished handling the interrupt. It is able to wake up in only 2micro seconds. (same cite). This is very beneficial when considering energy efficiency.   
 
-Entering deep sleep mode can be achieved by writing to the System Control Register(SCR). This register contains to bits of particular interest: \emph DEEPSLEEP and \emph SLEEPONEXIT. When enable, the DEEPSLEEP bit allows the CPU to enter deep sleep mode. SLEEPONEXIT, when enabled, allows the CPU to enter deep sleep mode when finished handling an interrupt. Both bits can be set by writing the value 6 to the \emph SCR register. When the \emph SCR register is configured, deep sleep mode can be achieved by calling the \emph WFI instructions. This instruction causes immediate entry to sleep mode. 
+%% However, it is also possible to modify the components themselves to use less energy. For instance, the clock manager is very powerful and allows the code to scale the clock to different frequencies. It is also possible to setup different clocks for different purposes. It is also possible to turn off parts of the RAM in order to improve energy efficiency. \cite{EFM32-energy} 
+
+
+%When waiting for an interrupt to occur there is really nothing going on in the system. This makes it possible to enter deep sleep mode during this time. There no point in wasting energy while waiting for interrupts, the processor is idle any way. In order to save this energy, EFM32GG allows the micro controller to enter energy mode very easily. The EFM32GG is still able to handle interrupts during this time. By entering deep sleep mode stops the high frequency oscillators and the HFPERCLK/HFCORECLK as well as the flash memory(cite EFM32GG side 30). During deep sleep mode it is possible to achieve energy consumption as low as, 900 nA(cite EFM32 energy efficiency page 2). The CPU will wake up when it receive an interrupt and go back to sleep when it is finished handling the interrupt. It is able to wake up in only 2micro seconds. (same cite). This is very beneficial when considering energy efficiency.   
+
+%Entering deep sleep mode can be achieved by writing to the System Control Register(SCR). This register contains to bits of particular interest: \emph DEEPSLEEP and \emph SLEEPONEXIT. When enable, the DEEPSLEEP bit allows the CPU to enter deep sleep mode. SLEEPONEXIT, when enabled, allows the CPU to enter deep sleep mode when finished handling an interrupt. Both bits can be set by writing the value 6 to the \emph SCR register. When the \emph SCR register is configured, deep sleep mode can be achieved by calling the \emph WFI instructions. This instruction causes immediate entry to sleep mode. 
+
+
+
+
+
