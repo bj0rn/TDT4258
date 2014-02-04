@@ -56,9 +56,19 @@ str r2, [r1, #GPIO_DOUT]     // Internal pull-up
 
 
 \subsection{Polling}\label{ch:polling}
-The simplest way of communicating with an I/O device is what is known as busy waiting\cite{micro}. In this way, the CPU constantly checks the device to see if some register value has changed. In the context of the gamepad, this involves checking the status of the buttons by reading the button input registers to check whether the buttons are pressed. If the button is toggled, the program responds by writing a certain value to the LEDs.
+The simplest way of communicating with an I/O device is what is known as busy waiting\cite[p. ]{wolf}. In this way, the CPU constantly checks the device to see if some register value has changed. In this context, the status of the buttons are checked by reading the button input registers. If the button is toggled, the program responds by writing a certain value to the LEDs. In the specific case of the gamepad used, this is accomplished by a loop continuously checking the $GPIO\_PC\_DIN$ register. If one of the bits in range 0-7 is set, the button is pushed. Note that a button is active low. An example of polling is provided in the following code snippet:
 
-In the case of the gamepad this can be accomplished by looping and continuously checking the $GPIO\_PC\_DIN$ register. If the returned register contains a 0, the button is pushed. To get some feedback on what buttons are pushed. The result from the read can be written to the $GPIO\_PA\_DOUT$ register. Since the buttons are located at the lower pins, and the buttons are located at the higher addresses, the value need to be shifted 8 positions to the left before it can be written to the $GPIO\_PA\_DOUT$ register. 
+\begin{lstlisting}
+     ldr r1, =GPIO_PC_BASE   // r1 = GPIO_PC_BASE
+     ldr r2, =GPIO_PA_BASE   // r2 = GPIO_PA_BASE
+while:
+    ldr r3, [r1, #GPIO_DIN]  // r3 = GPIO_PC_DIN
+    lsl r3, r3, #8           // r3 = shift left 8  
+    str r3, [r2, #GPIO_DOUT] // GPIO_PA_DOUT = r3
+    b while                  // loop
+\end{lstlisting}
+
+In this code example, the buttons are continuously polled. The result from each read-cycle is written to the $GPIO\_PA\_DOUT$ register. Since the buttons are located at the lower pins, and the buttons are located at the higher addresses, the value is shifted 8 positions to the left before it is written to the $GPIO\_PA\_DOUT$ register. 
 
 \subsection{Interrupts}\label{ch:interrupts}
 Continuously polling the status of some I/0 register is very inefficient. A lot of computational resources are wasted. A far better approach is to use interrupts. In interrupt the I/O controller is responsible of informing the CPU when change has occurred. When an interrupt occur the flow of execution is changed, and the CPU changes the program counter to point to an interrupt handler. The interrupt handler contains the code that should run in case of an interrupt. {\bf more details required}
