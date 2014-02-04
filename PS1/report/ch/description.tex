@@ -23,13 +23,35 @@ str r2, [r1, #CMU_HFPERCLKEN0]   //Store the register back
 
 The GPIO pins are divided into several different ports on the EFM32GG-DK3750 development board. Each port corresponds to a different location in memory.  The pins are configured by writing to the $GPIO\_MODEL$ and $GPIO\_MODEH$ registers. These can be accessed by using their position relative to the GPIO base to the specific port. These registers contains 8 bit fields that can be used to configure pins.  "$GPIO\_Px\_Model$ contains 8 bit fields named MODEn (n=0,1, .., 7) which controls pins 0-7 which controls pins 0-7, while $GPIO\_Px\_MODEH$ contains 8 bit fields named MODEn (n=8, 9, ..15) which controls pins 8-15." The different configurations can be found in \cite[p.758-759]{EFM32GG-rm}.    
 
-In case of the gamepad controller the pins to the LEDs are connected to port A. These are assigned to output by writing {\emph 0x55555555} to  the $GPIO\_PA\_MODEH$ register. This corresponds to setting the pins 8-15 to an "open drain with pull-up" configuration\cite[p.758-759]{EFM32GG-rm}. This means that the transistors connect to low and the resistor connects to low. This is configurations specific to the gamepad controller, and can be viewed in the schematics of the gamepad\cite{compendium}. Additionally, the drive strength of the pins are set to high. This is the current capabilities of the device. This is accomplished by writing 0x02 to the $GPIO\_PA\_CTRL$ register. Now, it is possible to toggle the LEDs by writing writing 0 to the upper level of the $GPIO\_PA\_DOUT$ registers. Note that the responds to active low signals. This can be seen by the gamepad schematics\cite{compendium}.   
+In case of the gamepad controller the pins to the LEDs are connected to port A. These are assigned to output by writing {\emph 0x55555555} to  the $GPIO\_PA\_MODEH$ register. This corresponds to setting the pins 8-15 to an "open drain with pull-up" configuration\cite[p.758-759]{EFM32GG-rm}. This means that the transistors connect to low and the resistor connects to high. This is configuration specific to the gamepad controller, and can be viewed in the schematics of the gamepad\cite{compendium}. Additionally, the drive strength of the pins are set to high. This is the current capabilities of the device. This is accomplished by writing 0x02 to the $GPIO\_PA\_CTRL$ register. Now, it is possible to toggle the LEDs by writing writing 0 to the upper level of the $GPIO\_PA\_DOUT$ registers. Note that the responds to active low signals. This can be seen by the gamepad schematics\cite{compendium}. The following instructions give an example on how this can be achieved:
+
+
+\begin{lstlisting}
+ldr r1, =GPIO_PA_BASE        // r1 = GPIO_PA_BASE
+ldr r2, =0x55555555          // r2 = 0x55555555  
+str r2, [r1, #GPIO_MODEH]    //Store config
+mov r2, #0x2                 // r2=0x02
+str r2, [r1, #GPIO_PA_CTRL]  // GPIO_PA_CTRL=0x2                    
+
+\end{lstlisting}
+
+
+ 
 
 \subsection{Button setup}
-The buttons are configured by enabling the lower pins of port C by writing 0b1100 to each pin using the $GPIO\_PC\_MODEL$ register. This implies that each pin is configured with an open drain with alternating drive strength. Then internal pull-up is enabled by writing 0xff to the $GPIO\_PC\_DOUT$. This make it possible to read the status of the buttons by reading the $GPIO\_PC\_DIN$ register. 
+The buttons are configured very similar with the configurations of the LEDs. However, with some differences. The buttons are configured by writing the configuration the $GPIO\_PC\_MODEL$ register. This register corresponds to pin numbers ranging from 0 to 7. The pins are set to input by writing {\emph 0x33333333} to the $GPIO\_PC\_MODEL$ register. This corresponds to configuring each pin to "open drain with alternating drive strength"\cite[p.758-759]{EFM32GG-rm}. The a internal pull-up is enabled by writing 
+Then internal pull-up is enabled by writing 0xff to the $GPIO\_PC\_DOUT$ register. The state of the buttons can be read by reading the $GPIO\_PC\_DIN$. An example of the configuration can be viewed in the following code snippet. 
+
+\begin{lstlisting}
+ldr r1, =GPIO_PC_BASE        //r1 = GPIO_PC_BASE
+ldr r2, =0x33333333          //r2 = 0x33333333  
+str r2, [r1, #GPIO_MODEL]    //Store config
+mov r2, #0xff                // r2 = 0xff
+str r2, [r1, #GPIO_DOUT]     // Internal pull-up
+
+\end{lstlisting}
 
 
-These pins can be configured to be either input or output. Det input portion can be accessed by reading the $GPIO\_DIN$ register, output to the pins can be set by writing to the $GPIO\_DOUT$ register. 
 
 
 
