@@ -102,8 +102,15 @@ str r2, [r1, #GPIO_IEN]       //Enable interrupt handling
 
 \end{lstlisting}
 
-When working with interrupts it is important to note that an interrupt flag is set. If not cleared, this flag, will cause the interrupt handler to be continuously called. In order to reset this flag the $GPIO\_IFC$ register need to be written. This register contains an overview of pending interrupts.(Cite here). An interrupt flag is reset by writing to its corresponding bit to 0.  The simplest way of achieving this is by by reading the $GPIO\_IF$ register, which is contains the source of the interrupt. By writing this value to the $GPIO\_IFC$ register the flag will be cleared.  
+When working with interrupts it is important to note that an interrupt flag is set. If not cleared, this flag, will cause the interrupt handler to be continuously called. In order to reset this flag the $GPIO\_IFC$ register need to be written. This register contains an overview of pending interrupts.(Cite here). An interrupt flag is reset by writing to its corresponding bit to 0.  The simplest way of achieving this is by by reading the $GPIO\_IF$ register, which is contains the source of the interrupt. By writing this value to the $GPIO\_IFC$ register the flag will be cleared.  This can be accomplished in the interrupt handler. The following code snip provide an example on how this can be achieved:
 
+\begin{lstlisting}
+ldr r1, =GPIO_BASE
+ldr r2, [r1, #GPIO_IF]
+str r2, [r2, GPIO_IFC]
+\end{lstlisting}
+ 
+{\bf need more cleanup}
 
 
 
