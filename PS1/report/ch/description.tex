@@ -134,10 +134,34 @@ The EFM32GG microcontroller is also allows are more fine grained approach of tun
 %% However, it is also possible to modify the components themselves to use less energy. For instance, the clock manager is very powerful and allows the code to scale the clock to different frequencies. It is also possible to setup different clocks for different purposes. It is also possible to turn off parts of the RAM in order to improve energy efficiency. \cite{EFM32-energy} 
 
   
+\subsection{User control}
+
+The second part of the assignment consisted of building on the setup so far to let the user control the LEDs in some way by pressing the gamepad buttons.
+
+\subsubsection{Delay function}
+
+At a clock frequency of 48 MHz, the CPU can potentially process tens of millions of instructions per second. As a result, without some sort of a delay function, any fancy LED display would be processed faster than a human eye could register. For this reason, a delay-function had to be implemented and executed between each change in LED behaviour.
+
+This function was implemented by loading a specified value to a register. The function would then enter a while loop, which worked in the way that the value 1 would be subtracted from the specified register, and then check the negative status flag. If the value of the flag was set to 1, the program would branch back to the LED display function in question. If the value was set to 0, the function would branch back to the beginning of the while loop and repeat. The following code snippet illustrates how this was implemented:
+
+\begin{lstlisting}
+delay:
+        mov r3, r6 // copy the delay-value to r3 in order to avoid overwriting it
+do_wait:
+        subs r3, #1 // r3 contains the specified delay value
+        bne do_wait
+        pop {r6}
+        BX lr
+\end{lstlisting}
+
+The functionality of the delay function was further extended by letting a user set a delay-variable to a certain amount of milliseconds. Through some calculations as well as trial and error, it was figured out that, given the current implementation above, one millisecond would correspond to approximately 5000 $do_wait$ cycles. In order to convert the delay-variable to the correct amount of cycles, all that needed to be done was multiply by 5000. This was implemented as shown here:
+
+\begin{lstlisting}
+convert_to_ms:
+        ldr r5, =DELAY //DELAY-variable specified in milliseconds
+        ldr r3, =5000
+        mul r6, r5, r3
+\end{lstlisting}
 
 
-
-
-
-
-
+\subsubsection{Blink}
