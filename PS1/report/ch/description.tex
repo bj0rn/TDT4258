@@ -142,9 +142,10 @@ The second part of the assignment consisted of building on the setup so far to l
 
 At a clock frequency of 48 MHz, the CPU can potentially process tens of millions of instructions per second. As a result, without some sort of a delay function, any fancy LED display would be processed faster than a human eye could register. For this reason, a delay-function had to be implemented and executed between each change in LED behaviour.
 
-This function was implemented by loading a specified value to a register. The function would then enter a while loop, which worked in the way that the value 1 would be subtracted from the specified register, and then check the negative status flag. If the value of the flag was set to 1, the program would branch back to the LED display function in question. If the value was set to 0, the function would branch back to the beginning of the while loop and repeat. The following code snippet illustrates how this was implemented:
+This function was implemented by loading a specified value to a register. The function would then enter a loop, which worked in the way that the value 1 would be subtracted from the value in specified register, and then check the negative status flag. If the value of the flag was set to 1, the program would branch back to the LED display function in question. If the value was set to 0, the function would branch back to the beginning of the loop and repeat. The following code snippet illustrates how this was implemented:
 
 \begin{lstlisting}
+
 delay:
         mov r3, r6 // copy the delay-value to r3 in order to avoid overwriting it
 do_wait:
@@ -152,9 +153,10 @@ do_wait:
         bne do_wait
         pop {r6}
         BX lr
+        
 \end{lstlisting}
 
-The functionality of the delay function was further extended by letting a user set a delay-variable to a certain amount of milliseconds. Through some calculations as well as trial and error, it was figured out that, given the current implementation above, one millisecond would correspond to approximately 5000 $do_wait$ cycles. In order to convert the delay-variable to the correct amount of cycles, all that needed to be done was multiply by 5000. This was implemented as shown here:
+The functionality of the delay function was further extended by letting a user set a delay-variable to a certain amount of milliseconds. Through some calculations as well as trial and error, it was figured out that, given the current implementation above, one millisecond would correspond to approximately 5000 $do\_wait$ cycles. In order to convert the delay-variable to the correct amount of cycles, all that needed to be done was multiply said variable by 5000. This was implemented as shown here:
 
 \begin{lstlisting}
 convert_to_ms:
@@ -165,3 +167,24 @@ convert_to_ms:
 
 
 \subsubsection{Blink}
+
+The purpose of this function was to switch between the four rightmost LEDs being turned on, and the four leftmost LEDs being turned on. With an already-functioning delay function, this was rather easy to implement. One register contained the hexadecimal value for setting the four rightmost LEDs, and another register for the four leftmost LEDs. The value of the first register would then be stored in the $GPIO\_PA\_BASE$ address with $GPIO\_DOUT$ as its offset. The function would then branch to the delay function and run for the time specified by the user, and then repeat the process with the second register. The function would then branch back to the beginning and repeat. The following code illustrates how this was implemented:
+\begin{lstlisting}
+
+mov r2, #0x0f
+mov r4, #0xf0
+lsl r2, r2, #8
+lsl r4, r4, #8
+while_loop:
+        str r2, [r1, #GPIO_DOUT] // r1 contains the GPIO_PA_BASE address
+        BL delay
+        str r4, [r1,#GPIO_DOUT]
+        BL delay
+        B while_loop
+
+
+\end{lstlisting}
+
+Although not very significant regarding the total energy consumption, the move and logical left shift instructions were placed before the while loop in order to avoid unnecessary instruction redundancies.
+
+\subsubsection{Wave}
