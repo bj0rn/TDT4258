@@ -1,6 +1,6 @@
 \section{Description And Methodology}
 
-The following section explains the setup of the microcontroller regarding GPIO, buttons and LEDs step by step. \ref{ch:initial_setup}.
+The following section takes a detailed approach to describing the setup of the system, starting with the setup of the GPIO clock \ref{ch:initial_setup}, LEDs \ref{ch:led-setup}, and buttons \ref{ch:buttons}, before moving on to .
 
 
 \subsection{GPIO clock setup} \label{ch:initial_setup}
@@ -72,7 +72,7 @@ while:
 In this code example, the buttons are continuously polled. The result from each read-cycle is written to the $GPIO\_PA\_DOUT$ register. Since the buttons are located at the lower pins, and the buttons are located at the higher addresses, the value is shifted 8 positions to the left before it is written to the $GPIO\_PA\_DOUT$ register. 
 
 \subsection{GPIO interrupts}\label{ch:interrupts}
-The busy waiting approach is very inefficient, as a lot of computational resources are wasted. A far more energy efficient approach is to use interrupts. With this approach, the I/O controllers themselves are responsible for informing the CPU when changes have occurred by sending information regarding type of interrupt. The CPU then stores and handles all relevant states, changes the flow of execution, and sets the program counter to point to the relevant interrupt handler.
+The busy waiting approach is very inefficient, as a lot of computational resources are wasted. A far more energy efficient approach is to use interrupts. With this approach, the I/O controllers themselves are responsible for informing the CPU when changes have occurred by sending information regarding type of interrupt. The CPU then stores and handles all relevant states, changes the flow of execution, and sets the program counter to point to the relevant interrupt handler \cite[p. 86]{wolf}.
 
 The EFM32GG processor, the ARM cortex-M3, contains an interrupt controller that can be used to enable and disable various interrupts. This interrupt controller is known as the Nested Vectored Interrupt Controller(NVIC). This vector table contains the addresses of exception handlers and the Interrupt service routines (ISRs). In the ARM cortex M family of processors, each interrupt requests(IRQ) received has its own ISR. The starting address of each ISR is stored in an interrupt vector table. A lookup in the interrupt handler is performed every time an interrupt request is triggered. The interrupt table contains the service routines for interrupts. \cite{EFM32-int}. Interrupts can be enabled by writing to the \emph ISER0 and \emph ISER1 registers. These registers contain one bit for each interrupt source. An overview of the different interruption sources supported, and their respective bit positions, can be found on pages 12-13 in the EFM32GG reference manual.
 
@@ -126,7 +126,7 @@ str r2, r1       // stor config
 
      
 
-The EFM32GG microcontroller also allows are more fine grained approach of tuning the energy consumption. By the far most interesting of these is the possibility of tuning the clocks. The microcontroller has a dedicated clock manager to be able to scale the different clocks to fit the need of the application. Different frequencies imply different energy consumptions. The micro controller also allow the usage of different clocks for different purposes. For a small assignment like this, it is however, difficult to get any beneficial results by doing so. For larger projects, however, this kind of optimizations could be beneficial. Larger projects would typically consist of several different parts with different energy needs. 
+Another way of controlling the energy consumption is by tuning the clocks. The microcontroller has a dedicated clock manager to be able to scale the different clocks to fit the needs of the system. Different frequencies imply different energy consumptions. The microcontroller also allow the usage of different clocks for different purposes. For a small assignment like this, however, it is difficult to get any beneficial results by doing so. For larger projects, however, this kind of optimizations could be beneficial.
 
 {\bf mention  tradeoffs}
 {\bf mention ram and other components}   
@@ -190,9 +190,7 @@ while_loop:
 Although not very significant regarding the total energy consumption, the move and logical left shift instructions were placed before the while loop in order to avoid unnecessary instruction redundancies.
 
 \subsubsection{Wave}
-The wave function is implemented to give feedback from the buttons. The function works by creating a wave effect from the button pushed. When a button is pushed the other LEDs to left is turned on one by one, with some specified delay. 
-
-The wave effect is accomplished by using XOR to isolate the position of the button. By shifting this value to the right the value can be XORed with the original button state, thus turning on the LED left to it. By doing this in a loop with the delay function, a wave like effect is achieved. The loop is finished when the value of the bit mask reaches 0. The following code snippet illustrates how this can be achieved. 
+The wave function is implemented to give feedback from the buttons. The function works by creating a wave effect from the button pushed by turning on the LEDs to left of the corresponing button one by one, with some specified delay. The wave effect is accomplished by using an exclusive-or instruction (XOR) to isolate the position of the button pushed. By shifting this value to the right the value can be XORed with the original button state, thus turning on the LED to the left of it. By doing this in a loop with the delay function, a wave-like effect is achieved. The loop is finished when the value of the bit mask reaches 0. The following code snippet illustrates how this can be achieved. 
 
 \begin{lstlisting}
 ldr r1, =GPIO_PA_BASE         //r1 = GPIO_PA_BASE
@@ -212,17 +210,3 @@ light:
     cmp r9, r5               //Reached end of loop ? 
     bne light
 \end{lstlisting}
-
- 
-
-
-
-
-
-
-
-
-
-
-
-
