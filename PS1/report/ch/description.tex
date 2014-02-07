@@ -193,7 +193,7 @@ Although not very significant regarding the total energy consumption, the move a
 \subsubsection{Wave}
 The wave function is implemented to give feedback from the buttons. The function works by creating a wave effect from the button pushed. When a button is pushed the other LEDs to left is turned on one by one, with some specified delay. 
 
-The wave effect is accomplished by using XOR to isolate the position of button pushed. By shifting this value to the right the value can be XORed with the original button state, thus turning on the LED left to it. By doing this in a loop with the delay function, a wave like effect is achieved. The loop is finished when the value of the bit mask reaches 0. The following code snippet illustrates how this can be achieved. 
+The wave effect is accomplished by using XOR to isolate the position of the button. By shifting this value to the right the value can be XORed with the original button state, thus turning on the LED left to it. By doing this in a loop with the delay function, a wave like effect is achieved. The loop is finished when the value of the bit mask reaches 0. The following code snippet illustrates how this can be achieved. 
 
 \begin{lstlisting}
 ldr r1, =GPIO_PA_BASE         //r1 = GPIO_PA_BASE
