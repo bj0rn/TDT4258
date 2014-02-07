@@ -121,7 +121,12 @@ The EFM32GG microcontroller allows a very easy transition between the levels usi
 
 Entering deep sleep mode can be achieved by writing to the System Control Register(SCR). This register contains to bits of particular interest: \emph DEEPSLEEP and \emph SLEEPONEXIT. When enable, the DEEPSLEEP bit allows the CPU to enter deep sleep mode. SLEEPONEXIT, when enabled, allows the CPU to enter deep sleep mode when finished handling an interrupt. Both bits can be set by writing the value 6 to the \emph SCR register. When the \emph SCR register is configured, deep sleep mode can be achieved by calling the \emph WFI instructions. This instruction causes immediate entry to sleep mode. 
 
-{\bf add code here}
+\begin{lstlisting}
+ldr r1, =SRC     //r1 = SRC
+mov r2, #6       //r2 = 6         
+str r2, r1       // stor config  
+\end{lstlisting}
+
      
 
 The EFM32GG microcontroller is also allows are more fine grained approach of tuning the energy consumption. By the far most interesting of these is the possibility of tuning the clocks. The microcontroller has a dedicated clock manager to be able to scale the different clocks to fit the need of the application. Different frequencies imply different energy consumptions. The micro controller also allow the usage of different clocks for different purposes. For a small assignment like this, it is however, difficult to get any beneficial results by doing so. For larger projects, however, this kind of optimizations could be beneficial. Larger projects would typically consist of several different parts with different energy needs. 
