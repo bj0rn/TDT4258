@@ -108,7 +108,7 @@ str r2, [r2, GPIO_IFC]
  
 
 \subsection{Energy Optimization}\label{ch:energy_optimization} 
-The EFM32GG microcontroller has a rich set of features regarding improving energy efficiency, the main focus being on turing off components that aren't used or simply decreasing power consumption by tuning their performance. When performing these optimization, one must be careful considering different trade-offs \cite{EFM32GG-energy}. However, to fully utilise the energy optimizations, one must also consider the code. A lot of energy can actually be saved by careful structuring of code. How the code is written and which methods are used directly affect the CPU and memory system of the microcontroller. For instance, it is far better to replace wait loops with interrupts. It is also possible to optimize the memory access. If a program is able to finish earlier, the clock cycles saved can be used in further optimizations. Note that accessing external memory requires more cycles than accessing registers and caches. The EFM32GG is actually delivered with an instruction cache to increase performance while fetching instructions. It is possible to turn this cached off. However, when using a small number of instructions, a far better approach is to leave this on. With small programs like the one presented in this exercise, a chance of a cache hit is large.
+The EFM32GG microcontroller has a rich set of features regarding improving energy efficiency, the main focus being on turing off components that aren't used or simply decreasing power consumption by tuning their performance. When performing these optimization, one must be careful considering different trade-offs \cite{EFM32GG-energy}. However, to fully utilise the energy optimizations, one must also consider the code. A lot of energy can actually be saved by careful structuring of code. How the code is written and which methods are used directly affect the CPU and memory system of the microcontroller. For instance, it is far better to replace wait loops with interrupts. It is also possible to optimize the memory access. If a program is able to finish earlier, the clock cycles saved can be used in further optimizations. Note that accessing external memory requires more cycles than accessing registers and caches. The EFM32GG is actually delivered with an instruction cache to increase performance while fetching instructions. It is possible to turn this cache off. However, when using a small number of instructions, a far better approach is to leave this on. With small programs like the one presented in this exercise, a chance of a cache hit is large.
 
 The gains from performing these optimizations are limited without combining them with other energy optimization techniques. For convenience, the EFM32GG microcontroller contains a set of different energy levels, where each energy level has certain functionality of the microcontroller available. This allows the programmer to effectively use different energy levels at any given time, depending on the resources actually needed. The transition between the different levels is also optimized to be responsive.  These energy modes are numbered from EM0 to EM4 \cite{EFM32GG-energy}. This makes them ideal when performing operations that does not utilize some of the functionality. For instance, if a component is not doing anything useful, it is better to turn it off while idling. The advantage with the energy levels is that EFM0 to EFM3 are able to sense interrupts.   
 
@@ -126,12 +126,15 @@ str r2, r1       // stor config
 
 Another way of controlling the energy consumption is by tuning the clocks. The microcontroller has a dedicated clock manager to be able to scale the different clocks to fit the needs of the system. Different frequencies imply different energy consumptions. The microcontroller also allow the usage of different clocks for different purposes. For a small assignment like this, however, it is difficult to get any beneficial results by doing so. For larger projects, however, this kind of optimizations could be beneficial.
 
-{\bf mention  tradeoffs}
-{\bf mention ram and other components}   
+The EFM32GG microcontroller also allows the application to control the RAM. Through the memory controller it is possible to turn of specific memory blocks. Note that each memory block is in charge of one address space. By doing so on should be able to save some static energy consumption. However, there is a downside by turning a block off, the block is not available unless the micro controller is reset.\cite{EFM32GG-energy} Also, one must take care that the address space is not actually needed later on. Power down of block 3, can be achieved trough the following instructions:
+
+\begin{lstlisting}
+ldr r1, =CMU_BASE
+mov r2, #4
+str, [r1,EMU_MEMCTRL]
+\end{lstlisting}
 
 
-
-%% However, it is also possible to modify the components themselves to use less energy. For instance, the clock manager is very powerful and allows the code to scale the clock to different frequencies. It is also possible to setup different clocks for different purposes. It is also possible to turn off parts of the RAM in order to improve energy efficiency. \cite{EFM32-energy} 
 
   
 \subsection{User control}
