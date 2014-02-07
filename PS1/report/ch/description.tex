@@ -37,7 +37,6 @@ str r2, [r1, #GPIO_PA_CTRL]  // GPIO_PA_CTRL=0x2
 \end{lstlisting}
 
 
- 
 
 \subsection{Button setup}\label{ch:buttons}
 The buttons are configured in a similar way to the configurations of the LEDs, with some minor differences. The pins are set to input by writing {\emph 0x33333333} to the $GPIO\_PC\_MODEL$ register. This corresponds to configuring each pin to "open drain with alternating drive strength"\cite[p.758-759]{EFM32GG-rm}. Next, the internal pull-up is enabled by writing 0xff to the $GPIO\_PC\_DOUT$ register. The current state of the buttons can be seen by reading the $GPIO\_PC\_DIN$ register. 
