@@ -106,8 +106,6 @@ ldr r2, [r1, #GPIO_IF]
 str r2, [r2, GPIO_IFC]
 \end{lstlisting}
  
-{\bf need more cleanup}
-
 
 \subsection{Energy Optimization}\label{ch:energy_optimization} 
 The EFM32GG microcontroller has a rich set of features regarding improving energy efficiency, the main focus being on turing off components that aren't used or simply decreasing power consumption by tuning their performance. When performing these optimization, one must be careful considering different trade-offs \cite{EFM32GG-energy}. However, to fully utilise the energy optimizations, one must also consider the code. A lot of energy can actually be saved by careful structuring of code. How the code is written and which methods are used directly affect the CPU and memory system of the microcontroller. For instance, it is far better to replace wait loops with interrupts. It is also possible to optimize the memory access. If a program is able to finish earlier, the clock cycles saved can be used in further optimizations. Note that accessing external memory requires more cycles than accessing registers and caches. The EFM32GG is actually delivered with an instruction cache to increase performance while fetching instructions. It is possible to turn this cached off. However, when using a small number of instructions, a far better approach is to leave this on. With small programs like the one presented in this exercise, a chance of a cache hit is large.
