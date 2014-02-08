@@ -87,12 +87,11 @@ _reset:
 
 //	      ldr r1, =CMU_BASE
 //	      mov r2, #9
-
 //	      str r2, [r1, #CMU_HFPERCLKDIV]	      
 
 	      BL setup_leds
 	      BL setup_buttons
-//		  BL convert_to_ms
+		  BL convert_to_ms
 //		  BL wave_left
 //		  BL blink
 //	      BL powerdown_ram3
@@ -135,10 +134,6 @@ setup_leds:
 		ldr r2, =0x55555555
 		str r2, [r1, #GPIO_MODEH]
 
-	   //set pins high
-	   // mov r2, #0xff
-	   // lsl r2, r2, #8
-   	   // str r2, [r1, #GPIO_DOUT]
 
 		BX LR
 
