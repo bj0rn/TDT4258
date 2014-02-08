@@ -82,7 +82,7 @@
 	      .type   _reset, %function
         .thumb_func
 _reset:
-	      DELAY = 2500
+	      DELAY = 1000
 	      BL setup_gpio_clk
 
 //	      ldr r1, =CMU_BASE
@@ -92,12 +92,12 @@ _reset:
 
 	      BL setup_leds
 	      BL setup_buttons
-//		  BL convert_to_ms
+	      BL convert_to_ms
 //		  BL wave_left
-//		  BL blink
+              BL blink
 //	      BL powerdown_ram3
-          BL setup_interrupts
-          BL setup_energy_mode
+//          BL setup_interrupts
+//          BL setup_energy_mode
 	      
 //	      BL polling
              WFI
@@ -162,10 +162,10 @@ setup_energy_mode:
 	.thumb_func
 convert_to_ms:
 
-	ldr r5, =DELAY
+	ldr r5, =DELAY //DELAY-variable specified in milliseconds
 	ldr r3, =5000
 	mul r6, r5, r3
-//	DELAY_MS = r6
+	BX LR
 
 	.thumb_func
 blink:
@@ -176,7 +176,7 @@ while_loop:
 	mov r4, #0xf0
 	lsl r2, r2, #8
 	lsl r4, r4, #8
-	str r2, [r1, #GPIO_DOUT]
+	str r2, [r1, #GPIO_DOUT] //r1 is loaded with GPIO_PA_BASE
 	BL delay
 	str r4, [r1,#GPIO_DOUT]
 	BL delay
@@ -216,7 +216,7 @@ delay:
 do_wait: 
 	subs r3, #1
 	bne do_wait
-	pop {r6}
+//	pop {r6}
 	BX lr
 
 
