@@ -1,9 +1,9 @@
 \section{Description And Methodology}
 
-The following section takes a detailed approach to describing the setup of the system, starting with the setup of the GPIO clock \ref{ch:initial_setup}, LEDs \ref{ch:led-setup}, and buttons \ref{ch:buttons}, before moving on to polling \ref{ch:polling}, interrupts \ref{ch:interrupts}, and various energy optimization techniques \ref{ch:energy_optimization}. Finally, in the last subsection \ref{ch:user_control}, a detailed description is given on how the various user control \ref{ch:user_control} functions were implemented.
+The following section takes a detailed approach to describing the setup of the system, starting with the setup of the GPIO clock \ref{ch:gpio-clock}, LEDs \ref{ch::led-setup}, and buttons \ref{ch:buttons}, before moving on to polling \ref{ch:polling}, interrupts \ref{ch:interrupts}, and various energy optimization techniques \ref{ch:energy_optimization}. Finally, in the last subsection \ref{ch:user_control}, a detailed description is given on how the various user control \ref{ch:user_control} functions were implemented.
 
 
-\subsection{GPIO clock setup} \label{ch:initial_setup}
+\subsection{GPIO clock setup} \label{ch:gpio-clock}
 The EFM32GG microcontroller is memory mapped, and the I/O devices are accessed by reading and writing to specific memory locations. The CPU uses normal read- and write instructions to communicate with the devices, and each I/O device is given a specific address in the memory map of the device. To save memory, only the specific I/O controllers used are clocked. This implies that the the I/O controller needs to be enabled before it can be used. Fortunately, the EFM32GG has a dedicated I/O controller for handling the different clocks, called the Clock Management Unit (CMU). A specific controller can be enabled by writing to the \emph CMU\_HFPERCLKEN0 register. This register consists of 32 bits where each bit corresponds to an I/O controller.
 
 To interface the gamepad to the EFM32GG, GPIO pins are used. These pins are controlled through the GPIO controller. To enable an I/O controller, the value 1 is written to its corresponding register position. In case of enabling the GPIO clock position, bit 13 is set to 1. The following instructions gives an example how this can be achieved: 
@@ -20,7 +20,7 @@ str r2, [r1, #CMU_HFPERCLKEN0]   //Store the register back
 \end{lstlisting}
 
 %Se mer på!!
-\subsection{LED setup}\label{led-setup}
+\subsection{LED setup}\label{ch::led-setup}
 
 The GPIO pins are divided into several different ports on the EFM32GG-DK3750 development board. Each port corresponds to a different location in memory.  The pins are configured by writing to the $GPIO\_MODEL$ and $GPIO\_MODEH$ registers. These can be accessed by using their position relative to the GPIO base of the specific port. These registers contain 8-bit fields that can be used to configure the pins. As described on pages 758-759 in the EFM32GG reference manual, the $GPIO\_Px\_Model$ registers contain 8 bit fields named MODEn (n=0,1, .., 7). These fields control pins 0-7, which in effect controls pins 0-7. The $GPIO\_Px\_MODEH$ registers contain 8 bit fields named MODEn (n=8, 9, ..15), which controls pins 8-15. More information about the specific configurations can be found in said pages of the reference manual.
 
