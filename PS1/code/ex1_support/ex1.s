@@ -159,9 +159,14 @@ setup_leds:
 	//////////////////////////////////////////////////////////////////////////
 		.thumb_func
 setup_buttons:
+		//Load GPIO_PC_BASE
 		ldr r1, =GPIO_PC_BASE 
- 		ldr r2, =0x33333333
+ 		
+		//Set pins 0-7 to input
+		ldr r2, =0x33333333
 		str r2, [r1, #GPIO_MODEL]
+		
+		//Enable interal pull-up
 		mov r2, #0xff
 		str r2, [r1, #GPIO_DOUT]
 
@@ -176,7 +181,10 @@ setup_buttons:
 
 	  .thumb_func
 setup_energy_mode: 
+		//Load the system control register
 		ldr r1, =SCR
+		
+		//Configure deepsleep and deepsleep on exit
 		mov r2, #6
 		str r2, [r1]
 		BX LR
