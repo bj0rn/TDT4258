@@ -19,7 +19,6 @@ orr r3, r2, r3                   //Enable the GPIO clock
 str r2, [r1, #CMU_HFPERCLKEN0]   //Store the register back 
 \end{lstlisting}
 
-%Se mer på!!
 \subsection{LED setup}\label{led-setup}
 
 The GPIO pins are divided into several different ports on the EFM32GG-DK3750 development board. Each port corresponds to a different location in memory.  The pins are configured by writing to the $GPIO\_MODEL$ and $GPIO\_MODEH$ registers. These can be accessed by using their position relative to the GPIO base of the specific port. These registers contain 8-bit fields that can be used to configure the pins. As described on pages 758-759 in the EFM32GG reference manual, the $GPIO\_Px\_Model$ registers contain 8 bit fields named MODEn (n=0,1, .., 7). These fields control pins 0-7, which in effect controls pins 0-7. The $GPIO\_Px\_MODEH$ registers contain 8 bit fields named MODEn (n=8, 9, ..15), which controls pins 8-15. More information about the specific configurations can be found in said pages of the reference manual.
@@ -41,7 +40,7 @@ str r2, [r1, #GPIO_PA_CTRL]  // GPIO_PA_CTRL=0x2
 \subsection{Button setup}\label{ch:buttons}
 The buttons are configured in a similar way to the configurations of the LEDs, with some minor differences. The pins are set to input by writing {\emph 0x33333333} to the $GPIO\_PC\_MODEL$ register. This corresponds to configuring each pin to "open drain with alternating drive strength"\cite[p.758-759]{EFM32GG-rm}. Next, the internal pull-up is enabled by writing 0xff to the $GPIO\_PC\_DOUT$ register. The current state of the buttons can be seen by reading the $GPIO\_PC\_DIN$ register. 
 
-An example of the configuration can be viewed in the following code snippet: 
+An example implementation of the configuration can be viewed in the following code snippet: 
 
 \begin{lstlisting}
 ldr r1, =GPIO_PC_BASE        //r1 = GPIO_PC_BASE
@@ -51,10 +50,6 @@ mov r2, #0xff                // r2 = 0xff
 str r2, [r1, #GPIO_DOUT]     // Internal pull-up
 
 \end{lstlisting}
-
-
-
-
 
 \subsection{Polling}\label{ch:polling}
 The simplest way of communicating with an I/O device is what is known as busy waiting\cite[p. 99]{wolf}. This works in the way that the CPU constantly checks the device to see if some register value(s) have changed. The status of the buttons are checked by reading the button input registers, and if the button is toggled, the program responds by writing a certain value to the LEDs. In the specific case of the gamepad used, this is accomplished by a loop continuously checking the $GPIO\_PC\_DIN$ register. If one of the bits in range 0-7 is set, the button is pushed. Note that the buttons are active low. An example of polling is provided in the following code snippet:
@@ -191,23 +186,37 @@ while_loop:
 Although not very significant regarding the total energy consumption, the move and logical left shift instructions were placed before the while loop in order to avoid unnecessary instruction redundancies.
 
 \subsubsection{Wave}
-The wave function is implemented to give feedback from the buttons. The function works by creating a wave effect from the button pushed by turning on the LEDs to left of the corresponing button one by one, with some specified delay. The wave effect is accomplished by using an exclusive-or instruction (XOR) to isolate the position of the button pushed. By shifting this value to the right the value can be XORed with the original button state, thus turning on the LED to the left of it. By doing this in a loop with the delay function, a wave-like effect is achieved. The loop is finished when the value of the bit mask reaches 0. The following code snippet illustrates how this can be achieved. 
+The wave function is implemented to give feedback from the buttons. The function works by creating a wave effect from the button pushed by turning on the LEDs to left of the corresponing button one by one, with some specified delay. The wave effect is accomplished by using an exclusive-or instruction (XOR) to isolate the position of the button pushed. By shifting this value to the left, the value can be XORed with the original button state, thus turning on the LED to the left of it. By doing this in a loop with the delay function, a wave-like effect is achieved. The loop is finished when the value of the bit mask reaches 0. Once this happens, all the LEDs are turned off, on, and then off again again, each of the steps separated by another specified delay. This is done to achieve a blink at the end of the function, before branching back to the GPIO handler and entering deep sleep. The following code snippet illustrates how this is done. 
 
 \begin{lstlisting}
-ldr r1, =GPIO_PA_BASE         //r1 = GPIO_PA_BASE
-ldr r2, =GPIO_PC_BASE         //r2 = GPIO_PC_BASE
-ldr r3, [r1, #GPIO_DOUT]      //Load button state
-mov r4, #0xff               
-eor r5, r3, r4                //Create mask 
-mov r9, #0
 
+wave_left:
+        mov r12, lr
+        ldr r1, =GPIO_PA_BASE
+        ldr r2, =GPIO_PC_BASE
+        ldr r8, [r2, #GPIO_DIN] 
+        mov r4, #0xff
+        eor r5, r8, r4
+        lsr r5, r5, #1
+        mov r9, #0
 light:
-    eor r3, r5, r3           //Enable next bit  
-    bl delay                 //Delay
-    lsl r11, r3, #8          //Shift 8   
-    str r11, [r1, #GPIO_DOUT]//Turn on LEDs 
-    bl delay                 //Delay
-    lsr r5, r5, #1           //Shift 1 right 
-    cmp r9, r5               //Reached end of loop ? 
-    bne light
+        eor r8, r5, r8
+    	ldr r6, =375000
+        BL delay
+        lsl r11, r8, #8
+        str r11, [r1, #GPIO_DOUT]
+        BL delay
+        lsr r5, r5, #1
+        cmp r9, r5
+        bne light
+
+        ldr r6, =750000 //setting new delay value
+        lsl r9, r9, #8
+        str r9, [r1, #GPIO_DOUT]
+        BL delay
+        lsl r4, r4, #8
+        str r4, [r1, #GPIO_DOUT]
+        BL delay
+        BX r12
+
 \end{lstlisting}
