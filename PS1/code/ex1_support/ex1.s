@@ -82,7 +82,7 @@
 	      .type   _reset, %function
         .thumb_func
 _reset:
-	      DELAY = 1000
+	      DELAY = 150
 	      BL setup_gpio_clk
 
 //	      ldr r1, =CMU_BASE
@@ -92,14 +92,13 @@ _reset:
 	      BL setup_leds
 	      BL setup_buttons
 	      BL convert_to_ms
-//		  BL wave_left
-              BL blink
+		  BL blink
 //	      BL powerdown_ram3
-//          BL setup_interrupts
-//          BL setup_energy_mode
+          BL setup_interrupts
+          BL setup_energy_mode
 	      
 //	      BL polling
-             WFI
+          WFI
 
  
           
@@ -128,12 +127,16 @@ setup_leds:
 		
 		//set high drive strength
 		mov r2, #0x2
-		str r2, [r1]
+		str r2, [r1, #GPIO_CTRL]
 		
 		//set pins 8-15 output
 		ldr r2, =0x55555555
 		str r2, [r1, #GPIO_MODEH]
+		
 
+		//mov r3, 0xff
+		//lsl r3, r3, #8
+		//str r3, [r1, GPIO_DOUT]
 
 		BX LR
 
@@ -182,26 +185,32 @@ wave_left:
 	mov r12, lr
 	ldr r1, =GPIO_PA_BASE
 	ldr r2, =GPIO_PC_BASE
-	ldr r3, [r2, #GPIO_DIN] 
+	ldr r8, [r2, #GPIO_DIN] 
 	mov r4, #0xff
-	eor r5, r3, r4
+	eor r5, r8, r4
+	lsr r5, r5, #1
 	mov r9, #0
 
 light:
-	eor r3, r5, r3
-    BL delay 
-	lsl r11, r3, #8
+	eor r8, r5, r8
+    ldr r6, =375000
+	BL delay 
+	lsl r11, r8, #8
 	str r11, [r1, #GPIO_DOUT]
 	BL delay
 	lsr r5, r5, #1
 	cmp r9, r5
 	bne light
-
+    
+    
+	ldr r6, =750000
+	lsl r9, r9, #8
+	str r9, [r1, #GPIO_DOUT]
+	BL delay
+	lsl r4, r4, #8
+	str r4, [r1, #GPIO_DOUT]
+	BL delay
 	BX r12
-
-
-
-
 
 
 	.thumb_func
@@ -211,7 +220,6 @@ delay:
 do_wait: 
 	subs r3, #1
 	bne do_wait
-//	pop {r6}
 	BX lr
 
 
@@ -273,14 +281,14 @@ gpio_handler:
 	    ldr r1, =GPIO_PC_BASE
 	    ldr r2, =GPIO_PA_BASE
 
-	     ldr r3, [r1, #GPIO_DIN]
-	     lsl r3, r3, #8
-	     str r3, [r2, #GPIO_DOUT]
-        // push {lr}
-	    // BL wave_left
-       // NOP
-	   // pop {lr}
-	    BX LR	
+		ldr r3, [r1, #GPIO_DIN]
+	    lsl r3, r3, #8
+	    str r3, [r2, #GPIO_DOUT]
+		push {lr}
+	    BL wave_left
+	    pop {lr}
+	    
+		BX LR	
 	
 	/////////////////////////////////////////////////////////////////////////////
 	.thumb_func
