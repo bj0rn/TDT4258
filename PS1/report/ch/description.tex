@@ -1,9 +1,9 @@
 \section{Description And Methodology}
 
-The following section takes a detailed approach to describing the setup of the system, starting with the setup of the GPIO clock \ref{ch:initial_setup}, LEDs \ref{ch:led-setup}, and buttons \ref{ch:buttons}, before moving on to polling \ref{ch:polling}, interrupts \ref{ch:interrupts}, and various energy optimization techniques \ref{ch:energy_optimization}. Finally, in the last subsection \ref{ch:user_control}, a detailed description is given on how the various user control \ref{ch:user_control} functions were implemented.
+The following section takes a detailed approach to describing the setup of the system, starting with the setup of the GPIO clock \ref{ch:gpio-clock}, LEDs \ref{ch::led-setup}, and buttons \ref{ch:buttons}, before moving on to polling \ref{ch:polling}, interrupts \ref{ch:interrupts}, and various energy optimization techniques \ref{ch:energy_optimization}. Finally, in the last subsection \ref{ch:user_control}, a detailed description is given on how the various user control \ref{ch:user_control} functions were implemented.
 
 
-\subsection{GPIO clock setup} \label{ch:initial_setup}
+\subsection{GPIO clock setup} \label{ch:gpio-clock}
 The EFM32GG microcontroller is memory mapped, and the I/O devices are accessed by reading and writing to specific memory locations. The CPU uses normal read- and write instructions to communicate with the devices, and each I/O device is given a specific address in the memory map of the device. To save memory, only the specific I/O controllers used are clocked. This implies that the the I/O controller needs to be enabled before it can be used. Fortunately, the EFM32GG has a dedicated I/O controller for handling the different clocks, called the Clock Management Unit (CMU). A specific controller can be enabled by writing to the \emph CMU\_HFPERCLKEN0 register. This register consists of 32 bits where each bit corresponds to an I/O controller.
 
 To interface the gamepad to the EFM32GG, GPIO pins are used. These pins are controlled through the GPIO controller. To enable an I/O controller, the value 1 is written to its corresponding register position. In case of enabling the GPIO clock position, bit 13 is set to 1. The following instructions gives an example how this can be achieved: 
