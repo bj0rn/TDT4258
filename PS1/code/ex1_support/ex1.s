@@ -144,11 +144,6 @@ setup_leds:
 		//set pins 8-15 output
 		ldr r2, =0x55555555
 		str r2, [r1, #GPIO_MODEH]
-		
-
-		//mov r3, 0xff
-		//lsl r3, r3, #8
-		//str r3, [r1, GPIO_DOUT]
 
 		BX LR
 
