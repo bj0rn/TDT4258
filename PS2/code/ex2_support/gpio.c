@@ -23,6 +23,9 @@ void setupGPIO()
 	*GPIO_IEN = 0xff; /*Enable interrupt generation*/
 	*ISER0 = 0x802; /*Enable interrupt handling*/
 
+	/*Configure deepsleep mode */
+	*SRC = 6; /* Set the DEEPSLEEP bit and the SLEEPONEXIT bit  */
+
 
     
   /* Example of HW access from C code: turn on joystick LEDs D4-D8
