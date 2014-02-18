@@ -31,6 +31,11 @@ int main(void)
   /* TODO for higher energy efficiency, sleep while waiting for interrupts
      instead of infinite loop for busy-waiting
   */
+
+  /* Wait for interrupts */
+  asm("WFI");
+
+
   while(1);
 
   return 0;
