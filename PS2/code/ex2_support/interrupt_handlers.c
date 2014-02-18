@@ -17,7 +17,9 @@ void __attribute__ ((interrupt)) GPIO_EVEN_IRQHandler()
 {
 	/* Clear pending interrupts */
 	*GPIO_IFC = *GPIO_IF;
-			    
+	
+	*GPIO_PA_DOUT = (*GPIO_PC_DIN << 8);
+
 
     /* TODO handle button pressed event, remember to clear pending interrupt */
 }
@@ -28,6 +30,7 @@ void __attribute__ ((interrupt)) GPIO_ODD_IRQHandler()
 	/*Clear pending interrupts*/
 	*GPIO_IFC = *GPIO_IF;
 			    
+	*GPIO_PA_DOUT = (*GPIO_PC_DIN << 8);
 			    
 
 
