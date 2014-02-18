@@ -24,7 +24,7 @@ void setupGPIO()
 	*ISER0 = 0x802; /*Enable interrupt handling*/
 
 	/*Configure deepsleep mode */
-	*SRC = 6; /* Set the DEEPSLEEP bit and the SLEEPONEXIT bit  */
+	*SCR = 6; /* Set the DEEPSLEEP bit and the SLEEPONEXIT bit  */
 
 
     
