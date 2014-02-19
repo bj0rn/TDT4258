@@ -5,7 +5,13 @@
 
 void setupDAC()
 {
-  /*
+  	*CMU_HFPERCLKEN0 |= (1 << 17); /*Enable DAC clock */
+	*DAC0_CTRL = 0x50010; /*Prescale clock to yield 437.5 KHz */
+	*DAC0_CH0CTRL = 1; /*Enable left channel */
+	*DAC0_CH0CTRL = 1; /*Enable right channel */
+
+
+	/*
     TODO enable and set up the Digital-Analog Converter
     
     1. Enable the DAC clock by setting bit 17 in CMU_HFPERCLKEN0
