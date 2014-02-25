@@ -22,7 +22,7 @@ int main(void)
 {  
   /* Call the peripheral setup functions */
   setupGPIO();
-//  setupDAC();
+  setupDAC();
   setupTimer(SAMPLE_PERIOD);
   
   /* Enable interrupt handling */

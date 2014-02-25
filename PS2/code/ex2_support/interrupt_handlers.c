@@ -3,6 +3,8 @@
 
 #include "efm32gg.h"
 
+int value = 0;
+
 /* TIMER1 interrupt handler */
 void __attribute__ ((interrupt)) TIMER1_IRQHandler() 
 {  
@@ -11,11 +13,9 @@ void __attribute__ ((interrupt)) TIMER1_IRQHandler()
     remember to clear the pending interrupt by writing 1 to TIMER1_IFC
   */
 
+  *DAC0_CH0DATA = value++;
+
   *GPIO_PA_DOUT = (0xff<<8);
-  int i=0;
-  while(i<200000){
-    i++;
-  }
   *TIMER1_IFC=1;  
 }
 
