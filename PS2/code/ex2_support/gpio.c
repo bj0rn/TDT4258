@@ -24,7 +24,7 @@ void setupGPIO()
 
 
 	/*Configure deepsleep mode */
-	*SCR = 6; /* Set the DEEPSLEEP bit and the SLEEPONEXIT bit  */
+//	*SCR = 6; /* Set the DEEPSLEEP bit and the SLEEPONEXIT bit  */
 
 
     
