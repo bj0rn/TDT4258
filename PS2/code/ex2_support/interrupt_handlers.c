@@ -4,7 +4,7 @@
 #include "efm32gg.h"
 #include "sounds.h"
 
-int value = 0;
+extern int tone;
 
 /* TIMER1 interrupt handler */
 void __attribute__ ((interrupt)) TIMER1_IRQHandler() 
@@ -13,7 +13,7 @@ void __attribute__ ((interrupt)) TIMER1_IRQHandler()
     TODO feed new samples to the DAC
     remember to clear the pending interrupt by writing 1 to TIMER1_IFC
   */
-  testNotes(48000);
+  play_note(tone);
 
   *GPIO_PA_DOUT = (0xff<<8);
   *TIMER1_IFC=1; 

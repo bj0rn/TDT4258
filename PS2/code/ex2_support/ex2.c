@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#include "sounds.h"
 #include "efm32gg.h"
 
 /* 
@@ -16,6 +17,10 @@
 void setupTimer(uint32_t period);
 void setupDAC();
 void setupNVIC();
+
+
+
+int test[] = {A, B, C, D, E, F};
 
 /* Your code will start executing here */
 int main(void) 
@@ -34,6 +39,8 @@ int main(void)
 
   /* Wait for interrupts */
   *SCR = 2; /* Set the DEEPSLEEP bit and the SLEEPONEXIT bit  */
+
+  play_music(test, 5, 0);
 
   __asm("WFI");
 

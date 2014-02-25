@@ -5,4 +5,6 @@
 #define E 659
 #define F 87
 
-void testNotes(int period);
+void play_note(int);
+void play_music(int *, int, int);
+
