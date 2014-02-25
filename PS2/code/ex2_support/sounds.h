@@ -9,3 +9,6 @@
 
 void testNotes(int note, int time);
 void silence(int time);
+void play_note(int);
+void play_music(int *, int, int);
+
