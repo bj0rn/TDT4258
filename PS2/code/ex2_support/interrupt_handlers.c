@@ -2,6 +2,7 @@
 #include <stdbool.h>
 
 #include "efm32gg.h"
+#include "sounds.h"
 
 int value = 0;
 
@@ -12,11 +13,10 @@ void __attribute__ ((interrupt)) TIMER1_IRQHandler()
     TODO feed new samples to the DAC
     remember to clear the pending interrupt by writing 1 to TIMER1_IFC
   */
-
-  *DAC0_CH0DATA = value++;
+  testNotes(48000);
 
   *GPIO_PA_DOUT = (0xff<<8);
-  *TIMER1_IFC=1;  
+  *TIMER1_IFC=1; 
 }
 
 /* GPIO even pin interrupt handler */
