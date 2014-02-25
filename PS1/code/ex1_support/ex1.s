@@ -92,13 +92,13 @@ _reset:
 	      BL setup_leds
 	      BL setup_buttons
 	      BL convert_to_ms
-		  BL blink
+	  BL blink
 //	      BL powerdown_ram3
           BL setup_interrupts
           BL setup_energy_mode
 	      
 //	      BL polling
-          WFI
+            WFI
 
 
 	////////////////////////////////////////////////////////////////////////////
