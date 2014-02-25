@@ -33,7 +33,7 @@ int main(void)
   */
 
   /* Wait for interrupts */
-  asm("WFI");
+  __asm("WFI");
 
 
   while(1);
