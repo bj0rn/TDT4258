@@ -21,7 +21,7 @@ void setupGPIO()
 	*GPIO_EXTIFALL = 0xff; /*Sense falling edge */
 	*GPIO_EXTIRISE = 0xff; /*Sense rising edge */
 	*GPIO_IEN = 0xff; /*Enable interrupt generation*/
-	*ISER0 = 0x802; /*Enable interrupt handling*/
+
 
 	/*Configure deepsleep mode */
 	*SCR = 6; /* Set the DEEPSLEEP bit and the SLEEPONEXIT bit  */
