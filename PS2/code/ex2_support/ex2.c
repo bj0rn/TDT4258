@@ -51,6 +51,7 @@ void setupNVIC()
      assignment.
   */
 	*ISER0 |= 0x802; /*Enable interrupt handling for odd and even GPIO pins*/
+	*ISER0 |= (1 << 12); /*Enable interrupt handling the timer */
 
 	
 
