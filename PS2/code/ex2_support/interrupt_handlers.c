@@ -5,20 +5,31 @@
 #include "sounds.h"
 
 extern int tone;
-//int test[] = {A, B, C, D, E, F, SILENCE};
+int test[] = {A, B, C, D, E, F, E,D,C,B,A, SILENCE};
+int pos=0;
+
 
 /* TIMER1 interrupt handler */
 void __attribute__ ((interrupt)) TIMER1_IRQHandler() 
 {  
+	
   /*
     TODO feed new samples to the DAC
     remember to clear the pending interrupt by writing 1 to TIMER1_IFC
   */
 //  play_note(tone);
 //  play_music(test, 6, 0);
+     testNotes(test[pos], 100000);
+     if(iterate==true){
+        pos++;
+        iterate=false;
 
-  *GPIO_PA_DOUT = (0xff<<8);
-  *TIMER1_IFC=1;
+     }
+//  testNotes(test[3], 100000);
+//  testNotes(test[0], 100000);
+//  *GPIO_PA_DOUT = (0xff<<8);
+	*TIMER1_IFC=1;
+  
    
 }
 

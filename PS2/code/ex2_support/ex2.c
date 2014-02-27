@@ -20,11 +20,11 @@ void setupNVIC();
 
 
 
-int test[] = {A, B, C, D, E, F};
+//int test[] = {A, B, C, D, E, F};
 
 /* Your code will start executing here */
-int main(void) 
-{  
+int main(void) {
+
   /* Call the peripheral setup functions */
   setupGPIO();
   setupDAC();
@@ -40,12 +40,13 @@ int main(void)
   /* Wait for interrupts */
   *SCR = 2; /* Set the DEEPSLEEP bit and the SLEEPONEXIT bit  */
 
-  play_music(test, 6, 0);
+  //play_music(test, 6, 0);
 
   __asm("WFI");
 
 
   while(1);
+
 
   return 0;
 }

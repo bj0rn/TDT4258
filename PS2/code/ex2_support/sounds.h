@@ -1,3 +1,5 @@
+#include <stdbool.h>
+
 #define A 440
 #define B 247
 #define C 131
@@ -6,6 +8,10 @@
 #define F 87
 #define SILENCE 0
 #define PERIOD 48000
+
+extern bool iterate;
+extern int pos;
+extern int test[];
 
 void testNotes(int note, int time);
 void silence(int time);

@@ -1,40 +1,55 @@
 #include "sounds.h"
 #include "efm32gg.h"
 #include <stdint.h>
+#include <stdbool.h>
 
 #define SAMPLING_FREQUENCY 48000
 
 int tone;
 int duration=0;
-int count=0;
+bool iterate=false;
+int counter=0;
+//int pos=0;
 
-
-
-
+//bool stop=false;
 void testNotes(int note, int time){
 
-	if(count==time){
-		silence(1000000);
-		count=0;
-	}
-	else{
+//	bool stop=false;
+	
+//	if(stop==false){
+	
+//		if(count==time){
+//			silence(1000000);
+//			counter=0;
+//		}
+//		else{
 		int sampling=PERIOD/note;
 		if(sampling/2>=duration){
 			*DAC0_CH0DATA=2000;
 			*DAC0_CH1DATA=2000;
+	        *GPIO_PA_DOUT = (0xff<<8);
+
 		}
 		else{
 			*DAC0_CH0DATA=-2000;
 			*DAC0_CH1DATA=-2000;
+			*GPIO_PA_DOUT = (0x00<<8);
 		}
 		duration++;
-		if(duration==sampling){
+		if(duration>=sampling){
 			duration=0;
 		}
-		time++;
-		count++;
-	}
+		counter++;
+		
+		if(counter==time){
+		   iterate=true;
+		   counter=0;
+		}
+//		if(stop)
+		   
+//		}
 }
+
 
 void play_note(int note){
 	int sampling = PERIOD/note;
@@ -56,11 +71,8 @@ void play_note(int note){
 	}
 }
 
-
-
-void play_music(int notes[], int song_length, int duration_time){
-			
-
+void play_music(int notes[], int song_length, int i){
+	testNotes(notes[i], 100000);
 }
 	
 
