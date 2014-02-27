@@ -18,9 +18,10 @@ void setupDAC();
 void setupNVIC();
 
 
+
 /* Your code will start executing here */
-int main(void) 
-{  
+int main(void) {
+
   /* Call the peripheral setup functions */
   setupGPIO();
   setupDAC();
@@ -37,10 +38,12 @@ int main(void)
   *SCR = 2; /* Set the DEEPSLEEP bit and the SLEEPONEXIT bit  */
 
 
+
   __asm("WFI");
 
 
   while(1);
+
 
   return 0;
 }
