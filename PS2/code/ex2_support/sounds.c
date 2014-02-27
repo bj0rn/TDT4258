@@ -70,8 +70,8 @@ void play_note(int note){
 		amplitude = -2000;
 	}
 	*/
-	*DAC0_CH0DATA = note+1500;
-	*DAC0_CH1DATA = note+1500;
+	*DAC0_CH0DATA = (note << 3);
+	*DAC0_CH1DATA = (note << 3);
 	
 	
 	duration++;
@@ -95,7 +95,7 @@ void play_music(int size, int tone_lenght){
 		notes_pos = 0;
 	}
 
-
+}
 
 
 void silence(int time){

@@ -20,15 +20,15 @@ void __attribute__ ((interrupt)) TIMER1_IRQHandler()
   */
 //  *GPIO_PA_DOUT = (0xff<<8);
 //  *TIMER1_IFC=1;
-//  play_music(192000, 0);
+	play_music(192000, 0);
 //  play_note(tone);
 //  play_music(test, 6, 0);
-     testNotes(test[pos], 100000);
-     if(iterate==true){
-        pos++;
-        iterate=false;
+//     testNotes(test[pos], 100000);
+//     if(iterate==true){
+//        pos++;
+//        iterate=false;
 
-     }
+//     }
 //  testNotes(test[3], 100000);
 //  testNotes(test[0], 100000);
 //  *GPIO_PA_DOUT = (0xff<<8);
