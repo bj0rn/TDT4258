@@ -1,3 +1,6 @@
+#ifndef SOUNDS_H
+#define SOUNDS_H
+
 #define A 440
 #define B 247
 #define C 131
@@ -10,5 +13,6 @@
 void testNotes(int note, int time);
 void silence(int time);
 void play_note(int);
-void play_music(int *, int, int);
+void play_music(int lenght, int flag);
 
+#endif

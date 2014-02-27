@@ -1,5 +1,6 @@
 #include "sounds.h"
 #include "efm32gg.h"
+#include "sound_data.h"
 #include <stdint.h>
 
 #define SAMPLING_FREQUENCY 48000
@@ -7,8 +8,9 @@
 int tone;
 int duration=0;
 int count=0;
-
-
+int note_pos=0;
+int tone_duration=0;
+int notes_pos=0; 
 
 
 void testNotes(int note, int time){
@@ -40,14 +42,16 @@ void play_note(int note){
 	int sampling = PERIOD/note;
 	int16_t amplitude;
 	
+	/*  
 	if(duration >= sampling/2){
 		amplitude = 2000;
 	}
 	else{
 		amplitude = -2000;
 	}
-	*DAC0_CH0DATA = amplitude;
-	*DAC0_CH0DATA = amplitude;
+	*/
+	*DAC0_CH0DATA = note+1500;
+	*DAC0_CH1DATA = note+1500;
 	
 	
 	duration++;
@@ -58,8 +62,23 @@ void play_note(int note){
 
 
 
-void play_music(int notes[], int song_length, int duration_time){
-			
+void play_music(int size, int tone_lenght){
+	int note = (char)sounddata_data[notes_pos];
+	play_note(note);
+
+ 	tone_duration++;
+	if(tone_duration > tone_lenght){
+		notes_pos++;
+		tone_duration = 0;
+	}
+	note_pos++;
+	if(notes_pos > size){
+		notes_pos = 0;
+	}
+
+
+	
+
 
 }
 	
