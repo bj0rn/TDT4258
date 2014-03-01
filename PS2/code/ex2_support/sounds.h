@@ -3,12 +3,15 @@
 #include <stdbool.h>
 
 
-#define A 440
-#define B 247
-#define C 131
-#define D 294
-#define E 659
-#define F 87
+#define A 200
+#define B 400
+#define C 600
+#define D 800
+#define E 1000
+#define F 1200
+#define G 1400
+#define H 1600
+
 #define SILENCE 0
 #define PERIOD 48000
 
@@ -20,5 +23,7 @@ void testNotes(int note, int time);
 void silence(int time);
 void play_note(int);
 void play_music(int lenght, int flag);
+void testSawtooth(int note, int time);
+void play_piano();
 
 #endif

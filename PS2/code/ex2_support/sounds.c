@@ -11,7 +11,7 @@ int duration=0;
 int count=0;
 int note_pos=0;
 int tone_duration=0;
-int notes_pos=0; 
+int notes_pos=0;
 
 bool iterate=false;
 int counter=0;
@@ -34,13 +34,13 @@ void testNotes(int note, int time){
 		if(sampling/2>=duration){
 			*DAC0_CH0DATA=2000;
 			*DAC0_CH1DATA=2000;
-	        *GPIO_PA_DOUT = (0xff<<8);
+//	        *GPIO_PA_DOUT = (0xff<<8);
 
 		}
 		else{
 			*DAC0_CH0DATA=-2000;
 			*DAC0_CH1DATA=-2000;
-			*GPIO_PA_DOUT = (0x00<<8);
+//			*GPIO_PA_DOUT = (0x00<<8);
 		}
 		duration++;
 		if(duration>=sampling){
@@ -57,6 +57,41 @@ void testNotes(int note, int time){
 //		}
 }
 
+void testSawtooth(int note, int time){
+
+//	bool stop=false;
+	
+//	if(stop==false){
+	
+//		if(count==time){
+//			silence(1000000);
+//			counter=0;
+//		}
+//		else{
+		int sampling=PERIOD/note;
+		
+		int slope = (1024)/sampling;
+		
+		int y = (slope*duration);
+		
+		*DAC0_CH0DATA=y;
+		*DAC0_CH1DATA=y;
+		
+		duration++;
+
+		if(duration>=sampling){
+			duration=0;
+		}
+		counter++;
+		
+		if(counter==time){
+		   iterate=true;
+		   counter=0;
+		}
+//		if(stop)
+		   
+//		}
+}
 
 void play_note(int note){
 	int sampling = PERIOD/note;
@@ -105,11 +140,32 @@ void silence(int time){
 		*DAC0_CH1DATA=0;
 	}
 }
-
-
-
-
-
-
-
-
+void play_piano(){
+	
+	switch((*GPIO_PC_DIN)){
+		case 0xfe:
+			testNotes(A, 1);
+			break;
+		case 0xfd:
+			testNotes(B, 1);
+			break;
+		case 0xfb:
+			testNotes(C, 1);
+			break;
+		case 0xf7:
+			testNotes(D, 1);
+			break;
+		case 0xef:
+			testNotes(E, 1);
+			break;
+		case 0xdf:
+			testNotes(F, 1);
+			break;
+		case 0xbf:
+			testNotes(G, 1);
+			break;
+		case 0x7f:
+			testNotes(H, 1);
+			break;
+	}
+}

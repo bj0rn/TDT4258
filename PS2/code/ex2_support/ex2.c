@@ -35,14 +35,16 @@ int main(void) {
   */
 
   /* Wait for interrupts */
-  *SCR = 2; /* Set the DEEPSLEEP bit and the SLEEPONEXIT bit  */
+//  *SCR = 2; /* Set the DEEPSLEEP bit and the SLEEPONEXIT bit  */
 
 
 
   __asm("WFI");
 
 
-  while(1);
+  while(1){
+    __asm("WFI");
+  }
 
 
   return 0;

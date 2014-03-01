@@ -5,7 +5,7 @@
 #include "sounds.h"
 
 extern int tone;
-int test[] = {A, B, C, D, E, F, E,D,C,B,A, SILENCE};
+int test[] = {A,B,C,D,E,F,E,D,C,B,A,B,C,D,E,F,E,D,C,B,A,SILENCE};
 int pos=0;
 
 
@@ -20,15 +20,15 @@ void __attribute__ ((interrupt)) TIMER1_IRQHandler()
   */
 //  *GPIO_PA_DOUT = (0xff<<8);
 //  *TIMER1_IFC=1;
-	play_music(192000, 0);
+//	play_music(192000, 0);
 //  play_note(tone);
 //  play_music(test, 6, 0);
-//     testNotes(test[pos], 100000);
-//     if(iterate==true){
-//        pos++;
-//        iterate=false;
-
-//     }
+//     testNotes(test[pos], 50000);
+     if(iterate==true){
+        pos++;
+        iterate=false;
+//        *GPIO_PA_DOUT = (pos << 8);
+     }
 //  testNotes(test[3], 100000);
 //  testNotes(test[0], 100000);
 //  *GPIO_PA_DOUT = (0xff<<8);
@@ -43,11 +43,15 @@ void __attribute__ ((interrupt)) GPIO_EVEN_IRQHandler()
 	/* Clear pending interrupts */
 //	*GPIO_IFC = *GPIO_IF;
 	*GPIO_IFC = 0xff;
-	
-	
-//	*GPIO_PA_DOUT = (*GPIO_PC_DIN << 8);
-	*GPIO_PA_DOUT = (0xff << 8);
+
+	*GPIO_PA_DOUT = (*GPIO_PC_DIN << 8);
+			
+	while((*GPIO_PC_DIN)!=0xff){
+		play_piano(50000);
+//		testNotes(A, 50000);	
+	}
 //	 play_music(test, 6, 0);
+
 
 
     /* TODO handle button pressed event, remember to clear pending interrupt */
@@ -59,11 +63,14 @@ void __attribute__ ((interrupt)) GPIO_ODD_IRQHandler()
 	/*Clear pending interrupts*/
 //	*GPIO_IFC = *GPIO_IF;
 	*GPIO_IFC = 0xff;
-		    
-//	*GPIO_PA_DOUT = (*GPIO_PC_DIN << 8);
-	*GPIO_PA_DOUT = (0x00 << 8);		    
+	
+	*GPIO_PA_DOUT = (*GPIO_PC_DIN << 8);
+		
+	while((*GPIO_PC_DIN)!=0xff){
+//		testNotes(A, 50000);	
+		play_piano();
+	}	 
 
-
-    /* TODO handle button pressed event, remember to clear pending interrupt */
+   /* TODO handle button pressed event, remember to clear pending interrupt */
 	/* TODO set input and output pins for the joystick */
 }
