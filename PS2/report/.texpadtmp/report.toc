@@ -1,0 +1,10 @@
+\contentsline {section}{\numberline {1}Introduction}{2}{section.0.1}
+\contentsline {section}{\numberline {2}Description And Methodology}{2}{section.0.2}
+\contentsline {subsection}{\numberline {2.1}Initial Setup}{2}{subsection.0.2.1}
+\contentsline {subsection}{\numberline {2.2}Sound Wave Synthesis}{2}{subsection.0.2.2}
+\contentsline {subsection}{\numberline {2.3}Sound Sampling}{2}{subsection.0.2.3}
+\contentsline {subsection}{\numberline {2.4}Energy Optimization}{2}{subsection.0.2.4}
+\contentsline {subsection}{\numberline {2.5}User Control}{2}{subsection.0.2.5}
+\contentsline {section}{\numberline {3}Results and Tests}{2}{section.0.3}
+\contentsline {section}{\numberline {4}Evaluation}{2}{section.0.4}
+\contentsline {section}{\numberline {5}Conclusion}{2}{section.0.5}
