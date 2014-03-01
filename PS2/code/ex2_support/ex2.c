@@ -16,16 +16,17 @@
 void setupTimer(uint32_t period);
 void setupDAC();
 void setupNVIC();
-
-
+void setupLowEnergyTimer();
+void setupGPIO();
 
 /* Your code will start executing here */
 int main(void) {
 
   /* Call the peripheral setup functions */
   setupGPIO();
-  setupDAC();
-  setupTimer(SAMPLE_PERIOD);
+  //setupDAC();
+  //setupTimer(SAMPLE_PERIOD);
+  setupLowEnergyTimer();
   
   /* Enable interrupt handling */
   setupNVIC();
@@ -35,16 +36,14 @@ int main(void) {
   */
 
   /* Wait for interrupts */
-//  *SCR = 2; /* Set the DEEPSLEEP bit and the SLEEPONEXIT bit  */
+  //*SCR = 6; /* Set the DEEPSLEEP bit and the SLEEPONEXIT bit  */
+
+  //__asm("WFI");
 
 
-
-  __asm("WFI");
-
-
-  while(1) 
-	__asm("WFI");
-
+  while(1){ 
+	//__asm("WFI");
+  }
 
   return 0;
 }
@@ -58,8 +57,9 @@ void setupNVIC()
      You will need TIMER1, GPIO odd and GPIO even interrupt handling for this
      assignment.
   */
-	*ISER0 = 0x1802; /*Enable interrupt handling for odd and even GPIO pins*/
-
+	//*ISER0 = 0x802; /*Enable interrupt handling for odd and even GPIO pins*/
+	//*ISER0 = (1 << 26);
+	 *ISER0 = 0x4000802;
 }
 
 /* if other interrupt handlers are needed, use the following names: 

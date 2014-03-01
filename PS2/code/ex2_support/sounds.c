@@ -1,6 +1,5 @@
 #include "sounds.h"
 #include "efm32gg.h"
-#include "sound_data.h"
 #include <stdint.h>
 #include <stdbool.h>
 
@@ -115,7 +114,8 @@ void play_note(int note){
 /*Feed the DAC with already existing samples. With normal use
  * this plays 48000 samples each second*/
 void play_music(int size, int tone_lenght){
-	int note = (char)sounddata_data[notes_pos];
+	//int note = (char)sounddata_data[notes_pos];
+	int note = 0;
 	play_note(note);
  	tone_duration++;
 	

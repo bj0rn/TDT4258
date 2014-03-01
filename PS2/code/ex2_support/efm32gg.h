@@ -78,7 +78,7 @@
 #define LETIMER0_IFC  ((volatile uint32_t*)(LETIMER0_BASE + 0x028))
 #define LETIMER0_TOP  ((volatile uint32_t*)(LETIMER0_BASE + 0x010)) //USE COMP as TOP register
 #define LETIMER0_CNT  ((volatile uint32_t*)(LETIMER0_BASE + 0x00c))
-
+#define LETIMER0_IF   ((volatile uint32_t*)(LETTIMER0_BASE + 0x020))
 
 // TIMER1
 

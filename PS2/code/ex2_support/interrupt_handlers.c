@@ -17,26 +17,24 @@ int pos=0;
 
 void __attribute__ ((interrupt)) TIMER1_IRQHandler() 
 {  
-	
+	*TIMER1_IFC = 1;	
   /*
     TODO feed new samples to the DAC
     remember to clear the pending interrupt by writing 1 to TIMER1_IFC
   */
-//  *GPIO_PA_DOUT = (0xff<<8);
-//  *TIMER1_IFC=1;
-//	play_music(192000, 0);
-//  play_note(tone);
-//  play_music(test, 6, 0);
-     testNotes(mario[pos].note, mario[pos].time);
+	
+    testNotes(mario[pos].note, mario[pos].time);
      if(iterate==true){
         pos++;
         iterate=false;
-//        *GPIO_PA_DOUT = (pos << 8);
-     }
+        *GPIO_PA_DOUT = (pos << 8);
+     }else if(pos > 33){
+		 //disableTimer();
+	 }
+
 //  testNotes(test[3], 100000);
 //  testNotes(test[0], 100000);
 //  *GPIO_PA_DOUT = (0xff<<8);
-	*TIMER1_IFC=1;
   
    
 }
@@ -45,16 +43,19 @@ void __attribute__ ((interrupt)) TIMER1_IRQHandler()
 void __attribute__ ((interrupt)) GPIO_EVEN_IRQHandler() 
 {
 	/* Clear pending interrupts */
-//	*GPIO_IFC = *GPIO_IF;
-	*GPIO_IFC = 0xff;
+	*GPIO_IFC = *GPIO_IF;
+	//*GPIO_IFC = 0xff;
 
-	*GPIO_PA_DOUT = (*GPIO_PC_DIN << 8);
-			
-	while((*GPIO_PC_DIN)!=0xff){
-		play_piano(50000);
-//		testNotes(A, 50000);	
-	}
+	
+	//*GPIO_PA_DOUT = (*GPIO_PC_DIN << 8);
+  	*GPIO_PA_DOUT = 0x0;		
+	//while((*GPIO_PC_DIN)!=0xff){
+	//	play_piano();
+		//testNotes(A, 50000);	
+	//}
 //	 play_music(test, 6, 0);
+//
+
 
 
 
@@ -65,16 +66,31 @@ void __attribute__ ((interrupt)) GPIO_EVEN_IRQHandler()
 void __attribute__ ((interrupt)) GPIO_ODD_IRQHandler() 
 {
 	/*Clear pending interrupts*/
-//	*GPIO_IFC = *GPIO_IF;
-	*GPIO_IFC = 0xff;
+	*GPIO_IFC = *GPIO_IF;
 	
-	*GPIO_PA_DOUT = (*GPIO_PC_DIN << 8);
-		
-	while((*GPIO_PC_DIN)!=0xff){
+
+	*GPIO_PA_DOUT = (0xffff << 8);
+
+
+//	*GPIO_IFC = 0xff;
+	
+	//*GPIO_PA_DOUT = (*GPIO_PC_DIN << 8);
+	
+	//while((*GPIO_PC_DIN)!=0xff){
 //		testNotes(A, 50000);	
-		play_piano();
-	}	 
+	//	play_piano();
+	// }	 
 
    /* TODO handle button pressed event, remember to clear pending interrupt */
 	/* TODO set input and output pins for the joystick */
+
 }
+
+void __attribute__ ((interrupt)) LETIMER0_IRQHandler(){
+	//play_music(192000, 0);
+	*GPIO_PA_DOUT = (0x0);
+	//Clear interrupt
+	*LETIMER0_IFC = *LETIMER0_IFC;
+
+}
+

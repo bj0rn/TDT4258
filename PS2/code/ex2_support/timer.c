@@ -29,3 +29,23 @@ void setupTimer(uint16_t period)
 }
 
 
+void disableTimer(){
+	*CMU_HFPERCLKEN0 &= ~(1 << 6);
+	*TIMER1_TOP = 0;
+	*TIMER1_IEN = 0;
+	*TIMER1_CMD = 0;
+}
+
+void setupLowEnergyTimer(){
+	
+	*CMU_OSCENCMD = (1 << 6);
+	*CMU_HFCORECLKEN0 |= (1 << 4); 					/* Enable LE clock */
+	*LETIMER0_CTRL |= (1 << 9); 					/* Set COMP0 as TOP register*/
+	*CMU_LFACLKEN0 |= (1 << 6);		                /* Enable LOW energy timer 0 */
+	*LETIMER0_TOP = 1;								/* Set TOP to 1 */
+	*LETIMER0_IEN = 1;							    /* Enable interrupts */
+	*LETIMER0_CMD = 1;							    /* Start timer  Start timer */ 
+
+}
+
+
