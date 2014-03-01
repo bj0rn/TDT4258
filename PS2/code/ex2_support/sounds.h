@@ -13,7 +13,7 @@
 #define H 1600
 
 #define SILENCE 0
-#define PERIOD 48000
+#define PERIOD 32768
 
 extern bool iterate;
 extern int pos;

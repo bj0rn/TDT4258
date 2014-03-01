@@ -48,11 +48,11 @@ void __attribute__ ((interrupt)) GPIO_EVEN_IRQHandler()
 
 	
 	//*GPIO_PA_DOUT = (*GPIO_PC_DIN << 8);
-  	*GPIO_PA_DOUT = 0x0;		
-	//while((*GPIO_PC_DIN)!=0xff){
+  	//*GPIO_PA_DOUT = 0x0;		
+	while((*GPIO_PC_DIN)!=0xff){
 	//	play_piano();
 		//testNotes(A, 50000);	
-	//}
+	}
 //	 play_music(test, 6, 0);
 //
 
@@ -69,17 +69,17 @@ void __attribute__ ((interrupt)) GPIO_ODD_IRQHandler()
 	*GPIO_IFC = *GPIO_IF;
 	
 
-	*GPIO_PA_DOUT = (0xff << 8);
+	//*GPIO_PA_DOUT = (0xff << 8);
 
 
 //	*GPIO_IFC = 0xff;
 	
 	//*GPIO_PA_DOUT = (*GPIO_PC_DIN << 8);
 	
-	//while((*GPIO_PC_DIN)!=0xff){
+	while((*GPIO_PC_DIN)!=0xff){
 //		testNotes(A, 50000);	
-	//	play_piano();
-	// }	 
+		play_piano();
+	}	 
 
    /* TODO handle button pressed event, remember to clear pending interrupt */
 	/* TODO set input and output pins for the joystick */
@@ -91,6 +91,8 @@ void __attribute__ ((interrupt)) LETIMER0_IRQHandler(){
 	*GPIO_PA_DOUT = (0x0f<<8);
 	//Clear interrupt
 	*LETIMER0_IFC = 1;
+
+	disableLowEnergyTimer();
 
 }
 

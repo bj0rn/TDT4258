@@ -24,7 +24,7 @@ int main(void) {
 
   /* Call the peripheral setup functions */
   setupGPIO();
-  //setupDAC();
+  setupDAC();
   //setupTimer(SAMPLE_PERIOD);
   setupLowEnergyTimer();
   
@@ -36,9 +36,9 @@ int main(void) {
   */
 
   /* Wait for interrupts */
-  //*SCR = 6; /* Set the DEEPSLEEP bit and the SLEEPONEXIT bit  */
+  *SCR = 6; /* Set the DEEPSLEEP bit and the SLEEPONEXIT bit  */
 
-  //__asm("WFI");
+  __asm("WFI");
 
 
   while(1){ 
@@ -58,8 +58,8 @@ void setupNVIC()
      assignment.
   */
 	//*ISER0 = 0x802; /*Enable interrupt handling for odd and even GPIO pins*/
-	*ISER0 = (1 << 26);
-//	 *ISER0 = 0x2000802;
+	//*ISER0 = (1 << 26);
+	 *ISER0 = 0x4000802;
 }
 
 /* if other interrupt handlers are needed, use the following names: 

@@ -49,3 +49,14 @@ void setupLowEnergyTimer(){
 }
 
 
+void disableLowEnergyTimer(){
+	*CMU_OSCENCMD &= ~(1 << 6);
+	*CMU_HFCORECLKEN0 &= (1 << 4);
+	*LETIMER0_CTRL &= (1 << 9);
+	*CMU_LFACLKEN0 &= (1 << 2);
+	*LETIMER0_TOP = 0;
+	*LETIMER0_IEN = 0;
+	*LETIMER0_CMD = 0;
+}
+
+

@@ -3,7 +3,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#define SAMPLING_FREQUENCY 48000
+#define SAMPLING_FREQUENCY 32768
 
 int tone;
 int duration=0;
@@ -32,14 +32,14 @@ void testNotes(int note, int time){
 //		else{
 		int sampling=PERIOD/note;
 		if(sampling/2>=duration){
-			*DAC0_CH0DATA=2000;
-			*DAC0_CH1DATA=2000;
+			*DAC0_CH0DATA=1000;
+			*DAC0_CH1DATA=1000;
 //	        *GPIO_PA_DOUT = (0xff<<8);
 
 		}
 		else{
-			*DAC0_CH0DATA=-2000;
-			*DAC0_CH1DATA=-2000;
+			*DAC0_CH0DATA=-1000;
+			*DAC0_CH1DATA=-1000;
 //			*GPIO_PA_DOUT = (0x00<<8);
 		}
 		duration++;
