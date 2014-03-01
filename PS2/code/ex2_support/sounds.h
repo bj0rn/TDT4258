@@ -17,7 +17,11 @@
 
 extern bool iterate;
 extern int pos;
-extern int test[];
+
+struct tone{
+	int note, time;
+};
+extern struct tone test[];
 
 void testNotes(int note, int time);
 void silence(int time);

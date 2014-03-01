@@ -42,9 +42,8 @@ int main(void) {
   __asm("WFI");
 
 
-  while(1){
-    __asm("WFI");
-  }
+  while(1) 
+	__asm("WFI");
 
 
   return 0;

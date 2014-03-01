@@ -20,6 +20,7 @@ int counter=0;
 
 //bool stop=false;
 void testNotes(int note, int time){
+	int cycles = convert_from_ms(time);
 
 //	bool stop=false;
 	
@@ -48,7 +49,7 @@ void testNotes(int note, int time){
 		}
 		counter++;
 		
-		if(counter==time){
+		if(counter==cycles){
 		   iterate=true;
 		   counter=0;
 		}
@@ -139,6 +140,9 @@ void silence(int time){
 		*DAC0_CH0DATA=0;
 		*DAC0_CH1DATA=0;
 	}
+}
+int convert_from_ms(int millis){
+	return millis * 50;
 }
 void play_piano(){
 	

@@ -3,11 +3,15 @@
 
 #include "efm32gg.h"
 #include "sounds.h"
+#include "melodies.h"
 
 extern int tone;
-int test[] = {A,B,C,D,E,F,E,D,C,B,A,B,C,D,E,F,E,D,C,B,A,SILENCE};
+//int test[] = {A,B,C,D,E,F,E,D,C,B,A,B,C,D,E,F,E,D,C,B,A,SILENCE};
 int pos=0;
 
+//struct tone t1 = {A, 100000};
+//struct tone t2 = {B, 50000};
+//struct tone t3 = {C, 20000};
 
 /* TIMER1 interrupt handler */
 
@@ -23,7 +27,7 @@ void __attribute__ ((interrupt)) TIMER1_IRQHandler()
 //	play_music(192000, 0);
 //  play_note(tone);
 //  play_music(test, 6, 0);
-//     testNotes(test[pos], 50000);
+     testNotes(mario[pos].note, mario[pos].time);
      if(iterate==true){
         pos++;
         iterate=false;
