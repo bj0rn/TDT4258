@@ -69,7 +69,7 @@ void __attribute__ ((interrupt)) GPIO_ODD_IRQHandler()
 	*GPIO_IFC = *GPIO_IF;
 	
 
-	*GPIO_PA_DOUT = (0xffff << 8);
+	*GPIO_PA_DOUT = (0xff << 8);
 
 
 //	*GPIO_IFC = 0xff;
@@ -88,9 +88,9 @@ void __attribute__ ((interrupt)) GPIO_ODD_IRQHandler()
 
 void __attribute__ ((interrupt)) LETIMER0_IRQHandler(){
 	//play_music(192000, 0);
-	*GPIO_PA_DOUT = (0x0);
+	*GPIO_PA_DOUT = (0x0f<<8);
 	//Clear interrupt
-	*LETIMER0_IFC = *LETIMER0_IFC;
+	*LETIMER0_IFC = 1;
 
 }
 

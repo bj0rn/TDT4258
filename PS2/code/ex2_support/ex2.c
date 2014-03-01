@@ -58,8 +58,8 @@ void setupNVIC()
      assignment.
   */
 	//*ISER0 = 0x802; /*Enable interrupt handling for odd and even GPIO pins*/
-	//*ISER0 = (1 << 26);
-	 *ISER0 = 0x4000802;
+	*ISER0 = (1 << 26);
+//	 *ISER0 = 0x2000802;
 }
 
 /* if other interrupt handlers are needed, use the following names: 
