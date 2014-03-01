@@ -94,18 +94,14 @@ void testSawtooth(int note, int time){
 //		}
 }
 
+
+
+
+/*Used in combination with the play music function*/
 void play_note(int note){
 	int sampling = PERIOD/note;
 	int16_t amplitude;
 	
-	/*  
-	if(duration >= sampling/2){
-		amplitude = 2000;
-	}
-	else{
-		amplitude = -2000;
-	}
-	*/
 	*DAC0_CH0DATA = (note << 3);
 	*DAC0_CH1DATA = (note << 3);
 	
@@ -116,12 +112,13 @@ void play_note(int note){
 	}
 }
 
-
+/*Feed the DAC with already existing samples. With normal use
+ * this plays 48000 samples each second*/
 void play_music(int size, int tone_lenght){
 	int note = (char)sounddata_data[notes_pos];
 	play_note(note);
-
  	tone_duration++;
+	
 	if(tone_duration > tone_lenght){
 		notes_pos++;
 		tone_duration = 0;

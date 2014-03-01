@@ -54,6 +54,9 @@
 #define CMU_HFCORECLKEN0 ((volatile uint32_t*)(CMU_BASE2 + 0x040))
 #define CMU_HFPERCLKEN0  ((volatile uint32_t*)(CMU_BASE2 + 0x044))
 #define CMU_CMD          ((volatile uint32_t*)(CMU_BASE2 + 0x024))
+#define CMU_LFACLKEN0    ((volatile uint32_t*)(CMU_BASE2 + 0x058))
+#define CMU_LFCLKSEL	 ((volatile uint32_t*)(CMU_BASE2 + 0x028))
+
 
 #define CMU2_HFPERCLKEN0_DAC0   (1 << 17)
 #define CMU2_HFPERCLKEN0_PRS    (1 << 15)
@@ -61,6 +64,19 @@
 #define CMU2_HFPERCLKEN0_TIMER1 (1 << 6)
 
 #define CMU_HFCORECLKEN0_DMA (1 << 0)
+#define CMU_LFACLKEN0_LETTIMER0 (1 << 2)
+
+
+//LETIMER0
+#define LETIMER0_BASE 0x40082000
+
+#define LETIMER0_CTRL ((volatile uint32_t*)(LETIMER0_BASE + 0x000)) 
+#define LETIMER0_CMD  ((volatile uint32_t*)(LETIMER0_BASE + 0x004)) 
+#define LETIMER0_IEN  ((volatile uint32_t*)(LETIMER0_BASE + 0x02c))
+#define LETIMER0_IFC  ((volatile uint32_t*)(LETIMER0_BASE + 0x028))
+#define LETIMER0_TOP  ((volatile uint32_t*)(LETIMER0_BASE + 0x010)) //USE COMP as TOP register
+#define LETIMER0_CNT  ((volatile uint32_t*)(LETIMER0_BASE + 0x00c))
+
 
 // TIMER1
 
