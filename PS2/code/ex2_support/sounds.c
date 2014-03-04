@@ -2,6 +2,7 @@
 #include "efm32gg.h"
 #include <stdint.h>
 #include <stdbool.h>
+#include "sound_data.h"
 
 #define SAMPLING_FREQUENCY 32768
 
@@ -101,9 +102,8 @@ void play_note(int note){
 	int sampling = PERIOD/note;
 	int16_t amplitude;
 	
-//	*DAC0_CH0DATA = (note << 3);
-//	*DAC0_CH1DATA = (note << 3);
-	
+	*DAC0_CH0DATA = (note << 2);
+	*DAC0_CH1DATA = (note << 2);	
 	
 	duration++;
 	if(duration == sampling){
@@ -114,8 +114,7 @@ void play_note(int note){
 /*Feed the DAC with already existing samples. With normal use
  * this plays 48000 samples each second*/
 void play_music(int size, int tone_lenght){
-	//int note = (char)sounddata_data[notes_pos];
-	int note = 0;
+	int note = (char)sounddata_data[notes_pos];
 	play_note(note);
  	tone_duration++;
 	

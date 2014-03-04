@@ -44,7 +44,8 @@ void setupLowEnergyTimer(){
 	*CMU_LFACLKEN0 |= (1 << 2);		                /* Enable LOW energy timer 0 */
 	*LETIMER0_TOP = 1;								/* Set TOP to 1 */
 	*LETIMER0_IEN = 1;							    /* Enable interrupts */
-	*LETIMER0_CMD = 1;							    /* Start timer  Start timer */ 
+	*LETIMER0_CMD = 1;								/* Start timer  Start timer */ 
+	//*CMU_LFCLKSEL = 1;
 
 }
 
