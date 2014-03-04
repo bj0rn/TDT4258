@@ -10,7 +10,7 @@
   registers are 16 bits.
 */
 /* The period between sound samples, in clock cycles */
-#define SAMPLE_PERIOD 48000
+#define SAMPLE_PERIOD 32748
 
 /* Declaration of peripheral setup functions */
 void setupTimer(uint32_t period);
@@ -42,7 +42,7 @@ int main(void) {
 
 
   while(1){ 
-	//__asm("WFI");
+	__asm("WFI");
   }
 
   return 0;

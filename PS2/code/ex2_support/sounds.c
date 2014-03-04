@@ -32,14 +32,14 @@ void testNotes(int note, int time){
 //		else{
 		int sampling=PERIOD/note;
 		if(sampling/2>=duration){
-			*DAC0_CH0DATA=1000;
-			*DAC0_CH1DATA=1000;
+			*DAC0_CH0DATA=2000;
+			*DAC0_CH1DATA=2000;
 //	        *GPIO_PA_DOUT = (0xff<<8);
 
 		}
 		else{
-			*DAC0_CH0DATA=-1000;
-			*DAC0_CH1DATA=-1000;
+			*DAC0_CH0DATA=-2000;
+			*DAC0_CH1DATA=-2000;
 //			*GPIO_PA_DOUT = (0x00<<8);
 		}
 		duration++;
@@ -101,8 +101,8 @@ void play_note(int note){
 	int sampling = PERIOD/note;
 	int16_t amplitude;
 	
-	*DAC0_CH0DATA = (note << 3);
-	*DAC0_CH1DATA = (note << 3);
+//	*DAC0_CH0DATA = (note << 3);
+//	*DAC0_CH1DATA = (note << 3);
 	
 	
 	duration++;
@@ -139,34 +139,34 @@ void silence(int time){
 	}
 }
 int convert_from_ms(int millis){
-	return millis * 50;
+	return millis * 15;
 }
 void play_piano(){
 	
 	switch((*GPIO_PC_DIN)){
 		case 0xfe:
-			testNotes(A, 1);
+			testNotes(A, 10);
 			break;
 		case 0xfd:
-			testNotes(B, 1);
+			testNotes(B, 10);
 			break;
 		case 0xfb:
-			testNotes(C, 1);
+			testNotes(C, 10);
 			break;
 		case 0xf7:
-			testNotes(D, 1);
+			testNotes(D, 10);
 			break;
 		case 0xef:
-			testNotes(E, 1);
+			testNotes(E, 10);
 			break;
 		case 0xdf:
-			testNotes(F, 1);
+			testNotes(F, 10);
 			break;
 		case 0xbf:
-			testNotes(G, 1);
+			testNotes(G, 10);
 			break;
 		case 0x7f:
-			testNotes(H, 1);
+			testNotes(H, 10);
 			break;
 	}
 }

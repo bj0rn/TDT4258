@@ -31,6 +31,7 @@ void __attribute__ ((interrupt)) TIMER1_IRQHandler()
      }else if(pos > 33){
 		 //disableTimer();
 	 }
+	 *GPIO_PA_DOUT = (*DAC0_CH0DATA<<8);
 
 //  testNotes(test[3], 100000);
 //  testNotes(test[0], 100000);
@@ -44,13 +45,14 @@ void __attribute__ ((interrupt)) GPIO_EVEN_IRQHandler()
 {
 	/* Clear pending interrupts */
 	*GPIO_IFC = *GPIO_IF;
-	//*GPIO_IFC = 0xff;
+	*GPIO_IFC = 0xff;
 
 	
 	//*GPIO_PA_DOUT = (*GPIO_PC_DIN << 8);
   	//*GPIO_PA_DOUT = 0x0;		
+	*GPIO_PA_DOUT = (*DAC0_CH0DATA<<8);
 	while((*GPIO_PC_DIN)!=0xff){
-	//	play_piano();
+		play_piano();
 		//testNotes(A, 50000);	
 	}
 //	 play_music(test, 6, 0);
@@ -66,18 +68,12 @@ void __attribute__ ((interrupt)) GPIO_EVEN_IRQHandler()
 void __attribute__ ((interrupt)) GPIO_ODD_IRQHandler() 
 {
 	/*Clear pending interrupts*/
-	*GPIO_IFC = *GPIO_IF;
+//	*GPIO_IFC = *GPIO_IF;
+	*GPIO_IFC = 0xff;
 	
-
-	//*GPIO_PA_DOUT = (0xff << 8);
-
-
-//	*GPIO_IFC = 0xff;
-	
-	//*GPIO_PA_DOUT = (*GPIO_PC_DIN << 8);
-	
+//	*GPIO_PA_DOUT = (*GPIO_PC_DIN << 8);
+	*GPIO_PA_DOUT = (*DAC0_CH0DATA<<8);
 	while((*GPIO_PC_DIN)!=0xff){
-//		testNotes(A, 50000);	
 		play_piano();
 	}	 
 
@@ -88,11 +84,19 @@ void __attribute__ ((interrupt)) GPIO_ODD_IRQHandler()
 
 void __attribute__ ((interrupt)) LETIMER0_IRQHandler(){
 	//play_music(192000, 0);
-	*GPIO_PA_DOUT = (0x0f<<8);
+//	*GPIO_PA_DOUT = (0x0f<<8);
 	//Clear interrupt
 	*LETIMER0_IFC = 1;
 
-	disableLowEnergyTimer();
-
+     testNotes(hit[pos].note, hit[pos].time);
+     if(iterate==true){
+        pos++;
+        iterate=false;
+//        *GPIO_PA_DOUT = (*DAC0_CH0DATA<<8);
+     }else if(pos > 37){
+		 disableLowEnergyTimer();
+		 *DAC0_CH0DATA=0;
+		 *DAC0_CH1DATA=0;
+	 }
 }
 
