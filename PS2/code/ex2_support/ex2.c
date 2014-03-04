@@ -21,7 +21,8 @@ void setupGPIO();
 
 /* Your code will start executing here */
 int main(void) {
-
+	initSound();
+	initPos();
   /* Call the peripheral setup functions */
   setupGPIO();
   setupDAC();
@@ -30,6 +31,9 @@ int main(void) {
   
   /* Enable interrupt handling */
   setupNVIC();
+  
+  *DAC0_CH0DATA=2000;
+  *DAC0_CH1DATA=2000;
   
   /* TODO for higher energy efficiency, sleep while waiting for interrupts
      instead of infinite loop for busy-waiting

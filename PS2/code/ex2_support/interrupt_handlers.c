@@ -6,6 +6,7 @@
 #include "melodies.h"
 
 void disableLowEnergyTimer();
+void disableDAC();
 extern int tone;
 //int test[] = {A,B,C,D,E,F,E,D,C,B,A,B,C,D,E,F,E,D,C,B,A,SILENCE};
 int pos=0;
@@ -15,6 +16,10 @@ int pos=0;
 //struct tone t3 = {C, 20000};
 
 /* TIMER1 interrupt handler */
+
+void initPos(){
+	pos=0;
+}
 
 void __attribute__ ((interrupt)) TIMER1_IRQHandler() 
 {  
@@ -87,15 +92,20 @@ void __attribute__ ((interrupt)) LETIMER0_IRQHandler(){
 //	*GPIO_PA_DOUT = (0x0f<<8);
 	//Clear interrupt
 	*LETIMER0_IFC = 1;
-     testNotes(hit[pos].note, hit[pos].time);
+	static int sample=0;
+	sample+=55;
+	if(sample>4095)
+		sample-=4095;
+//	*DAC0_CH0DATA=sample;
+//	*DAC0_CH1DATA=sample;
+	testNotes(mario[pos].note, mario[pos].time);
      if(iterate==true){
         pos++;
         iterate=false;
 //        *GPIO_PA_DOUT = (*DAC0_CH0DATA<<8);
      }else if(pos > 37){
 		 disableLowEnergyTimer();
-		 *DAC0_CH0DATA=0;
-		 *DAC0_CH1DATA=0;
+//		 disableDAC();
 	 }
 }
 

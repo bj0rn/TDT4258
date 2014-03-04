@@ -59,5 +59,3 @@ void disableLowEnergyTimer(){
 	*LETIMER0_IEN = 0;
 	*LETIMER0_CMD = 0;
 }
-
-

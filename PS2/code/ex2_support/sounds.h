@@ -29,5 +29,7 @@ void play_note(int);
 void play_music(int lenght, int flag);
 void testSawtooth(int note, int time);
 void play_piano();
+void initSound();
+void initPos();
 
 #endif

@@ -19,6 +19,14 @@ int counter=0;
 
 
 //bool stop=false;
+void initSound(){
+	duration=0;
+	note_pos=0;
+	tone_duration=0;
+	notes_pos=0;
+	counter=0;
+	iterate=false;
+}
 void testNotes(int note, int time){
 	int cycles = convert_from_ms(time);
 
@@ -39,8 +47,8 @@ void testNotes(int note, int time){
 
 		}
 		else{
-			*DAC0_CH0DATA=-2000;
-			*DAC0_CH1DATA=-2000;
+			*DAC0_CH0DATA=0;
+			*DAC0_CH1DATA=0;
 //			*GPIO_PA_DOUT = (0x00<<8);
 		}
 		duration++;
