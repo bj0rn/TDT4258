@@ -5,6 +5,7 @@
 #include "sounds.h"
 #include "melodies.h"
 
+void disableLowEnergyTimer();
 extern int tone;
 //int test[] = {A,B,C,D,E,F,E,D,C,B,A,B,C,D,E,F,E,D,C,B,A,SILENCE};
 int pos=0;
@@ -43,20 +44,18 @@ void __attribute__ ((interrupt)) TIMER1_IRQHandler()
 void __attribute__ ((interrupt)) GPIO_EVEN_IRQHandler() 
 {
 	/* Clear pending interrupts */
-	*GPIO_IFC = *GPIO_IF;
-	//*GPIO_IFC = 0xff;
+	//*GPIO_IFC = *GPIO_IF;
+	*GPIO_IFC = 0xff;
 
 	
 	//*GPIO_PA_DOUT = (*GPIO_PC_DIN << 8);
   	//*GPIO_PA_DOUT = 0x0;		
-	while((*GPIO_PC_DIN)!=0xff){
-	//	play_piano();
-		//testNotes(A, 50000);	
-	}
+	//while((*GPIO_PC_DIN)!=0xff){
+		//play_piano();
+		//testNotes(A, 50000);
+	//}
 //	 play_music(test, 6, 0);
 //
-
-
 
 
     /* TODO handle button pressed event, remember to clear pending interrupt */
@@ -66,20 +65,20 @@ void __attribute__ ((interrupt)) GPIO_EVEN_IRQHandler()
 void __attribute__ ((interrupt)) GPIO_ODD_IRQHandler() 
 {
 	/*Clear pending interrupts*/
-	*GPIO_IFC = *GPIO_IF;
+	//*GPIO_IFC = *GPIO_IF;
 	
 
 	//*GPIO_PA_DOUT = (0xff << 8);
 
 
-//	*GPIO_IFC = 0xff;
+	*GPIO_IFC = 0xff;
 	
 	//*GPIO_PA_DOUT = (*GPIO_PC_DIN << 8);
 	
-	while((*GPIO_PC_DIN)!=0xff){
+	//while((*GPIO_PC_DIN)!=0xff){
 //		testNotes(A, 50000);	
-		play_piano();
-	}	 
+	//	play_piano();
+	//}	 
 
    /* TODO handle button pressed event, remember to clear pending interrupt */
 	/* TODO set input and output pins for the joystick */
@@ -92,7 +91,21 @@ void __attribute__ ((interrupt)) LETIMER0_IRQHandler(){
 	//Clear interrupt
 	*LETIMER0_IFC = 1;
 
-	disableLowEnergyTimer();
+	
+	//play_music(341792, 1);
+	
+	 testNotes(mario[pos].note, mario[pos].time);
+     if(iterate==true){
+        pos++;
+        iterate=false;
+        *GPIO_PA_DOUT = (pos << 8);
+     }else if(pos > 33){
+		 disableLowEnergyTimer();
+	 }
+
+
+	//disableLowEnergyTimer();
+	//disableDAC(); 
 
 }
 

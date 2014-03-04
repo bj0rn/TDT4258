@@ -2,6 +2,7 @@
 #include "efm32gg.h"
 #include <stdint.h>
 #include <stdbool.h>
+#include "sound_data.h"
 
 #define SAMPLING_FREQUENCY 32768
 
@@ -32,14 +33,14 @@ void testNotes(int note, int time){
 //		else{
 		int sampling=PERIOD/note;
 		if(sampling/2>=duration){
-			*DAC0_CH0DATA=1000;
-			*DAC0_CH1DATA=1000;
+			*DAC0_CH0DATA=2000;
+			*DAC0_CH1DATA=2000;
 //	        *GPIO_PA_DOUT = (0xff<<8);
 
 		}
 		else{
-			*DAC0_CH0DATA=-1000;
-			*DAC0_CH1DATA=-1000;
+			*DAC0_CH0DATA=-2000;
+			*DAC0_CH1DATA=-2000;
 //			*GPIO_PA_DOUT = (0x00<<8);
 		}
 		duration++;
@@ -101,8 +102,8 @@ void play_note(int note){
 	int sampling = PERIOD/note;
 	int16_t amplitude;
 	
-	*DAC0_CH0DATA = (note << 3);
-	*DAC0_CH1DATA = (note << 3);
+	*DAC0_CH0DATA = (note << 2);
+	*DAC0_CH1DATA = (note << 2);
 	
 	
 	duration++;
@@ -114,8 +115,7 @@ void play_note(int note){
 /*Feed the DAC with already existing samples. With normal use
  * this plays 48000 samples each second*/
 void play_music(int size, int tone_lenght){
-	//int note = (char)sounddata_data[notes_pos];
-	int note = 0;
+	int note = (char)sounddata_data[notes_pos];
 	play_note(note);
  	tone_duration++;
 	
@@ -139,7 +139,7 @@ void silence(int time){
 	}
 }
 int convert_from_ms(int millis){
-	return millis * 50;
+	return millis * 15;
 }
 void play_piano(){
 	
