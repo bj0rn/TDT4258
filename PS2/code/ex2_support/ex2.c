@@ -18,6 +18,7 @@ void setupDAC();
 void setupNVIC();
 void setupLowEnergyTimer();
 void setupGPIO();
+void changeTopCounter(int sample_rate);
 
 /* Your code will start executing here */
 int main(void) {
@@ -29,11 +30,15 @@ int main(void) {
   //setupTimer(SAMPLE_PERIOD);
   setupLowEnergyTimer();
   
+  changeTopCounter(8000);
+
+
+
   /* Enable interrupt handling */
   setupNVIC();
   
-  *DAC0_CH0DATA=2000;
-  *DAC0_CH1DATA=2000;
+ // *DAC0_CH0DATA=2000;
+ // *DAC0_CH1DATA=2000;
   
   /* TODO for higher energy efficiency, sleep while waiting for interrupts
      instead of infinite loop for busy-waiting
@@ -46,7 +51,7 @@ int main(void) {
 
 
   while(1){ 
-	__asm("WFI");
+	//__asm("WFI");
   }
 
   return 0;

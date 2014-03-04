@@ -92,20 +92,21 @@ void __attribute__ ((interrupt)) LETIMER0_IRQHandler(){
 //	*GPIO_PA_DOUT = (0x0f<<8);
 	//Clear interrupt
 	*LETIMER0_IFC = 1;
-	static int sample=0;
-	sample+=55;
-	if(sample>4095)
-		sample-=4095;
+	//static int sample=0;
+	//sample+=55;
+	//if(sample>4095)
+	//	sample-=4095;
 //	*DAC0_CH0DATA=sample;
 //	*DAC0_CH1DATA=sample;
-	testNotes(mario[pos].note, mario[pos].time);
-     if(iterate==true){
-        pos++;
-        iterate=false;
+	//testNotes(mario[pos].note, mario[pos].time);
+     //if(iterate==true){
+      //  pos++;
+      //  iterate=false;
 //        *GPIO_PA_DOUT = (*DAC0_CH0DATA<<8);
-     }else if(pos > 37){
-		 disableLowEnergyTimer();
+     //}else if(pos > 37){
+	//	 disableLowEnergyTimer();
 //		 disableDAC();
-	 }
+	// }
+	play_music(452379, 0);
 }
 
