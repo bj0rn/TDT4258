@@ -2,15 +2,28 @@
 
 
 \subsection{Initial Setup}
+In this assignment the following peripherals need to be configured, buttons, LEDs, DAC, and some timer. The buttons are needed to allow interaction with the board. The buttons are configured to play different sounds when pushed. 
+
+
 
 
 \subsection{Sound Wave Synthesis}
+Sound is realised through sound waves which is created by oscillations. "An oscillator generates a consistent, repeating signals". These consistent signals can be used to create waves at various frequencies. Sound is actually the properties of the waves generated, with respect to frequency, amplitude, and period. The frequency 
+
+The waves are generated  
+
+
+In case of this assignment, we have decided to take two approaches for generating sound. The first one is implementing an synthesiser in software. This synthesiser is created by using square waves. The square wave is generating the approximations of the frequency, for various tones. The tones are as follows, A, B, C, D, E, and F. The waves are realised by writing to the DAC with the various frequencies, thereby approximating the different tones. The period of the tone is determined by a counter.
+
+  
 
 
 \subsection{Sound Sampling}
+Sound can also be generated through pre computed samples. With this approach the sound waves are generated on some other platform. The samples produced are approximations to already existing sound waves.
 
 
 \subsection{Energy Optimization}
+In order to decrease the energy consumption of our program we have taken various different methods to reduce the consumption. Instead of using the proposed timer\cite{compendium}, we are instead using the low energy timer, LETIMER0 \cite{EFM32GG-rm}. This timer runs at a lower frequency, but require an low frequency oscillator in order to be of any value. The advantage with this timer is that it uses less energy and is able to run in EM2.  
 
 
 
