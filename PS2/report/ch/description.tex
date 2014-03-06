@@ -2,11 +2,11 @@
 
 
 \subsection{Initial Setup}
-To begin with, peripherals such as buttons, LEDs, DAC, and timers needed to be configured. As C programs can control hardware directly, one only needs to use pointers to refer to memory-mapped I/O registers. A lot of these were provided in the efm32gg.h-file where many of the registers were defined with macros by using volatile uint32_t pointer variables, so in the initial setup it was simply a matter of dereferencing these and writing the appropriate values.
+To begin with, peripherals such as buttons, LEDs, DAC, and timers needed to be configured. As C programs can control hardware directly, one only needs to use pointers to refer to memory-mapped I/O registers. A lot of these were provided in the efm32gg.h-file where many of the registers were defined with macros by using volatile $uint32\_t$ pointer variables, so in the initial setup it was simply a matter of dereferencing these and writing the appropriate values.
 
 
 \subsubsection{Interrupt handlers}
-The procedure for setting up interrupt handlers will vary depending on the hardware used. In this case, as the exception vectors were already filled out in the startup code, all that needed to be done to enable interrupt generation and interrupt handling was to write the appropriate value to the ISER0-register, whic was done in the setupNVIC()-function. The code for enabling interrupts for the GPIO-pins (odd and even) and TIMER1 was as follows. 
+The procedure for setting up interrupt handlers will vary depending on the hardware used. To enable interrupt generation and interrupt handling for the appropriate exception handlers, the proper value had to be written to the ISER0-register, which was done in the setupNVIC()-function. The code for enabling interrupts for the GPIO-pins (odd and even) and TIMER1 was as follows.
 
 \begin{lstlisting}
 
@@ -16,7 +16,10 @@ void setupNVIC()
 }
 
 \end{lstlisting} 
-This corresponds to writing bit 1, 11, and 12 in the register, which are the appropriate bits for enabling interrupts for the mentioned exception handlers.
+This hexadecimal value corresponds to writing bit 1, 11, and 12 in the register, which are the appropriate bits for enabling interrupts for the mentioned exception handlers.
+
+The code for the exception vectors was already filled out in the startup code, so all that needed to be done to use the exception handlers was to write a function in the form $\_\_attribute\_\_ ((interrupt))$, as this tells the compiler that this is a function used for exception handling.
+
 
 \subsubsection{Hardware timers}
 There are several hardware timers that can be used, depending on the purpose (calculation-intensive operations, low energy demnads, etc...). In the initial setup, 
