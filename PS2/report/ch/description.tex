@@ -27,8 +27,8 @@ Sound is realised through sound waves which is created by oscillations. "An osci
 
 The waves are generated  
 
-
-In case of this assignment, we have decided to take two approaches for generating sound. The first one is implementing an synthesiser in software. This synthesiser is created by using square waves. The square wave is generating the approximations of the frequency, for various tones. The tones are as follows, A, B, C, D, E, and F. The waves are realised by writing to the DAC with the various frequencies, thereby approximating the different tones. The period of the tone is determined by a counter.
+\subsection{Sound Sampling}
+Sound can also be generated through pre computed samples. With this approach the sound waves are generated on some other platform. The samples produced are approximations to already existing sound samples. The samples are modified slightly to fit the microcontroller. Due to size limitations on the board, 8 bit samples with 8000Hz were generated. This allowed us to be able to play song with some length. In the first approach we generated samples with a sample frequency of 48000Hz. This sample rate produced sounds with relatively high sounds quality, but required a lot of storage for the songs. This limited the lenght of the songs we were able to play. 
 
 \subsection{Sound Sampling}
 Sound can also be generated through pre computed samples. With this approach the sound waves are generated on some other platform. The samples produced are approximations to already existing sound waves.
@@ -40,8 +40,7 @@ In order to decrease the energy consumption of our program we have taken various
 
 
 \subsection{User Control}
-
-\include{UserControl}
+\input{UserControl}
 
 
 
