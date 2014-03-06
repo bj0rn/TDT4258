@@ -5,6 +5,7 @@
 \contentsline {subsection}{\numberline {2.3}Sound Sampling}{2}{subsection.0.2.3}
 \contentsline {subsection}{\numberline {2.4}Energy Optimization}{3}{subsection.0.2.4}
 \contentsline {subsection}{\numberline {2.5}User Control}{3}{subsection.0.2.5}
-\contentsline {section}{\numberline {3}Results and Tests}{3}{section.0.3}
-\contentsline {section}{\numberline {4}Evaluation}{3}{section.0.4}
-\contentsline {section}{\numberline {5}Conclusion}{3}{section.0.5}
+\contentsline {subsection}{\numberline {2.6}User Control}{4}{subsection.0.2.6}
+\contentsline {section}{\numberline {3}Results and Tests}{5}{section.0.3}
+\contentsline {section}{\numberline {4}Evaluation}{5}{section.0.4}
+\contentsline {section}{\numberline {5}Conclusion}{5}{section.0.5}
