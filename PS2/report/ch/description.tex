@@ -23,15 +23,18 @@ There are several hardware timers that can be used, depending on the purpose (ca
 
 
 \subsection{Sound Wave Synthesis}
-Sound is realised through sound waves which is created by oscillations. "An oscillator generates a consistent, repeating signals". These consistent signals can be used to create waves at various frequencies. Sound is actually the properties of the waves generated, with respect to frequency, amplitude, and period. The frequency 
 
-The waves are generated  
+Sound is realised through sound waves which is created by oscillations. "An oscillator generates a consistent, repeating signals". These consistent signals can be used to create waves at various frequencies. Sound is actually the properties of the waves generated, with respect to frequency, amplitude, and period. The frequency determines the tone of the sound, the amplitude the strength, and the period the duration of the sound.  
+
+There are various different approaches for generating these sound waves. The different waves have slightly different properties in regard to sound. To name a few different waves we have the sine wave, sawtooth wave, triangle wave and the square wave. These waves produces different sound characteristics {\bf more on this ? Sources and shit like that}. 
+
+In case of this assignment, we have crated two different kind of waves, the square wave and the sawtooth wave. The square wave is created by calculating discrete samples based on the tone frequency and the oscillator frequency. Oscillator frequency divided by the tone frequency decides how often the values to the DAC should alternate, thereby producing an approximation of the note. The different notes supported by the program is as follows, A, B, C, D, E, F, and H.
+
+
 
 \subsection{Sound Sampling}
 Sound can also be generated through pre computed samples. With this approach the sound waves are generated on some other platform. The samples produced are approximations to already existing sound samples. The samples are modified slightly to fit the microcontroller. Due to size limitations on the board, 8 bit samples with 8000Hz were generated. This allowed us to be able to play song with some length. In the first approach we generated samples with a sample frequency of 48000Hz. This sample rate produced sounds with relatively high sounds quality, but required a lot of storage for the songs. This limited the lenght of the songs we were able to play. 
 
-\subsection{Sound Sampling}
-Sound can also be generated through pre computed samples. With this approach the sound waves are generated on some other platform. The samples produced are approximations to already existing sound waves.
 
 
 \subsection{Energy Optimization}
