@@ -35,13 +35,7 @@ int main(void) {
 
   /* Enable interrupt handling */
   setupNVIC();
-  
-<<<<<<< HEAD
- // *DAC0_CH0DATA=2000;
- // *DAC0_CH1DATA=2000;
-  
-=======
->>>>>>> fc212bcafdfd5c35306342b56bb2cdbb01d16fcc
+
   /* TODO for higher energy efficiency, sleep while waiting for interrupts
      instead of infinite loop for busy-waiting
   */
@@ -68,7 +62,7 @@ void setupNVIC()
      You will need TIMER1, GPIO odd and GPIO even interrupt handling for this
      assignment.
   */
-	//*ISER0 = 0x802; /*Enable interrupt handling for odd and even GPIO pins*/
+	//*ISER0 = 0x1802; /*Enable interrupt handling for odd and even GPIO pins and TIMER0*/
 	//*ISER0 = (1 << 26);
 	 *ISER0 = 0x4000802;
 }

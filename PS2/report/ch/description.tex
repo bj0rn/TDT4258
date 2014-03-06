@@ -2,7 +2,24 @@
 
 
 \subsection{Initial Setup}
-To begin with, peripherals such as buttons, LEDs, DAC, and timers needed to be configured. The buttons are needed to allow interaction with the board. The buttons are configured to play different sounds when pushed.
+To begin with, peripherals such as buttons, LEDs, DAC, and timers needed to be configured. As C programs can control hardware directly, one only needs to use pointers to refer to memory-mapped I/O registers. A lot of these were provided in the efm32gg.h-file where many of the registers were defined with macros by using volatile uint32_t pointer variables, so in the initial setup it was simply a matter of dereferencing these and writing the appropriate values.
+
+
+\subsubsection{Interrupt handlers}
+The procedure for setting up interrupt handlers will vary depending on the hardware used. In this case, as the exception vectors were already filled out in the startup code, all that needed to be done to enable interrupt generation and interrupt handling was to write the appropriate value to the ISER0-register, whic was done in the setupNVIC()-function. The code for enabling interrupts for the GPIO-pins (odd and even) and TIMER1 was as follows. 
+
+\begin{lstlisting}
+
+void setupNVIC()
+{
+ 	*ISER0 = 0x1802; /*Enable interrupt handling for odd and even GPIO pins and TIMER1*/
+}
+
+\end{lstlisting} 
+This corresponds to writing bit 1, 11, and 12 in the register, which are the appropriate bits for enabling interrupts for the mentioned exception handlers.
+
+\subsubsection{Hardware timers}
+There are several hardware timers that can be used, depending on the purpose (calculation-intensive operations, low energy demnads, etc...). In the initial setup, 
 
 
 \subsection{Sound Wave Synthesis}
@@ -12,9 +29,6 @@ The waves are generated
 
 
 In case of this assignment, we have decided to take two approaches for generating sound. The first one is implementing an synthesiser in software. This synthesiser is created by using square waves. The square wave is generating the approximations of the frequency, for various tones. The tones are as follows, A, B, C, D, E, and F. The waves are realised by writing to the DAC with the various frequencies, thereby approximating the different tones. The period of the tone is determined by a counter.
-
-  
-
 
 \subsection{Sound Sampling}
 Sound can also be generated through pre computed samples. With this approach the sound waves are generated on some other platform. The samples produced are approximations to already existing sound waves.
