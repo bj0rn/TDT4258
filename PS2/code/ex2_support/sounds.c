@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "sound_data.h"
+#include "melodies.h"
 
 #define SAMPLING_FREQUENCY 32768
 
@@ -12,71 +13,47 @@ int count=0;
 int note_pos=0;
 int tone_duration=0;
 int notes_pos=0;
+int pos=0;
 
 bool iterate=false;
 int counter=0;
-//int pos=0;
 
 
-//bool stop=false;
+// Set all variables to zero after reset
 void initSound(){
 	duration=0;
 	note_pos=0;
 	tone_duration=0;
 	notes_pos=0;
 	counter=0;
+	pos=0;
 	iterate=false;
 }
 void testNotes(int note, int time){
 	int cycles = convert_from_ms(time);
 
-//	bool stop=false;
-	
-//	if(stop==false){
-	
-//		if(count==time){
-//			silence(1000000);
-//			counter=0;
-//		}
-//		else{
-		int sampling=PERIOD/note;
-		if(sampling/2>=duration){
-			*DAC0_CH0DATA=2000;
-			*DAC0_CH1DATA=2000;
-//	        *GPIO_PA_DOUT = (0xff<<8);
-
-		}
-		else{
-			*DAC0_CH0DATA=0;
-			*DAC0_CH1DATA=0;
-//			*GPIO_PA_DOUT = (0x00<<8);
-		}
-		duration++;
-		if(duration>=sampling){
-			duration=0;
-		}
-		counter++;
-		
-		if(counter==cycles){
-		   iterate=true;
-		   counter=0;
-		}
-//		if(stop)
-		   
-//		}
+	int sampling=PERIOD/note;
+	if(sampling/2>=duration){
+		*DAC0_CH0DATA=2000;
+		*DAC0_CH1DATA=2000;
+	}
+	else{
+		*DAC0_CH0DATA=-2000;
+		*DAC0_CH1DATA=-2000;
+	}
+	duration++;
+	if(duration>=sampling){
+		duration=0;
+	}
+	counter++;	
+	if(counter==cycles){
+		iterate=true;
+	   counter=0;
+	}
 }
 
 void testSawtooth(int note, int time){
 
-//	bool stop=false;
-	
-//	if(stop==false){
-	
-//		if(count==time){
-//			silence(1000000);
-//			counter=0;
-//		}
-//		else{
 		int sampling=PERIOD/note;
 		
 		int slope = (1024)/sampling;
@@ -97,9 +74,6 @@ void testSawtooth(int note, int time){
 		   iterate=true;
 		   counter=0;
 		}
-//		if(stop)
-		   
-//		}
 }
 
 
@@ -148,7 +122,18 @@ void silence(int time){
 int convert_from_ms(int millis){
 	return millis * 15;
 }
-void play_piano(){
+void playSong(struct tone melody[], int size){
+	testNotes(melody[pos].note, melody[pos].time);
+	if(iterate==true){
+        pos++;
+        iterate=false;
+	}
+	else if(pos >= size){
+//		disableLowEnergyTimer();
+		initSound();
+	 }
+}
+void play_melodies(){
 	
 	switch((*GPIO_PC_DIN)){
 		case 0xfe:
@@ -164,16 +149,16 @@ void play_piano(){
 			testNotes(D, 10);
 			break;
 		case 0xef:
-			testNotes(E, 10);
+			playSong(mario, 215);
 			break;
 		case 0xdf:
-			testNotes(F, 10);
+			playSong(mario, 215);
 			break;
 		case 0xbf:
-			testNotes(G, 10);
+			playSong(mario, 215);
 			break;
 		case 0x7f:
-			testNotes(H, 10);
+			playSong(mario, 215);
 			break;
 	}
 }

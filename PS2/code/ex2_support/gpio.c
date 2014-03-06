@@ -18,7 +18,7 @@ void setupGPIO()
 
 	/* Configure interrupts */
 	*GPIO_EXTIPSELL = 0x22222222; /*Enable interrupts*/
-	*GPIO_EXTIFALL = 0xff; /*Sense falling edge */
+//	*GPIO_EXTIFALL = 0xff; /*Sense falling edge */
 	*GPIO_EXTIRISE = 0xff; /*Sense rising edge */
 	*GPIO_IEN = 0xff; /*Enable interrupt generation*/
 

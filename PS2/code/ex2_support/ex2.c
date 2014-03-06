@@ -3,6 +3,7 @@
 
 #include "efm32gg.h"
 
+
 /* 
   TODO calculate the appropriate sample period for the sound wave(s) 
   you want to generate. The core clock (which the timer clock is derived
@@ -23,11 +24,9 @@ void changeTopCounter(int sample_rate);
 /* Your code will start executing here */
 int main(void) {
 	initSound();
-	initPos();
   /* Call the peripheral setup functions */
   setupGPIO();
   setupDAC();
-  //setupTimer(SAMPLE_PERIOD);
   setupLowEnergyTimer();
   
   changeTopCounter(8000);
@@ -37,9 +36,12 @@ int main(void) {
   /* Enable interrupt handling */
   setupNVIC();
   
+<<<<<<< HEAD
  // *DAC0_CH0DATA=2000;
  // *DAC0_CH1DATA=2000;
   
+=======
+>>>>>>> fc212bcafdfd5c35306342b56bb2cdbb01d16fcc
   /* TODO for higher energy efficiency, sleep while waiting for interrupts
      instead of infinite loop for busy-waiting
   */
