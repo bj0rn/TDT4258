@@ -1,8 +1,10 @@
+#ifndef MELODIES_H
+#define MELODIES_H
+
+#define LENGTH_OF_TONE 19
 #include "sounds.h"
 
-#define LENGTH_OF_TONE 70
-
-struct tone mario[312] = {
+struct tone mario[215] = {
 {660,210},
 {0,14},
 {660,210},
@@ -223,7 +225,7 @@ struct tone mario[312] = {
 {0,82},
 };
 
-struct tone hit[37] = {
+struct tone hit_received[37] = {
 	{A, 10},
 	{B, 10},
 	{C, 10},
@@ -262,3 +264,66 @@ struct tone hit[37] = {
 	{A, 10},
 };
 
+struct tone hit_dealt[41] = {
+	{A, LENGTH_OF_TONE},
+	{B, LENGTH_OF_TONE},
+	{C, LENGTH_OF_TONE},
+	{D, LENGTH_OF_TONE},
+	{E, LENGTH_OF_TONE},
+	{F, LENGTH_OF_TONE},
+	{F, LENGTH_OF_TONE},
+	{E, LENGTH_OF_TONE},
+	{D, LENGTH_OF_TONE},
+	{C, LENGTH_OF_TONE},
+	{B, LENGTH_OF_TONE},
+	{A, LENGTH_OF_TONE},
+	{A, LENGTH_OF_TONE},
+	{B, LENGTH_OF_TONE},
+	{C, LENGTH_OF_TONE},
+	{D, LENGTH_OF_TONE},
+	{E, LENGTH_OF_TONE},
+	{F, LENGTH_OF_TONE},
+	{G, LENGTH_OF_TONE},
+	{G, LENGTH_OF_TONE},
+	{F, LENGTH_OF_TONE},
+	{E, LENGTH_OF_TONE},
+	{D, LENGTH_OF_TONE},
+	{C, LENGTH_OF_TONE},
+	{B, LENGTH_OF_TONE},
+	{A, LENGTH_OF_TONE},
+	{A, LENGTH_OF_TONE},
+	{B, LENGTH_OF_TONE},
+	{C, LENGTH_OF_TONE},
+	{D, LENGTH_OF_TONE},
+	{E, LENGTH_OF_TONE},
+	{F, LENGTH_OF_TONE},
+	{G, LENGTH_OF_TONE},
+	{H, LENGTH_OF_TONE},
+	{H, LENGTH_OF_TONE},
+	{G, LENGTH_OF_TONE},
+	{F, LENGTH_OF_TONE},
+	{E, LENGTH_OF_TONE},
+	{D, LENGTH_OF_TONE},
+	{C, LENGTH_OF_TONE},
+	{B, LENGTH_OF_TONE},
+	{A, LENGTH_OF_TONE},	
+};
+struct tone shoot[15]={
+	{O, LENGTH_OF_TONE},
+	{N, LENGTH_OF_TONE},
+	{M, LENGTH_OF_TONE},
+	{L, LENGTH_OF_TONE},
+	{K, LENGTH_OF_TONE},
+	{J, LENGTH_OF_TONE},
+	{I, LENGTH_OF_TONE},
+	{H, LENGTH_OF_TONE},
+	{G, LENGTH_OF_TONE},
+	{F, LENGTH_OF_TONE},
+	{E, LENGTH_OF_TONE},
+	{D, LENGTH_OF_TONE},
+	{C, LENGTH_OF_TONE},
+	{B, LENGTH_OF_TONE},
+	{A, LENGTH_OF_TONE},
+};
+
+#endif
