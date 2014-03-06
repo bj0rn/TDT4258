@@ -1,0 +1,13 @@
+\subsection{User Control}
+
+In order to let a user be able to interact with our setup, the buttons on the gamepad were configured so that different sounds would play when one of them were pressed. Each button was configured to play one specified sound or melody. This was done by reading the value of the GPIO_PC_DIN register, and writing this value to a function play_melodies(int) that would take the GPIO_PC_DIN value as an input parameter and play the corresponding melody. One of the challenges in this was to get the DAC to output the entire melody, and not just for the duration in which a button was pressed. To solve this, a pointer variable was used to point to the correct sample array and let the timer run for the entire length of the array in order to play the whole melody.
+
+Our setup was as follows:
+
+SW1: Mario
+SW2: Shoot
+SW3: Hit dealt
+SW4: Hit received
+SW5: Battlefield intro
+SW6 - SW8: Simple *beep*-noises at different frequencies (specified in appendix)
+
