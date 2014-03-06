@@ -12,7 +12,7 @@ Sound is realised through sound waves which is created by oscillations. "An osci
 
 There are various different approaches for generating these sound waves. The different waves have slightly different properties in regard to sound. To name a few different waves we have the sine wave, sawtooth wave, triangle wave and the square wave. These waves produces different sound characteristics {\bf more on this ? Sources and shit like that}. 
 
-In case of this assignment, we have crated two different kind of waves, the square wave and the sawtooth wave. The square wave is created by calculating discrete samples based on the tone frequency and the oscillator frequency. Oscillator frequency divided by the tone frequency decides how often the values to the DAC should alternate, thereby producing an approximation of the note. The different notes supported by the program is as follows, A, B, C, D, E, and F. 
+In case of this assignment, we have crated two different kind of waves, the square wave and the sawtooth wave. The square wave is created by calculating discrete samples based on the tone frequency and the oscillator frequency. Oscillator frequency divided by the tone frequency decides how often the values to the DAC should alternate, thereby producing an approximation of the note. The different notes supported by the program is as follows, A, B, C, D, E, F, and H.
 
 
 \input{fig/square}
@@ -24,7 +24,8 @@ Sound can also be generated through pre computed samples. With this approach the
 
 
 \subsection{Energy Optimization}
-In order to decrease the energy consumption of our program we have taken various different methods to reduce the consumption. Instead of using the proposed timer\cite{compendium}, we are instead using the low energy timer, LETIMER0 \cite{EFM32GG-rm}. This timer runs at a lower frequency, but require an low frequency oscillator in order to be of any value. The advantage with this timer is that it uses less energy and is able to run in EM2.  
+\input{ch/energy}
+
 
 
 
