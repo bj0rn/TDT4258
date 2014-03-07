@@ -18,21 +18,54 @@ void setupNVIC()
 \end{lstlisting} 
 This hexadecimal value corresponds to writing bit 1, 11, and 12 in the register, which are the appropriate bits for enabling interrupts for the mentioned exception handlers.
 
-The code for the exception vectors was already filled out in the startup code, so all that needed to be done to use the exception handlers was to write a function in the form $\_\_attribute\_\_ ((interrupt))$, as this tells the compiler that this is a function used for exception handling.
+The code for the exception vectors was already filled out in the startup code, so all that needed to be done to use the exception handlers was to write a function in the form $\_\_attribute\_\_$ ((interrupt)), as this tells the compiler that this is a function used for exception handling.
 
 
-\subsubsection{Hardware timers}
-There are several hardware timers that can be used, depending on the purpose (calculation-intensive operations, low energy demnads, etc...). In the initial setup, 
+\subsubsection{Timers}
+There are several hardware timers that can be used, depending on the purpose (calculation-intensive operations, low energy demnads, etc...). In the initial setup, we followed the procudure described in the compendium, which was achieved through the following C-code:
 
+\begin{lstlisting}
+
+void setupTimer(uint16_t period)
+{
+	*CMU_HFPERCLKEN0 |= (1 << 6); //Enable clock to timer by setting bit 6 in CMU_HFPERCLKEN0
+	*TIMER1_TOP = CLOCK_FREQUENCY/period; //Write the number of cycles between interrupts to register TIMER1_TOP
+	*TIMER1_IEN = 1; //Enable timer interrupt generation by writing 1 to TIMER1_IEN
+	*TIMER1_CMD = 1; //Start the timer by writing 1 to TIMER1_CMD
+}
+
+\end{lstlisting}
+
+Where $uint16\_t period$ is the number of interrupts per second.
+
+\subsubsection{Digital to analog converter (DAC)}
+
+The EFM32GG has several modes of writing to the DAC, with continous mode being the simplest one. How to set up the DAC in this mode was well specified in the compendium, and was implemented as a C function in the following way:
+
+\begin{lstlisting}
+
+void setupDAC()
+{
+  	*CMU_HFPERCLKEN0 |= (1 << 17); /*Enable DAC clock */
+	*DAC0_CTRL = 0x50010; /*Prescale clock to yield 437.5 KHz and enables DAC output to the amplified */
+	*DAC0_CH0CTRL = 1; /*Enable left channel */
+	*DAC0_CH1CTRL = 1; /*Enable right channel */
+}
+
+\end{lstlisting}
+
+Writing 0x50010 to the $DAC0\_CTRL$ register also enables DAC-output in continous mode. As we learned later, altering  this value to, for instance, 0x50014, will enable the DAC-output to sample/hold mode instead of continous mode. This will be explained in greater detail in the Energy Optimization section.
 
 \subsection{Sound Wave Synthesis}
 
-Sound is realised through sound waves which is created by oscillations. "An oscillator generates a consistent, repeating signals". These consistent signals can be used to create waves at various frequencies. Sound is actually the properties of the waves generated, with respect to frequency, amplitude, and period. The frequency determines the tone of the sound, the amplitude the strength, and the period the duration of the sound.  
+Sound is realised through sound waves which is created by oscillations. "An oscillator generates a consistent, repeating signals". These consistent signals can be used to create waves at various frequencies. Sound is actually the properties of the waves generated, with respect to frequency, amplitude, and period. The frequency determines the tone of the sound, the amplitude the strength, and the period the duration of the sound.
 
-There are various different approaches for generating these sound waves. The different waves have slightly different properties in regard to sound. To name a few different waves we have the sine wave, sawtooth wave, triangle wave and the square wave. These waves produces different sound characteristics {\bf more on this ? Sources and shit like that}. 
+There are various different approaches for generating these sound waves. The different waves have slightly different properties in regard to sound. To name a few different waves we have the sine wave, sawtooth wave, triangle wave and the square wave. These waves produces different sound characteristics. For instance, an ideal square wave will make instantaneous transitions between high and low levels, whereas a sawtooth wave will "climb" to the highest amplitude level, then instantaneously drop down to its lowest level. These two waves are illustrated in the figures below.{\bf more on this ? Sources and shit like that}. 
 
-In case of this assignment, we have crated two different kind of waves, the square wave and the sawtooth wave. The square wave is created by calculating discrete samples based on the tone frequency and the oscillator frequency. Oscillator frequency divided by the tone frequency decides how often the values to the DAC should alternate, thereby producing an approximation of the note. The different notes supported by the program is as follows, A, B, C, D, E, F, and H.
+\input{fig/square.tex}
+\input{fig/sawtooth.tex}
 
+The waves shown above are the two types we have created in this assignment. The square wave is created by calculating discrete samples based on the tone frequency and the oscillator frequency. Oscillator frequency divided by the tone frequency decides how often the values to the DAC should alternate, thereby producing an approximation of the note. The different notes supported by the program is as follows, A, B, C, D, E, F, G, and H.
 
 
 \subsection{Sound Sampling}
