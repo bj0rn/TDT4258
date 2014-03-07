@@ -12,6 +12,11 @@
 void setupLowEnergyTimer();
 void disableLowEnergyTimer();
 
+
+
+/*Global variables*/
+bool timer_running;
+
 int tone;
 int duration; //Keeps track of wave length
 int count;
@@ -147,6 +152,7 @@ void playSong(struct tone melody[], int size){
 	}
 	else if(pos >= size){	
 		disableLowEnergyTimer();
+		timer_running = false;
 		initSound();
 	 }
 }
@@ -154,41 +160,73 @@ void select_melodies(){
 	
 	switch((*GPIO_PC_DIN)){
 		case 0xfe:
+			if(timer_running){
+				disableLowEnergyTimer();
+			}
+			timer_running = true;
 			setupLowEnergyTimer();
 			sampleArray=mario;
 			songlength=215;
 			break;
 		case 0xfd:
+			if(timer_running){
+				disableLowEnergyTimer();
+			}
+			timer_running = true;
 			setupLowEnergyTimer();
 			sampleArray=mario;
 			songlength=215;			
 			break;
 		case 0xfb:
+			if(timer_running){
+				disableLowEnergyTimer();
+			}
+			timer_running = true;
 			setupLowEnergyTimer();
 			sampleArray=mario;
 			songlength=215;
 			break;
 		case 0xf7:
+			if(timer_running){
+				diableLowEnergyTimer();
+			}
+			timer_running = true; 
 			setupLowEnergyTimer();
 			sampleArray=mario;
 			songlength=215;
 			break;
 		case 0xef:
+			if(timer_running){
+				disableLowEnergyTimer();
+			}
+			timer_running = true;
 			setupLowEnergyTimer();
 			sampleArray=mario;
 			songlength=215;
 			break;
 		case 0xdf:
+			if(timer_running){
+				disableLowEnergyTimer();
+			}
+			timer_running = true; 
 			setupLowEnergyTimer();
 			sampleArray=mario;
 			songlength=215;
 			break;
 		case 0xbf:
+			if(timer_running){
+				disableLowEnergyTimer();
+			}
+			timer_running = true;
 			setupLowEnergyTimer();
 			sampleArray=mario;
 			songlength=215;
 			break;
 		case 0x7f:
+			if(timer_running){
+				disableLowEnergyTimer();
+			}
+			timer_running = true;
 			setupLowEnergyTimer();
 			sampleArray=mario;
 			songlength=215;
