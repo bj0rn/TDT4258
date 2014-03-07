@@ -1,55 +1,41 @@
 \section{Description And Methodology}
 
-
 \subsection{Initial Setup}
 To begin with, peripherals such as buttons, LEDs, DAC, and timers needed to be configured. As C programs can control hardware directly, one only needs to use pointers to refer to memory-mapped I/O registers. A lot of these were provided in the efm32gg.h-file where many of the registers were defined with macros by using volatile $uint32\_t$ pointer variables, so in the initial setup it was simply a matter of dereferencing these and writing the appropriate values.
 
 
 \subsubsection{Interrupt handlers}
-The procedure for setting up interrupt handlers will vary depending on the hardware used. To enable interrupt generation and interrupt handling for the appropriate exception handlers, the proper value had to be written to the ISER0-register, which was done in the setupNVIC()-function. The code for enabling interrupts for the GPIO-pins (odd and even) and TIMER1 was as follows.
-
-\begin{lstlisting}
-
-void setupNVIC()
-{
- 	*ISER0 = 0x1802; /*Enable interrupt handling for odd and even GPIO pins and TIMER1*/
-}
-
-\end{lstlisting} 
-This hexadecimal value corresponds to writing bit 1, 11, and 12 in the register, which are the appropriate bits for enabling interrupts for the mentioned exception handlers.
-
-The code for the exception vectors was already filled out in the startup code, so all that needed to be done to use the exception handlers was to write a function in the form $\_\_attribute\_\_$ ((interrupt)), as this tells the compiler that this is a function used for exception handling.
+The procedure for setting up interrupt handlers will vary depending on the hardware used. To enable interrupt generation and interrupt handling for the appropriate exception handlers, the proper value had to be written to the ISER0-register, which was done in the setupNVIC()-function in the ex2.c-file. The hexadecimal value 0x1802 written to the ISER0-register corresponds to writing bit 1, 11, and 12 in the register, which are the appropriate bits for enabling interrupts for the mentioned exception handlers.
+	The code for the exception vectors was already filled out in the startup code, so all that needed to be done to use the exception handlers was to write a function in the form $\_\_attribute\_\_$ ((interrupt)), as this tells the compiler that this is a function used for exception handling.
 
 
 \subsubsection{Timers}
-There are several hardware timers that can be used, depending on the purpose (calculation-intensive operations, low energy demands, etc...). The timers have the advantage of being able to produce interrupts at periodic intervals. These makes them ideal when working with sounds where the creations of sound waves depends consistent oscillations. 
+There are several hardware timers that can be used, depending on the purpose (calculation-intensive operations, low energy demands, etc...). The timers have the advantage of being able to produce interrupts at periodic intervals. These make them ideal when working with sounds where the creations of sound waves depends consistent oscillations. 
 
-The timer were configured to be set to an specific frequency through the use of the TOP register. The interrupt frequency was determined by dividing the timer clock frequency by the amount of interrupts required. The TOP register specifies the number of clock cycles between each interrupt
+The timer was configured to be set to a specific frequency through the use of the TOP register. The interrupt frequency was determined by dividing the timer clock frequency by the amount of interrupts required. The TOP register specifies the number of clock cycles between each interrupt
 
 
 \subsubsection{Digital to analog converter (DAC)}
-The DAC is an component that based to a digital value converts it to analog signals. The DAC on the 
-
-The EFM32GG has several modes of writing to the DAC, with continous mode being the simplest one. How to set up the DAC in this mode was well specified in the compendium, and was implemented as a C function in the following way:
-
-Writing 0x50010 to the $DAC0\_CTRL$ register also enables DAC-output in continous mode. As we learned later, altering  this value to, for instance, 0x50014, will enable the DAC-output to sample/hold mode instead of continous mode. This will be explained in greater detail in the Energy Optimization section.
+The DAC is a component that converts a digital value to an analog signals. The DAC on the EFM32GG has two channels, each with a 12-bit data register. The EFM32GG has several modes of writing to the DAC, with continous mode being the simplest one. How to set up the DAC in this mode was well specified in the compendium, and was implemented in the setupDAC()-function in the dac.c-file. Writing 0x50010 to the $DAC0\_CTRL$ register enables DAC-output in continous mode. As we learned later, altering  this value to, for instance, 0x50014, will enable the DAC-output to sample/hold mode instead of continous mode, which has other advantages. This will be explained in greater detail in the Energy Optimization section.
 
 \subsection{Sound Wave Synthesis}
 
 Sound is realised through sound waves which is created by oscillations. "An oscillator generates a consistent, repeating signals". These consistent signals can be used to create waves at various frequencies. Sound is actually the properties of the waves generated, with respect to frequency, amplitude, and period. The frequency determines the tone of the sound, the amplitude the strength, and the period the duration of the sound.
 
-There are various different approaches for generating these sound waves. The different waves have slightly different properties in regard to sound. To name a few different waves we have the sine wave, sawtooth wave, triangle wave and the square wave. These waves produces different sound characteristics. For instance, an ideal square wave will make instantaneous transitions between high and low levels, whereas a sawtooth wave will "climb" to the highest amplitude level, then instantaneously drop down to its lowest level. These two waves are illustrated in the figures below.{\bf more on this ? Sources and shit like that}. 
+There are various different approaches for generating these sound waves. The different waves have slightly different properties in regard to sound. To name a few different waves we have the sine wave, sawtooth wave, triangle wave and the square wave. These waves produces different sound characteristics. For instance, an ideal square wave will make instantaneous transitions between high and low levels, whereas a sawtooth wave will "climb" to the highest amplitude level, then instantaneously drop down to its lowest level. These two waves are illustrated in the figures below. (SOURCE)
 
 \input{fig/square.tex}
 \input{fig/sawtooth.tex}
 
-The waves shown above are the two types we have created in this assignment. The square wave is created by calculating discrete samples based on the tone frequency and the oscillator frequency. Oscillator frequency divided by the tone frequency decides how often the values to the DAC should alternate, thereby producing an approximation of the note. The different notes supported by the program is as follows, A, B, C, D, E, F, G, and H.
+The waves shown above are the two types we have created and tested in this assignment. The square wave is created by calculating discrete samples based on tone and oscillator frequency. Oscillator frequency divided by the tone frequency decides how often the values to the DAC should alternate, thereby producing an approximation of the note. 
 
+\subsubsection{Program structure}
+
+The different notes were defined as macros A through O in the sounds.h file, with each as a frequency between 200 and 3000 Hz. These were used mainly used for creating specific sound effects, which will be described in further detail in the User Control section.
+	In order to play tones for a specified amount of time, we defined a struct in the sounds.h-file with a note and time field, where note would be specified in Hz, and time in milliseconds. Each of the melodies in the melodies.h-file were made as arrays of said structs. The playSong()-function would then be responsible for playing these melodies by continously calling on the testNotes()-function and iterating through the array. A square waveform with a peak-to-peak amplitude of 4000 was used, as this generated a comfortable sound level. This was also tested with an implementation of the sawtooth waveform, but in the end the sound produced by the square waveform was prefered.
 
 \subsection{Sound Sampling}
 \input{ch/sound-sampling}
-
-
 
 
 \subsection{Energy Optimization}
@@ -59,14 +45,3 @@ The waves shown above are the two types we have created in this assignment. The 
 
 \subsection{User Control}
 \input{UserControl}
-
-
-
-
-
-
-
-
-
-
-
