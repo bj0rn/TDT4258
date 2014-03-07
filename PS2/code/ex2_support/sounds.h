@@ -34,7 +34,7 @@ void silence(int time);
 void play_note(int);
 void play_music(int lenght, int flag);
 void testSawtooth(int note, int time);
-void play_melodies();
+void select_melodies();
 void initSound();
 void initPos();
 void playSong(struct tone melody[], int size);

@@ -7,6 +7,11 @@
 
 #define SAMPLING_FREQUENCY 32768
 
+
+/*Function prototypes*/
+void setupLowEnergyTimer();
+void disableLowEnergyTimer();
+
 int tone;
 int duration; //Keeps track of wave length
 int count;
@@ -140,43 +145,51 @@ void playSong(struct tone melody[], int size){
         pos++;
         iterate=false;
 	}
-	else if(pos >= size){
-//		disableLowEnergyTimer();
+	else if(pos >= size){	
+		disableLowEnergyTimer();
 		initSound();
 	 }
 }
-void play_melodies(){
+void select_melodies(){
 	
-	switch((*GPIO_IF)){
+	switch((*GPIO_PC_DIN)){
 		case 0xfe:
+			setupLowEnergyTimer();
 			sampleArray=mario;
 			songlength=215;
 			break;
 		case 0xfd:
+			setupLowEnergyTimer();
 			sampleArray=mario;
 			songlength=215;			
 			break;
 		case 0xfb:
+			setupLowEnergyTimer();
 			sampleArray=mario;
 			songlength=215;
 			break;
 		case 0xf7:
+			setupLowEnergyTimer();
 			sampleArray=mario;
 			songlength=215;
 			break;
 		case 0xef:
+			setupLowEnergyTimer();
 			sampleArray=mario;
 			songlength=215;
 			break;
 		case 0xdf:
+			setupLowEnergyTimer();
 			sampleArray=mario;
 			songlength=215;
 			break;
 		case 0xbf:
+			setupLowEnergyTimer();
 			sampleArray=mario;
 			songlength=215;
 			break;
 		case 0x7f:
+			setupLowEnergyTimer();
 			sampleArray=mario;
 			songlength=215;
 			break;
