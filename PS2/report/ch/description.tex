@@ -28,20 +28,9 @@ The timer were configured to be set to an specific frequency through the use of 
 
 
 \subsubsection{Digital to analog converter (DAC)}
+The DAC is an component that based to a digital value converts it to analog signals. The DAC on the 
 
 The EFM32GG has several modes of writing to the DAC, with continous mode being the simplest one. How to set up the DAC in this mode was well specified in the compendium, and was implemented as a C function in the following way:
-
-\begin{lstlisting}
-
-void setupDAC()
-{
-  	*CMU_HFPERCLKEN0 |= (1 << 17); /*Enable DAC clock */
-	*DAC0_CTRL = 0x50010; /*Prescale clock to yield 437.5 KHz and enables DAC output to the amplified */
-	*DAC0_CH0CTRL = 1; /*Enable left channel */
-	*DAC0_CH1CTRL = 1; /*Enable right channel */
-}
-
-\end{lstlisting}
 
 Writing 0x50010 to the $DAC0\_CTRL$ register also enables DAC-output in continous mode. As we learned later, altering  this value to, for instance, 0x50014, will enable the DAC-output to sample/hold mode instead of continous mode. This will be explained in greater detail in the Energy Optimization section.
 
