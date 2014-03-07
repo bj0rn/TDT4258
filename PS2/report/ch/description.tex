@@ -22,21 +22,10 @@ The code for the exception vectors was already filled out in the startup code, s
 
 
 \subsubsection{Timers}
-There are several hardware timers that can be used, depending on the purpose (calculation-intensive operations, low energy demnads, etc...). In the initial setup, we followed the procudure described in the compendium, which was achieved through the following C-code:
+There are several hardware timers that can be used, depending on the purpose (calculation-intensive operations, low energy demands, etc...). The timers have the advantage of being able to produce interrupts at periodic intervals. These makes them ideal when working with sounds where the creations of sound waves depends consistent oscillations. 
 
-\begin{lstlisting}
+The timer were configured to be set to an specific frequency through the use of the TOP register. The interrupt frequency was determined by dividing the timer clock frequency by the amount of interrupts required. The TOP register specifies the number of clock cycles between each interrupt
 
-void setupTimer(uint16_t period)
-{
-	*CMU_HFPERCLKEN0 |= (1 << 6); //Enable clock to timer by setting bit 6 in CMU_HFPERCLKEN0
-	*TIMER1_TOP = CLOCK_FREQUENCY/period; //Write the number of cycles between interrupts to register TIMER1_TOP
-	*TIMER1_IEN = 1; //Enable timer interrupt generation by writing 1 to TIMER1_IEN
-	*TIMER1_CMD = 1; //Start the timer by writing 1 to TIMER1_CMD
-}
-
-\end{lstlisting}
-
-Where $uint16\_t period$ is the number of interrupts per second.
 
 \subsubsection{Digital to analog converter (DAC)}
 
