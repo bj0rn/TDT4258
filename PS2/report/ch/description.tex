@@ -1,6 +1,5 @@
 \section{Description And Methodology}
 
-
 \subsection{Initial Setup}
 To begin with, peripherals such as buttons, LEDs, DAC, and timers needed to be configured. As C programs can control hardware directly, one only needs to use pointers to refer to memory-mapped I/O registers. A lot of these were provided in the efm32gg.h-file where many of the registers were defined with macros by using volatile $uint32\_t$ pointer variables, so in the initial setup it was simply a matter of dereferencing these and writing the appropriate values.
 
@@ -54,7 +53,7 @@ void setupDAC()
 
 \end{lstlisting}
 
-Writing 0x50010 to the $DAC0\_CTRL$ register also enables DAC-output in continous mode. As we learned later, altering  this value to, for instance, 0x50014, will enable the DAC-output to sample/hold mode instead of continous mode. This will be explained in greater detail in the Energy Optimization section.
+Writing 0x50010 to the $DAC0\_CTRL$ register also enables DAC-output in continous mode. As we learned later, altering  this value to, for instance, 0x50014, will enable the DAC-output to sample/hold mode instead of continous mode, which has other advantages. This will be explained in greater detail in the Energy Optimization section.
 
 \subsection{Sound Wave Synthesis}
 
@@ -65,7 +64,19 @@ There are various different approaches for generating these sound waves. The dif
 \input{fig/square.tex}
 \input{fig/sawtooth.tex}
 
-The waves shown above are the two types we have created in this assignment. The square wave is created by calculating discrete samples based on the tone frequency and the oscillator frequency. Oscillator frequency divided by the tone frequency decides how often the values to the DAC should alternate, thereby producing an approximation of the note. The different notes supported by the program is as follows, A, B, C, D, E, F, G, and H.
+The waves shown above are the two types we have created and tested in this assignment. The square wave is created by calculating discrete samples based on tone and oscillator frequency. Oscillator frequency divided by the tone frequency decides how often the values to the DAC should alternate, thereby producing an approximation of the note. 
+
+\subsubsection{Program structure}
+
+The different notes were defined as macros A through O in the sounds.h file, with each as a frequency between 200 and 3000 Hz. These were used mainly used for creating specific sound effects, which will be described in further detail in the User Control section.
+	In order to play tones for a specified amount of time, we defined a struct with a note and time field, specified as follows:
+	
+\begin{lstlisting}
+struct tone{
+	int note, time;
+};
+\end{lstlisting}
+
 
 
 \subsection{Sound Sampling}

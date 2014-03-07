@@ -8,15 +8,15 @@
 #define SAMPLING_FREQUENCY 32768
 
 int tone;
-int duration=0;
-int count=0;
-int note_pos=0;
-int tone_duration=0;
-int notes_pos=0;
-int pos=0;
+int duration; //Keeps track of wave length
+int count;
+int note_pos;
+int tone_duration;
+int notes_pos;
+int pos;
 
-bool iterate=false;
-int counter=0;
+bool iterate=false; //Set to true if tone has been played for a specified amount of time
+int counter=0; //Keeps track of time duration of tone 
 
 
 // Set all variables to zero after reset
@@ -29,10 +29,14 @@ void initSound(){
 	pos=0;
 	iterate=false;
 }
-void testNotes(int note, int time){
-	int cycles = convert_from_ms(time);
 
-	int sampling=PERIOD/note;
+/*
+Function to play a note for a specified amount of milliseconds
+*/
+void testNotes(int note, int time){
+	int cycles = convert_from_ms(time); //Cycle variable corresponds to amount of milliseconds specified in time-variable
+
+	int sampling=PERIOD/note; //Create correct number of samples per waveform based on the number of samples per second 
 	if(sampling/2>=duration){
 		*DAC0_CH0DATA=2000;
 		*DAC0_CH1DATA=2000;
@@ -47,8 +51,8 @@ void testNotes(int note, int time){
 	}
 	counter++;	
 	if(counter==cycles){
-		iterate=true;
-	   counter=0;
+		iterate=true; //Iterate to next note if the current note has played for specified amount of time
+	    counter=0;
 	}
 }
 
