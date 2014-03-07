@@ -15,6 +15,9 @@ int tone_duration;
 int notes_pos;
 int pos;
 
+struct tone *sampleArray;
+int songlength;
+
 bool iterate=false; //Set to true if tone has been played for a specified amount of time
 int counter=0; //Keeps track of time duration of tone 
 
@@ -144,30 +147,38 @@ void playSong(struct tone melody[], int size){
 }
 void play_melodies(){
 	
-	switch((*GPIO_PC_DIN)){
+	switch((*GPIO_IF)){
 		case 0xfe:
-			testNotes(A, 10);
+			sampleArray=mario;
+			songlength=215;
 			break;
 		case 0xfd:
-			testNotes(B, 10);
+			sampleArray=mario;
+			songlength=215;			
 			break;
 		case 0xfb:
-			testNotes(C, 10);
+			sampleArray=mario;
+			songlength=215;
 			break;
 		case 0xf7:
-			testNotes(D, 10);
+			sampleArray=mario;
+			songlength=215;
 			break;
 		case 0xef:
-			playSong(mario, 215);
+			sampleArray=mario;
+			songlength=215;
 			break;
 		case 0xdf:
-			playSong(mario, 215);
+			sampleArray=mario;
+			songlength=215;
 			break;
 		case 0xbf:
-			playSong(mario, 215);
+			sampleArray=mario;
+			songlength=215;
 			break;
 		case 0x7f:
-			playSong(mario, 215);
+			sampleArray=mario;
+			songlength=215;
 			break;
 	}
 }

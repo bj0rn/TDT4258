@@ -4,6 +4,9 @@
 #include "efm32gg.h"
 #include "sounds.h"
 
+extern struct tone *sampleArray;
+extern int songlength;
+
 void disableLowEnergyTimer();
 void disableDAC();
 //int pos=0;
@@ -33,11 +36,8 @@ void __attribute__ ((interrupt)) TIMER1_IRQHandler()
 void __attribute__ ((interrupt)) GPIO_EVEN_IRQHandler() 
 {
 	/* Clear pending interrupts */
-	*GPIO_IFC = *GPIO_IF;
-	*GPIO_IFC = 0xff;
-	
-	play_melodies();
-
+//	*GPIO_IFC = *GPIO_IF;
+//	*GPIO_IFC = 0xff;
 	
 	//*GPIO_PA_DOUT = (*GPIO_PC_DIN << 8);
   	//*GPIO_PA_DOUT = 0x0;		
@@ -57,7 +57,7 @@ void __attribute__ ((interrupt)) GPIO_ODD_IRQHandler()
 
 	
 	/*Clear pending interrupts*/
-	*GPIO_IFC = 0xff;
+//	*GPIO_IFC = 0xff;
 //	while((*GPIO_PC_DIN)!=0xff){
 //		play_piano();
 //	}	 
@@ -69,8 +69,6 @@ void __attribute__ ((interrupt)) GPIO_ODD_IRQHandler()
 }
 
 void __attribute__ ((interrupt)) LETIMER0_IRQHandler(){
-	//Clear interrupt
-	*LETIMER0_IFC = 1;
 	//static int sample=0;
 	//sample+=55;
 	//if(sample>4095)
@@ -86,8 +84,10 @@ void __attribute__ ((interrupt)) LETIMER0_IRQHandler(){
 	//	 disableLowEnergyTimer();
 //		 disableDAC();
 	// }
-	play_music(452379, 0);
+	playSong(sampleArray, songlength);
 
+	//Clear interrupt
+//	*LETIMER0_IFC = 1;
 }
 
 
