@@ -1,1 +1,19 @@
-Sound can also be generated through pre computed samples. With this approach the sound waves are generated on some other platform. The samples produced are approximations to already existing sound samples. The samples are modified slightly to fit the microcontroller. Due to size limitations on the board, 8 bit samples with 8000Hz were generated. This allowed us to be able to play song with some length. In the first approach we generated samples with a sample frequency of 48000Hz. This sample rate produced sounds with relatively high sounds quality, but required a lot of storage for the songs. This limited the lenght of the songs we were able to play. 
+
+Sound can also be generated through pre computed samples. With this approach the sound waves are generated on some other platform. The samples produced are approximations to already existing sound samples. The samples are modified slightly to fit the microcontroller. Due to size limitations on the board, 8 bit samples at 8000Hz were generated. This decreased the sound quality, but allowed us to be able to play songs with greater length. In the first approach we generated samples with a sample frequency of 48000Hz. This sample rate produced sounds with relatively high sounds quality, but required a substantial amount of storage.
+
+The sound samples were generated with the use of audacity and switch. These programs were used to modify already existing .wav files. E.g change size of the samples and adjust the sample rate. The samples when then further extracted from the .wav files, and extracted into an array consisting of 8 bits chars. The sample array could then be then statically linked with the code. However, the relatively low sample rate required some changes in the code. Note that the sound synthesiser used an higher sample rate. E.g 48000. In order to be able to create play the samples at 8000Hz we had to adjust the sample frequency when playing the precomputed samples. This was achieved by simply changing TOP register of the timer. By adjusting this register we were able to change the interrupt frequency, and thereby changing the sample frequency. Then each sample could simply be played at each interrupt.  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+

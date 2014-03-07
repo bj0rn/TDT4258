@@ -37,6 +37,9 @@ void testNotes(int note, int time){
 	int cycles = convert_from_ms(time); //Cycle variable corresponds to amount of milliseconds specified in time-variable
 
 	int sampling=PERIOD/note; //Create correct number of samples per waveform based on the number of samples per second 
+	
+	
+	/* if-else to transition between high and low */
 	if(sampling/2>=duration){
 		*DAC0_CH0DATA=2000;
 		*DAC0_CH1DATA=2000;
@@ -46,10 +49,12 @@ void testNotes(int note, int time){
 		*DAC0_CH1DATA=-2000;
 	}
 	duration++;
+	
+	/* Reset duration if end of period */
 	if(duration>=sampling){
 		duration=0;
 	}
-	counter++;	
+	counter++;
 	if(counter==cycles){
 		iterate=true; //Iterate to next note if the current note has played for specified amount of time
 	    counter=0;
