@@ -29,7 +29,7 @@ int main(void) {
   setupDAC();
   setupLowEnergyTimer();
   
-  changeTopCounter(8000);
+//  changeTopCounter(8000);
 
 
 
