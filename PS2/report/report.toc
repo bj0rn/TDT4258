@@ -12,9 +12,9 @@
 \contentsline {section}{\numberline {3}Results and Tests}{8}{section.0.3}
 \contentsline {subsection}{\numberline {3.1}Energy optimization}{8}{subsection.0.3.1}
 \contentsline {subsubsection}{\numberline {3.1.1}Idle}{8}{subsubsection.0.3.1.1}
-\contentsline {subsubsection}{\numberline {3.1.2}Running}{8}{subsubsection.0.3.1.2}
-\contentsline {subsection}{\numberline {3.2}Sounds functionality}{8}{subsection.0.3.2}
-\contentsline {subsubsection}{\numberline {3.2.1}Sound effects}{8}{subsubsection.0.3.2.1}
-\contentsline {subsubsection}{\numberline {3.2.2}Music}{8}{subsubsection.0.3.2.2}
-\contentsline {section}{\numberline {4}Evaluation}{8}{section.0.4}
-\contentsline {section}{\numberline {5}Conclusion}{9}{section.0.5}
+\contentsline {subsubsection}{\numberline {3.1.2}Running}{9}{subsubsection.0.3.1.2}
+\contentsline {subsection}{\numberline {3.2}Sounds functionality}{10}{subsection.0.3.2}
+\contentsline {subsubsection}{\numberline {3.2.1}Sound effects}{10}{subsubsection.0.3.2.1}
+\contentsline {subsubsection}{\numberline {3.2.2}Music}{10}{subsubsection.0.3.2.2}
+\contentsline {section}{\numberline {4}Evaluation}{10}{section.0.4}
+\contentsline {section}{\numberline {5}Conclusion}{11}{section.0.5}

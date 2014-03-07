@@ -99,9 +99,6 @@ void testSawtooth(int note, int time){
 		}
 }
 
-
-
-
 /*Used in combination with the play music function*/
 void play_note(int note){
 	int sampling = PERIOD/note;
