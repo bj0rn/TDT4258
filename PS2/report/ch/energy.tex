@@ -2,40 +2,38 @@ The EFM32GG microcontroller has a rich set of features regarding improving energ
 
 Various techniques were employed to reach this goal. As it turned out the achieving deep sleep and sleep on exit proved to be more complicated than first imagined. During deep sleep mode the high frequency oscillator was turned off. This oscillator was used to clock both the DAC and the timer. When entering EFM32 this produced some unexpected bugs. On entering EM2 the program started to behave non-deterministic. As it turned out, both the DAC and the timer was clocked by the high frequency oscillator. This directly affected the interrupts produced by the timer.
 
-This problem was solved by introducing the low energy timer. This timer is able to run as low as to EM2 and EM3 depending on the oscillator used. In case of producing sound, the 32 KHz oscillator were used. This timer replaced the old timer, and only caused some minor changes to made in the already existing code. In particular, the frequency used to generated was changed to accommodate the new oscillator frequency. Instead of  using a sample rate of 48000, the new 
-new oscillator were able to produce 32768 interrupts every second. The code used to enable the low energy timer can be viewed below.  
+This problem was solved by introducing the low energy timer. This timer is able to run as low as to EM2 and EM3 depending on the oscillator used. In case of producing sound, the 32,768 KHz oscillator were used. This timer replaced the old timer, and only caused some minor changes to made in the already existing code. In particular, the frequency used to generated was changed to accommodate the new oscillator frequency. Instead of  using a sample rate of 48000, the new 
+new oscillator were able to produce 32768 interrupts every second. This implied a maximum sample rate of 32768.
+
+%\begin{lstlisting}
+%void setupLowEnergyTimer(){
+%    *CMU_OSCENCMD = (1 << 6); /* Enable the low frequency oscillator*/
+%    *CMU_HFCORECLKEN0 |= (1 << 4); /* Enable LE clock*/
+%    *LETIMER0_CTRL |= (1 << 9); /* Set COMP0 as top register*/
+%    *CMU_LFACLKEN0 |= (1 << 2); /* Enable low energy timer0*/
+%    *LETIMER0_TOP = 1;  /* Set TOP to 1 */
+%    *LETIMER0_IEN = 1;  /* Enable interrupts */ 
+%    *LETIMER0_CMD = 1;  /* Start the timer */
+%}
+
+%\end{lstlisting}
+
+This produced a lower energy consumption, however DAC still caused problems. Since the DAC were configured to continuously pull the DAC registers. The were some problems when entering the low energy mode. The entering of energy mode caused the DAC to continue producing static sound. As it turns out, configuring the DAC with continuous mode will not be able to maintain the voltage levels when entering deep sleep. This cause the voltage levels to fluctuate, and create a static background sound. Fortunately, the DAC also support another mode, sample/hold mode. During sample/hold mode, the DAC core converts on a triggered conversion and then holds the output in a sample/hold element. When not converting, the DAC is turned of between sample, which reduces the power consumption. The sample/hold element will hold the element for a certain time without a refresh conversion\cite{EFM32GG-rm}. Fortunately, this holding time is sufficient in order to fix our bug, and on the same time further decrease the energy consumption. This change from continuous mode to sample/hold mode is achieved by changing the value written to the $DAC0\_CTRL$ register. 
 
 
-\begin{lstlisting}
-void setupLowEnergyTimer(){
-    *CMU_OSCENCMD = (1 << 6); /* Enable the low frequency oscillator*/
-    *CMU_HFCORECLKEN0 |= (1 << 4); /* Enable LE clock*/
-    *LETIMER0_CTRL |= (1 << 9); /* Set COMP0 as top register*/
-    *CMU_LFACLKEN0 |= (1 << 2); /* Enable low energy timer0*/
-    *LETIMER0_TOP = 1;  /* Set TOP to 1 */
-    *LETIMER0_IEN = 1;  /* Enable interrupts */ 
-    *LETIMER0_CMD = 1;  /* Start the timer */
-}
-
-\end{lstlisting}
-
-This produced a lower energy consumption, however DAC still caused problems. Since the DAC were configured to continuously pull the DAC registers. The were some problems when entering the low energy mode. The entering of energy mode caused the DAC to continue producing static sound. As it turns out, configuring the DAC with continuous mode will not be able to maintain the voltage levels when entering deep sleep. This cause the voltage levels to fluctuate, and create a static background sound. Fortunately, the DAC also support another mode, sample/hold mode. During sample/hold mode, the DAC core converts on a triggered conversion and then holds the output in a sample/hold element. When not converting, the DAC is turned of between sample, which reduces the power consumption. The sample/hold element will hold the element for a certain time without a refresh conversion\cite{EFM32GG-rm}. Fortunately, this holding time is sufficient in order to fix our bug, and on the same time further decrease the energy consumption. This change from continuous mode to sample/hold mode is achieved by changing the value written to the $DAC0\_CTRL$ register. This can be seen in the code listing below. 
-
-
-\begin{lstlisting}
-void setupDAC(){
-    /*...*/
-    *DAC_CTRL0 = 0x50010;   /*The old value*/
-    *DAC_CTRL0 = 0x50014;   /*The new value enabling hold/sample mode*/
-    /*...*/
-}
-\end{lstlisting}
+%\begin{lstlisting}
+%void setupDAC(){
+%    /*...*/
+%    *DAC_CTRL0 = 0x50010;   /*The old value*/
+%    *DAC_CTRL0 = 0x50014;   /*The new value enabling hold/sample mode*/
+%    /*...*/
+%}
+%\end{lstlisting}
 
 These techniques allow the code to enter deep sleep mode, and also allow utilisation of sleep on exit. This is was accomplished by writing the value 6 to the SCR register setting the deep sleep and deep sleep on exit bit. Then entering EM2 is achieved by calling the WFI instruction.
 
 These techniques combined proved to be very beneficial regarding the energy efficiency. However, we could do even better. During the execution of our program. Most of the functionality were idle. The high frequency oscillator was turned of during deep sleep, however the DAC and the energy timer would still consume power. To allow the program achieve even better decrease in power consumption. We implemented functions that could enable/disable these components. These components we only enabled when needed and disable during idle mode. 
 
-{\bf add code here}
 
 
  
