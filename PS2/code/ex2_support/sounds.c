@@ -11,6 +11,8 @@
 /*Function prototypes*/
 void setupLowEnergyTimer();
 void disableLowEnergyTimer();
+int convert_from_ms(int millis);
+void changeTopCounter(int sampleRate);
 
 
 
@@ -27,6 +29,7 @@ int pos;
 
 struct tone *sampleArray;
 int songlength;
+int runBattlefield;
 
 bool iterate=false; //Set to true if tone has been played for a specified amount of time
 int counter=0; //Keeps track of time duration of tone 
@@ -42,6 +45,8 @@ void initSound(){
 	pos=0;
 	songlength=0;
 	iterate=false;
+	runBattlefield = 0;
+	changeTopCounter(SAMPLING_FREQUENCY);
 }
 
 /*
@@ -101,34 +106,25 @@ void testSawtooth(int note, int time){
 
 /*Used in combination with the play music function*/
 void play_note(int note){
-	int sampling = PERIOD/note;
-	int16_t amplitude;
 	
-	*DAC0_CH0DATA = (note << 2);
-	*DAC0_CH1DATA = (note << 2);	
+	*DAC0_CH0DATA = (note << 1);
+	*DAC0_CH1DATA = (note << 1);	
 	
-	duration++;
-	if(duration == sampling){
-		duration = 0;
-	}
 }
 
 /*Feed the DAC with already existing samples. With normal use
  * this plays 8000 samples per second*/
-void play_music(int size, int tone_lenght){
+void play_music(int size){
 	int note = (char)sounddata_data[notes_pos];
 	play_note(note);
- 	tone_duration++;
 	
-	if(tone_duration > tone_lenght){
-		notes_pos++;
-		tone_duration = 0;
-	}
-	note_pos++;
 	if(notes_pos > size){
 		notes_pos = 0;
-//		disableLowEnergyTimer();
+		disableLowEnergyTimer();
+		initSound();
 	}
+	
+	notes_pos++;
 
 }
 
@@ -141,7 +137,7 @@ void silence(int time){
 	}
 }
 int convert_from_ms(int millis){
-	return millis * 50;
+	return millis * 15;
 }
 void playSong(struct tone melody[], int size){
 	testNotes(melody[pos].note, melody[pos].time);
@@ -204,9 +200,10 @@ void select_melodies(){
 				initSound();			
 			}
 			timer_running = true;
+			runBattlefield = 1;
 			setupLowEnergyTimer();
-			sampleArray=mario;
-			songlength=215;
+			changeTopCounter(8000);
+			songlength=300000;
 			break;
 		case 0xdf:
 			if(timer_running){
