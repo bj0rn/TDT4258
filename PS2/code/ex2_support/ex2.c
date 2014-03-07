@@ -17,7 +17,7 @@
 void setupTimer(uint32_t period);
 void setupDAC();
 void setupNVIC();
-//void setupLowEnergyTimer();
+void setupLowEnergyTimer();
 void setupGPIO();
 void changeTopCounter(int sample_rate);
 
@@ -28,8 +28,8 @@ int main(void) {
   setupGPIO();
   setupDAC();
   setupLowEnergyTimer();
-  
-//  changeTopCounter(8000);
+    
+  changeTopCounter(8000);
 
 
 

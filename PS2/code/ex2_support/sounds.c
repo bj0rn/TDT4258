@@ -40,6 +40,7 @@ void initSound(){
 	notes_pos=0;
 	counter=0;
 	pos=0;
+	songlength=0;
 	iterate=false;
 }
 
@@ -129,6 +130,7 @@ void play_music(int size, int tone_lenght){
 	note_pos++;
 	if(notes_pos > size){
 		notes_pos = 0;
+//		disableLowEnergyTimer();
 	}
 
 }
@@ -142,7 +144,7 @@ void silence(int time){
 	}
 }
 int convert_from_ms(int millis){
-	return millis * 15;
+	return millis * 50;
 }
 void playSong(struct tone melody[], int size){
 	testNotes(melody[pos].note, melody[pos].time);
@@ -162,6 +164,7 @@ void select_melodies(){
 		case 0xfe:
 			if(timer_running){
 				disableLowEnergyTimer();
+				initSound();
 			}
 			timer_running = true;
 			setupLowEnergyTimer();
@@ -171,33 +174,37 @@ void select_melodies(){
 		case 0xfd:
 			if(timer_running){
 				disableLowEnergyTimer();
+				initSound();
 			}
 			timer_running = true;
 			setupLowEnergyTimer();
-			sampleArray=mario;
-			songlength=215;			
+			sampleArray=hit_received;
+			songlength=36;			
 			break;
 		case 0xfb:
 			if(timer_running){
 				disableLowEnergyTimer();
+				initSound();
 			}
 			timer_running = true;
 			setupLowEnergyTimer();
-			sampleArray=mario;
-			songlength=215;
+			sampleArray=hit_dealt;
+			songlength=41;
 			break;
 		case 0xf7:
 			if(timer_running){
-				diableLowEnergyTimer();
+				disableLowEnergyTimer();
+				initSound();
 			}
 			timer_running = true; 
 			setupLowEnergyTimer();
-			sampleArray=mario;
-			songlength=215;
+			sampleArray=shoot;
+			songlength=15;
 			break;
 		case 0xef:
 			if(timer_running){
 				disableLowEnergyTimer();
+				initSound();			
 			}
 			timer_running = true;
 			setupLowEnergyTimer();
@@ -207,6 +214,7 @@ void select_melodies(){
 		case 0xdf:
 			if(timer_running){
 				disableLowEnergyTimer();
+				initSound();			
 			}
 			timer_running = true; 
 			setupLowEnergyTimer();
@@ -216,6 +224,7 @@ void select_melodies(){
 		case 0xbf:
 			if(timer_running){
 				disableLowEnergyTimer();
+				initSound();			
 			}
 			timer_running = true;
 			setupLowEnergyTimer();
@@ -225,6 +234,7 @@ void select_melodies(){
 		case 0x7f:
 			if(timer_running){
 				disableLowEnergyTimer();
+				initSound();
 			}
 			timer_running = true;
 			setupLowEnergyTimer();
