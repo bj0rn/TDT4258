@@ -1,14 +1,25 @@
 \section{Results and Tests}
 
 \subsection{Energy optimization}
-During this assignment we have employed several methods for decreasing the power consumption of the program. We have focused on power consumption of both when the program idle and active. The eAprofiler in the simplicity studio bundle has been used to analyze the power consumption at various stages in the program. For completeness both the power consumptions before and after the an optimization is illustrated through various tests.
+During this assignment we have employed several methods for decreasing the power consumption of the program. We have focused on power consumption of both when the program idle and active. The eAprofiler in the simplicity studio bundle has been used to analyze the power consumption at various stages in the program. For completeness both the power consumptions before and after the an optimization is illustrated.
 
 
 \subsubsection{Idle}
+When the program is idle e.g not playing anything the power consumption should be decreased. This is accomplished by the techniques described in section 2.4. Running the energy optimized program should use significantly less energy than the program before the optimization. The optimized program should be able to use as little as the energy interval expected by EM2. The output from the eAprofiler for the energy optimized program can be seen in figure, and the non-optimized program can be seen in figure.
+
+{\bf add me}
+{\bf add me}
+
+As seen the the energy usage is set at an comfortable level of  . This is significantly less than before the optimization. 
+
 
 
 
 \subsubsection{Running}
+During the running of the program the CPU and the DAC is not utilised every clock cycles. It is possible to exploit this fact by entering deep sleep when the processor is not active and configure the DAC stop/hold mode. Also further energy consumption should be reduced by using the low energy timer. It is not necessary to power the CPU and the DAC when not used. This can significantly reduce the power consumption when the program is active as illustarted in the figures below. The first figure illustrates the energy when using deepsleep and stop/hold mode for the DAC. The second figure illustrates the power consumption when no optimizations techniques are in use.  
+
+
+As seen by comparing the figures. The gains is significant when turning of the components during idle cycles. 
 
 
 \subsection{Sounds functionality}
