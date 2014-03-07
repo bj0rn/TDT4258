@@ -18,10 +18,12 @@ As seen the the energy usage is set at an comfortable level of  . This is signif
 
 
 \subsubsection{Running}
-During the running of the program the CPU and the DAC is not utilised every clock cycles. It is possible to exploit this fact by entering deep sleep when the processor is not active and configure the DAC stop/hold mode. Also further energy consumption should be reduced by using the low energy timer. It is not necessary to power the CPU and the DAC when not used. This can significantly reduce the power consumption when the program is active as illustarted in the figures below. The first figure illustrates the energy when using deepsleep and stop/hold mode for the DAC. The second figure illustrates the power consumption when no optimizations techniques are in use.  
+During the running of the program the CPU and the DAC is not utilised every clock cycle. It is possible to exploit this by entering deep sleep when the processor is not active and configure the DAC stop/hold mode. Also, further energy consumption should be reduced by using the low energy timer. It is not necessary to power the CPU and the DAC when not used. This can significantly reduce the power consumption when the program is active as illustrated in the figures below. The first figure illustrates the energy when using deepsleep and stop/hold mode for the DAC. The second figure illustrates the power consumption when no optimizations techniques are in use.
+
+\input{fig/LowEnergyOutput.tex}
 
 
-As seen by comparing the figures. The gains is significant when turning of the components during idle cycles. 
+As seen by comparing the figures, the gains are significant when turning off the components during idle cycles. 
 
 
 \subsection{Sounds functionality}
