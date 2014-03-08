@@ -11,8 +11,7 @@ When the program is idle the power consumption is reduced. The energy optimized 
 \input{fig/EnergyModeIdle.tex}
 \input{fig/Timer1Idle.tex}
 
-As seen the the energy usage is set at an comfortable level of 74 micro amperes. This is significantly less than before the optimization, where the idle processor consume 4.5 milli amperes.  
-
+As seen the the energy usage is set at an comfortable level of 74 $\mu$A \\. This is significantly less than before the optimization, where the idle processor consumes 4.5 mA. 
 
 \subsubsection{Running the syntheizer}
 When the synthesiser is active the CPU and the DAC is not utilised every clock cycle. It is possible to exploit this by disabling the CPU and disable the DAC between samples. The low energy timer is still active, but should reduce energy compared to timer1. The energy consumption is illustrated in figure 5. The non optimized program can be seen in figure ??.    
@@ -23,20 +22,64 @@ When the synthesiser is active the CPU and the DAC is not utilised every clock c
 As seen by comparing the figures, the gains are significant when turning off the components during idle cycles. 
 
 
-\subsubsection{Running with samples}
-When using pre-computed samples we use the same ideas that pointed out above. However, the result is slightly different. The number of idle cycles is increased. The CPU do not need to perform expensive operations, as with the synthesiser. This increases the time the CPU and DAC can spend in sleep mode, which impact the overall energy consumption.   
-
-
-
+\subsubsection{Running with pre-computed samples}
+When using pre-computed samples we use the same idea pointed out above. However, the result is slightly different. The number of idle cycles is increased, since the CPU does not need to perform expensive operations. This increases the time the CPU and DAC can spend in sleep mode, which reduces the overall energy consumption.   
 
 
 \subsection{Sound functionality}
 
+Our button setup was as follows:
 
+\begin{table}[ht]
+\caption{Buttons and corresponding melodies}
+% title of Table
+\centering
+% used for centering table
+\begin{tabular}{c c}
+% centered columns (4 columns)
+\hline
+\hline %inserts double horizontal lines
+Button & Melody \\ [0.5ex]
+% inserts table
+%heading
+\hline
+SW1 & Mario \\
+SW2 & Shoot \\
+SW3 & Hit dealt \\
+SW4 & Hit received \\
+SW5 & Battlefield intro \\
+SW6-SW8 & Simple *beep*-noises \\
+% [1ex] adds vertical space
+\hline
+%inserts single line%
+\end{tabular}
+\label{table:nonlin}
+% is used to refer this table in the text
+\end{table}
 
 \subsubsection{Sound effects}
 
+The sound effects were made by rapidly altering between the note macros defined in the sounds.h file. Three sound effects were created, which are the ones corresponding to SW2, SW3, and SW4. We were quite satisfied with these, as they were reminiscent of sound effects of old consoles and PC games from the early 1990s. The format of these can be viewed in the melodies.h-file.
 
-\subsubsection{Music}
+\subsubsection{Mario}
+
+For creating the super mario theme music, we initially used sound samples found online. However, we were not quite satisfied with these, as the sample periods were too short and the silence intervals too long. To fix this, a Python script was written to alter the samples by reducing the silence intervals by a certain factor, and increasing the sample periods by another factor. After a lot of trial and error, we ended up with a struct array of samples that we were reasonably satisfied with (this can be viewed in the melodies.h-file).
+
+\subsubsection{Battlefield}
+
+This is the intro music from the game Battlefield 1942. Here, we took a different approach for creating samples. 
+
+\subsubsection{Tests}
+
+Following are test cases created to firstly test whether the button input responds to expected sound output, and secondly, whether the energy levels behave as expected:
 
 
+
+\emph{Input: } Press SW1-SW4\\
+\emph{Expected output: } Play corresponding melody/sound effect with energy use of the sound synthesizer, then drop down to idle energy use when finished playing\\
+\emph{Actual output: } as expected, with running energy use of 1.8 mA, and idle energy use of 74 $\mu$A \\
+
+
+\emph{Input: } Press SW5\\
+\emph{Expected output: } Play Battlefield with energy use of pre-computed samples, then drop down to idle energy use when finished playing\\
+\emph{Actual output: } as expected with running energy use of 600 (??) $\mu$A \\ and idle energy use of 74 $\mu$A \\ 
