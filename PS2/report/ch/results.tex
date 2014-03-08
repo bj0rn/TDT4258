@@ -1,11 +1,10 @@
 \section{Results and Tests}
 
 \subsection{Energy optimization}
-During this assignment we have employed several methods for decreasing the power consumption of the program. We have focused on power consumption of both when the program idle and active. The eAprofiler in the simplicity studio bundle has been used to analyze the power consumption at various stages in the program. For completeness both the power consumptions before and after the an optimization is illustrated.
-
+Several methods for decreasing the power consumption of the program were implemented. We have focused on power consumption both when the program idle and active. The eAprofiler in the Simplicity Studio bundle has been used to analyze the power consumption at various stages in the program.
 
 \subsubsection{Idle}
-When the program is idle the power consumption is reduced. The energy optimized program should consume   significantly less energy. The high frequency peripheral is turned off, the low energy oscillator is turned off and the DAC is partly turned off. The CPU remain in deep sleep during this time. The output from the eAprofiler for the energy optimized program can be seen in figure 3 for comparison the non optimized program can be seen in figure 4. 
+In order to reduce power consumption during idle mode, the high frequency peripheral as well as the low energy oscillator are turned off, while the DAC being partly turned off. The CPU remains in deep sleep during this time. The output from the eAprofiler for the energy optimized program can be seen in figure 3, while the non-optimized program can be seen in figure 4. 
 
 
 \input{fig/EnergyModeIdle.tex}
@@ -14,7 +13,7 @@ When the program is idle the power consumption is reduced. The energy optimized 
 As seen the the energy usage is set at an comfortable level of 74 $\mu$A \\. This is significantly less than before the optimization, where the idle processor consumes 4.5 mA. 
 
 \subsubsection{Running the syntheizer}
-When the synthesiser is active the CPU and the DAC is not utilised every clock cycle. It is possible to exploit this by disabling the CPU and disable the DAC between samples. The low energy timer is still active, but should reduce energy compared to timer1. The energy consumption is illustrated in figure 5. The non optimized program can be seen in figure ??.    
+When the synthesiser is active, the CPU and the DAC is not utilised every clock cycle. It is possible to exploit this by disabling the CPU and the DAC between samples. The low energy timer is still active, but uses less energy compared to timer1. The energy consumption is illustrated in figure 5, while the non optimized program is illustrated in figure ??.    
 
 \input{fig/LowEnergyOutput.tex}
 
@@ -23,8 +22,7 @@ As seen by comparing the figures, the gains are significant when turning off the
 
 
 \subsubsection{Running with pre-computed samples}
-When using pre-computed samples we use the same idea pointed out above. However, the result is slightly different. The number of idle cycles is increased, since the CPU does not need to perform expensive operations. This increases the time the CPU and DAC can spend in sleep mode, which reduces the overall energy consumption.   
-
+When using pre-computed samples we use the same idea pointed out above. However, the result is slightly different. The number of idle cycles is increased, since the CPU does not need to perform expensive operations. This increases the time the CPU and DAC can spend in sleep mode, which reduces the overall energy consumption. This is shown in figure ??
 
 \subsection{Sound functionality}
 
@@ -67,7 +65,7 @@ For creating the super mario theme music, we initially used sound samples found 
 
 \subsubsection{Battlefield}
 
-This is the intro music from the game Battlefield 1942. Here, we took a different approach for creating samples. 
+This is the intro music from the game Battlefield 1942. These samples were pre-computed, as described in the sound sampling section. 
 
 \subsubsection{Tests}
 
@@ -77,9 +75,9 @@ Following are test cases created to firstly test whether the button input respon
 
 \emph{Input: } Press SW1-SW4\\
 \emph{Expected output: } Play corresponding melody/sound effect with energy use of the sound synthesizer, then drop down to idle energy use when finished playing\\
-\emph{Actual output: } as expected, with running energy use of 1.8 mA, and idle energy use of 74 $\mu$A \\
+\emph{Actual output: } as expected, with running energy use of 1.8 mA, and idle energy use of 2 $\mu$A \\
 
 
 \emph{Input: } Press SW5\\
 \emph{Expected output: } Play Battlefield with energy use of pre-computed samples, then drop down to idle energy use when finished playing\\
-\emph{Actual output: } as expected with running energy use of 600 (??) $\mu$A \\ and idle energy use of 74 $\mu$A \\ 
+\emph{Actual output: } as expected with running energy use of 600 (??) $\mu$A \\ and idle energy use of 2 $\mu$A \\ 

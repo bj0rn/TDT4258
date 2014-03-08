@@ -1,36 +1,7 @@
-The EFM32GG microcontroller has a rich set of features regarding improving energy efficiency, where the main focus is turing of components that are not in use, or tuning their performance. In case of this assignment, we have utilised many of these techniques to improve the power consumption of the program. Where our main goal has been trying to exploit the various energy levels that the microcontroller had to offer. Preferable being able to achieve EM2, and turn of every component currently not being used. 
+The EFM32GG microcontroller has a rich set of features regarding improving energy efficiency, where the main focus is turning of components that are not in use, or tuning their performance. We have utilised many of these techniques to improve the power consumption of the program, where our main goal has been to try to exploit the various energy levels that the microcontroller has to offer, preferably being able to achieve EM3 and turn of every component not in use. 
 
-Various techniques were employed to reach this goal. As it turned out the achieving deep sleep and sleep on exit proved to be more complicated than first imagined. During deep sleep mode the high frequency oscillator was turned off. This oscillator was used to clock both the DAC and the timer. When entering EFM32 this produced some unexpected bugs. On entering EM2 the program started to behave non-deterministic. As it turned out, both the DAC and the timer was clocked by the high frequency oscillator. This directly affected the interrupts produced by the timer.
+Various techniques were employed to reach this goal. As it turned out, achieving deep sleep and sleep on exit proved to be more complicated than first imagined. During deep sleep mode the high frequency oscillator was turned off. This oscillator was used to clock both the DAC and the timer. When entering EM3 this produced some unexpected bugs. On entering EM2 the program started to behave non-deterministic. As it turned out, both the DAC and the timer was clocked by the high frequency oscillator. This directly affected the interrupts produced by the timer. This problem was solved by introducing the low energy timer. This timer is able to run as low as EM2 and EM3 depending on the oscillator used. For producing sound, the 32.768 KHz oscillator was used. This timer replaced the old timer, and only caused some minor changes to made in the already existing code. In particular, the frequency used to generated was changed to accommodate the new oscillator frequency. Instead of  using a sample rate of 48000, the new oscillator was able to produce 32768 interrupts every second. This implied a maximum sample rate of 32768. Fortunately, our tone frequencies were sufficiently low to accommodate this change in sample frequency. However, while this reduced the energy consumption, there were still some problems with the DAC, as entering a lower energy mode caused the DAC to continue producing static sound. As it turns out, configuring the DAC with continuous mode will not be able to maintain the voltage levels when entering deep sleep. This caused the voltage levels to fluctuate, and create a static background sound. Fortunately, the DAC also support another mode, sample/hold mode. During sample/hold mode, the DAC core converts on a triggered conversion and then holds the output in a sample/hold element. When not converting, the DAC is turned of between samples, which reduces the power consumption. The sample/hold element will hold the element for a certain time without needing a refresh conversion\cite{EFM32GG-rm}. Switching to this mode not only fixed our bug, but also further decreased the energy consumption. This change from continuous mode to sample/hold mode is achieved by changing the value written to the $DAC0\_CTRL$ register from 0x50010 to 0x50014. 
 
-This problem was solved by introducing the low energy timer. This timer is able to run as low as to EM2 and EM3 depending on the oscillator used. In case of producing sound, the 32,768 KHz oscillator were used. This timer replaced the old timer, and only caused some minor changes to made in the already existing code. In particular, the frequency used to generated was changed to accommodate the new oscillator frequency. Instead of  using a sample rate of 48000, the new 
-new oscillator were able to produce 32768 interrupts every second. This implied a maximum sample rate of 32768. Fortunately, our tone frequencies were sufficiently low to accommodate this change in sample frequency. 
+These techniques allow the code to enter deep sleep mode, and also allow utilisation of sleep on exit. This is was accomplished by writing the value 6 to the SCR register setting the deep sleep and deep sleep on exit bit. Entering EM3 is then achieved by calling the WFI instruction.
 
-
-This produced a lower energy consumption, however DAC still caused problems. Since the DAC were configured to continuously pull the DAC registers. The were some problems when entering the low energy mode. The entering of energy mode caused the DAC to continue producing static sound. As it turns out, configuring the DAC with continuous mode will not be able to maintain the voltage levels when entering deep sleep. This cause the voltage levels to fluctuate, and create a static background sound. Fortunately, the DAC also support another mode, sample/hold mode. During sample/hold mode, the DAC core converts on a triggered conversion and then holds the output in a sample/hold element. When not converting, the DAC is turned of between sample, which reduces the power consumption. The sample/hold element will hold the element for a certain time without a refresh conversion\cite{EFM32GG-rm}. Fortunately, this holding time is sufficient in order to fix our bug, and on the same time further decrease the energy consumption. This change from continuous mode to sample/hold mode is achieved by changing the value written to the $DAC0\_CTRL$ register to 0x50014. 
-
-
-These techniques allow the code to enter deep sleep mode, and also allow utilisation of sleep on exit. This is was accomplished by writing the value 6 to the SCR register setting the deep sleep and deep sleep on exit bit. Then entering EM2 is achieved by calling the WFI instruction.
-
-These techniques combined proved to be very beneficial regarding the energy efficiency. However, we could do even better. During the execution of our program. Most of the functionality were idle. The high frequency oscillator was turned of during deep sleep, however the energy timer would still consume power. To allow the program achieve even better decrease in power consumption. We implemented functions that could enable/disable this components. These components we only enabled when needed and disable during idle mode. 
-
-
-
- 
-
-  
-
-
-
-
-
-   
-
-
-
-  
-       
-
- 
-
-
-
+These techniques combined proved to be very beneficial regarding the energy efficiency. However, even further improvements could be made. While the high frequency oscillator was turned off during deep sleep, the energy timer would still consume power. To allow the program achieve even better decrease in power consumption, we implemented functions that could enable/disable these components. Said components were only enabled when needed, and disabled during idle mode.
