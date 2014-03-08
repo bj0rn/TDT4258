@@ -10,6 +10,7 @@ extern int runBattlefield;
 
 void disableLowEnergyTimer();
 void disableDAC();
+void playMario();
 
 
 
@@ -22,6 +23,8 @@ void __attribute__ ((interrupt)) TIMER1_IRQHandler()
     TODO feed new samples to the DAC
     remember to clear the pending interrupt by writing 1 to TIMER1_IFC
   */
+	playMario();
+	playSong(sampleArray, songlength);
 
 }
 

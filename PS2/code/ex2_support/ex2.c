@@ -26,11 +26,9 @@ void initSound();
 int main(void) {
 	initSound();
   	setupGPIO();
-  	setupDAC();
-  	setupLowEnergyTimer();
-    
-  	changeTopCounter(8000);
-
+  	//setupDAC();
+  	//setupLowEnergyTimer();
+    //setupTimer(48000);
 
 
   /* Enable interrupt handling */
