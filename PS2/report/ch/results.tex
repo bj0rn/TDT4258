@@ -10,19 +10,23 @@ In order to reduce power consumption during idle mode, the high frequency periph
 \input{fig/EnergyModeIdle.tex}
 \input{fig/Timer1Idle.tex}
 
-As seen the the energy usage is set at an comfortable level of 74 $\mu$A \\. This is significantly less than before the optimization, where the idle processor consumes 4.5 mA. 
+As seen the the energy usage is set at an comfortable level of 2.7 $\mu$A \\. This is significantly less than before the optimization, where the idle processor consumes 4.5 mA. 
 
 \subsubsection{Running the syntheizer}
 When the synthesiser is active, the CPU and the DAC is not utilised every clock cycle. It is possible to exploit this by disabling the CPU and the DAC between samples. The low energy timer is still active, but uses less energy compared to timer1. The energy consumption is illustrated in figure 5, while the non optimized program is illustrated in figure ??.    
 
 \input{fig/LowEnergyOutput.tex}
-
+\input{fig/Timer1Output.tex}
 
 As seen by comparing the figures, the gains are significant when turning off the components during idle cycles. 
 
 
 \subsubsection{Running with pre-computed samples}
 When using pre-computed samples we use the same idea pointed out above. However, the result is slightly different. The number of idle cycles is increased, since the CPU does not need to perform expensive operations. This increases the time the CPU and DAC can spend in sleep mode, which reduces the overall energy consumption. This is shown in figure ??
+
+\input{fig/energyBattlefield.tex}
+
+As can be seen, the current hovers at around 614 $\mu$A, significantly lower than when using sound synthesizing.
 
 \subsection{Sound functionality}
 
