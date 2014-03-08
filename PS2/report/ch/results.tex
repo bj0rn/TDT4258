@@ -1,7 +1,7 @@
 \section{Results and Tests}
 
 \subsection{Energy optimization}
-Several methods for decreasing the power consumption of the program were implemented. We have focused on power consumption both when the program idle and active. The eAprofiler in the Simplicity Studio bundle has been used to analyze the power consumption at various stages in the program.
+Several methods for decreasing the power consumption of the program were implemented. We have focused on power consumption both when the program is idle and active. The eAprofiler in the Simplicity Studio bundle has been used to analyze the power consumption at various stages in the program.
 
 \subsubsection{Idle}
 In order to reduce power consumption during idle mode, the high frequency peripheral as well as the low energy oscillator are turned off, while the DAC being partly turned off. The CPU remains in deep sleep during this time. The output from the eAprofiler for the energy optimized program can be seen in figure 3, while the non-optimized program can be seen in figure 4. 
