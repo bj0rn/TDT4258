@@ -4,7 +4,7 @@
 #define LENGTH_OF_TONE 19
 #include "sounds.h"
 
-struct tone mario[215] = {
+struct tone mario[218] = {
 {660,210},
 {0,14},
 {660,210},
@@ -264,7 +264,7 @@ struct tone hit_received[37] = {
 	{A, 10},
 };
 
-struct tone hit_dealt[41] = {
+struct tone hit_dealt[42] = {
 	{A, LENGTH_OF_TONE},
 	{B, LENGTH_OF_TONE},
 	{C, LENGTH_OF_TONE},
