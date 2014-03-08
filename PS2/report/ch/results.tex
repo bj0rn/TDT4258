@@ -5,14 +5,13 @@ During this assignment we have employed several methods for decreasing the power
 
 
 \subsubsection{Idle}
-When the program is idle e.g not playing anything the power consumption should be decreased. This is accomplished by the techniques described in section 2.4. Running the energy optimized program should use significantly less energy than the program before the optimization. The optimized program should be able to use as little as the energy interval expected by EM2. The output from the eAprofiler for the energy optimized program can be seen in figure 3, and the non-optimized program can be seen in figure 4.
+When the program is idle the power consumption is reduced. The energy optimized program should consume   significantly less energy. The high frequency peripheral is turned off, the low energy oscillator is turned off and the DAC is partly turned off. The DAC is not completely disabled and will consume some power. The CPU remain in deep sleep during this time. The output from the eAprofiler for the energy optimized program can be seen in figure 3 for comparison the non optimized program can be seen in figure 4. 
+
 
 \input{fig/EnergyModeIdle.tex}
 \input{fig/Timer1Idle.tex}
-{\bf add me}
-{\bf add me}
 
-As seen the the energy usage is set at an comfortable level of  . This is significantly less than before the optimization. 
+As seen the the energy usage is set at an comfortable level of 74 micro amperes. This is significantly less than before the optimization, where the idle processor consume 4.5 milli amperes.  
 
 
 
