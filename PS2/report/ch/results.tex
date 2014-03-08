@@ -5,20 +5,17 @@ During this assignment we have employed several methods for decreasing the power
 
 
 \subsubsection{Idle}
-When the program is idle e.g not playing anything the power consumption should be decreased. This is accomplished by the techniques described in section 2.4. Running the energy optimized program should use significantly less energy than the program before the optimization. The optimized program should be able to use as little as the energy interval expected by EM2. The output from the eAprofiler for the energy optimized program can be seen in figure 3, and the non-optimized program can be seen in figure 4.
+When the program is idle the power consumption is reduced. The energy optimized program should consume   significantly less energy. The high frequency peripheral is turned off, the low energy oscillator is turned off and the DAC is partly turned off. The CPU remain in deep sleep during this time. The output from the eAprofiler for the energy optimized program can be seen in figure 3 for comparison the non optimized program can be seen in figure 4. 
+
 
 \input{fig/EnergyModeIdle.tex}
 \input{fig/Timer1Idle.tex}
-{\bf add me}
-{\bf add me}
 
-As seen the the energy usage is set at an comfortable level of  . This is significantly less than before the optimization. 
+As seen the the energy usage is set at an comfortable level of 74 micro amperes. This is significantly less than before the optimization, where the idle processor consume 4.5 milli amperes.  
 
 
-
-
-\subsubsection{Running}
-During the running of the program the CPU and the DAC is not utilised every clock cycle. It is possible to exploit this by entering deep sleep when the processor is not active and configure the DAC stop/hold mode. Also, further energy consumption should be reduced by using the low energy timer. It is not necessary to power the CPU and the DAC when not used. This can significantly reduce the power consumption when the program is active as illustrated in the figures below. The first figure illustrates the energy when using deepsleep and stop/hold mode for the DAC. The second figure illustrates the power consumption when no optimizations techniques are in use.
+\subsubsection{Running the syntheizer}
+When the synthesiser is active the CPU and the DAC is not utilised every clock cycle. It is possible to exploit this by disabling the CPU and disable the DAC between samples. The low energy timer is still active, but should reduce energy compared to timer1. The energy consumption is illustrated in figure 5. The non optimized program can be seen in figure ??.    
 
 \input{fig/LowEnergyOutput.tex}
 
@@ -26,7 +23,14 @@ During the running of the program the CPU and the DAC is not utilised every cloc
 As seen by comparing the figures, the gains are significant when turning off the components during idle cycles. 
 
 
-\subsection{Sounds functionality}
+\subsubsection{Running with samples}
+When using pre-computed samples we use the same ideas that pointed out above. However, the result is slightly different. The number of idle cycles is increased. The CPU do not need to perform expensive operations, as with the synthesiser. This increases the time the CPU and DAC can spend in sleep mode, which impact the overall energy consumption.   
+
+
+
+
+
+\subsection{Sound functionality}
 
 
 
