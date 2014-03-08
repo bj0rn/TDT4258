@@ -16,7 +16,22 @@ The timer was configured to be set to a specific frequency through the use of th
 
 
 \subsubsection{Digital to analog converter (DAC)}
-The DAC is a component that converts a digital value to an analog signals. The DAC on the EFM32GG has two channels, each with a 12-bit data register. The EFM32GG has several modes of writing to the DAC, with continous mode being the simplest one. How to set up the DAC in this mode was well specified in the compendium, and was implemented in the setupDAC()-function in the dac.c-file. Writing 0x50010 to the $DAC0\_CTRL$ register enables DAC-output in continous mode. As we learned later, altering  this value to, for instance, 0x50014, will enable the DAC-output to sample/hold mode instead of continous mode, which has other advantages. This will be explained in greater detail in the Energy Optimization section.
+The DAC is a component that converts a digital value to an analog signals. The DAC on the EFM32GG has two channels, each with a 12-bit data register. The EFM32GG has several modes of writing to the DAC, with continous mode being the simplest one. How to set up the DAC in this mode was well specified in the compendium, and was implemented in the setupDAC()-function in the dac.c-file. Writing 0x50010 to the $DAC0\_CTRL$ register enables DAC-output in continous mode. As we learned later, altering  this value to, for instance, 0x50014, will enable the DAC-output to sample/hold mode instead of continous mode, which has other advantages. This will be explained in greater detail in the Energy Optimization section. 
+	Bit 16, 17, and 18 of said control register decided prescaling value (PRESC) in such a way that the DAC clock frequency is set by:
+
+\begin{center}
+
+$f_{DAC\_CLK} = \frac{f_{HFPERCLK}}{2^{PRESC}}$
+
+\end{center}
+
+Since PRESC can be any value between 0 and 7, the fraction part of the equation can be between 1 and 128. In our case, we used a prescaling value of $101_2$, or $5_{10}$. With this value, and a high peripheral clock frequency of 14 MHz, the DAC clock frequency was set to:
+
+\begin{center}
+
+$f_{DAC\_CLK} = \frac{f_{HFPERCLK}}{2^{5}} = \frac{14000000 Hz}{32} = 437.5 KHz $
+
+\end{center}
 
 \subsection{Sound Wave Synthesis}
 
@@ -32,7 +47,7 @@ The waves shown above are the two types we have created and tested in this assig
 \subsubsection{Program structure}
 
 The different notes were defined as macros A through O in the sounds.h file, with each as a frequency between 200 and 3000 Hz. These were used mainly used for creating specific sound effects, which will be described in further detail in the User Control section.
-	In order to play tones for a specified amount of time, we defined a struct in the sounds.h-file with a note and time field, where note would be specified in Hz, and time in milliseconds. Each of the melodies in the melodies.h-file were made as arrays of said structs. The playSong()-function would then be responsible for playing these melodies by continously calling on the testNotes()-function and iterating through the array. A square waveform with a peak-to-peak amplitude of 4000 was used, as this generated a comfortable sound level. This was also tested with an implementation of the sawtooth waveform, but in the end the sound produced by the square waveform was prefered.
+	In order to play tones for a specified amount of time, we defined a struct in the sounds.h-file with a note and time field, where note would be specified in Hz, and time in milliseconds. Each of the melodies in the melodies.h-file were made as arrays of said structs. The playSong()-function would then be responsible for playing these melodies by continously calling on the testNotes()-function and iterating through the array. A square waveform with a peak-to-peak amplitude of 4000 was used, as this generated a comfortable sound level. This was also tested with an implementation of the sawtooth waveform, which was implemented as a linear function where the rising slope was calculated by dividing the peak amplitude by the number of samples per wave. The value written to both DAC-channels would then be calculated by multiplying the slope with the duration variable, which was used in the same fashion as in the square waveform. However, using the square waveform instead was prefered in the end due to the 'sharp' sound of the sawtooth waveform.
 
 \subsection{Sound Sampling}
 \input{ch/sound-sampling}
