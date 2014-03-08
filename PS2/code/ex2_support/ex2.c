@@ -24,31 +24,28 @@ void initSound();
 
 /* Your code will start executing here */
 int main(void) {
-	initSound();
-  	setupGPIO();
-  	//setupDAC();
+	
+	initSound(); /* Reset every global variable at reset */
+  	setupGPIO(); /* Configure buttons and LEDs */
+  	
+	/* These functions are used called when needed. E.g when we play tunes. See
+	 * sounds.c:selectMelodies() */
+	
+	//setupDAC();
   	//setupLowEnergyTimer();
     //setupTimer(48000);
 
 
-  /* Enable interrupt handling */
-  setupNVIC();
+ 	setupNVIC(); /*Setup exceptions vectors*/
 
-  /* TODO for higher energy efficiency, sleep while waiting for interrupts
-     instead of infinite loop for busy-waiting
-  */
+ 	*SCR = 6; /* Set the DEEPSLEEP bit and the SLEEPONEXIT bit  */
 
-  /* Wait for interrupts */
-  *SCR = 6; /* Set the DEEPSLEEP bit and the SLEEPONEXIT bit  */
-
-  __asm("WFI");
+    __asm("WFI"); /* Wait for interrupts */
 
 
-  while(1){ 
-	//__asm("WFI");
-  }
+  	while(1){}
 
-  return 0;
+  	return 0;
 }
 
 void setupNVIC()
