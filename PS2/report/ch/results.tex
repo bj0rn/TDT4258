@@ -13,7 +13,7 @@ In order to reduce power consumption during idle mode, the high frequency periph
 As seen the the energy usage is set at an comfortable level of 2.7 $\mu$A \\. This is significantly less than before the optimization, where the idle processor consumes 4.5 mA. 
 
 \subsubsection{Running the syntheizer}
-When the synthesiser is active, the CPU and the DAC is not utilised every clock cycle. It is possible to exploit this by disabling the CPU and the DAC between samples. The low energy timer is still active, but uses less energy compared to timer1. The energy consumption is illustrated in figure 5, while the non optimized program is illustrated in figure ??.    
+When the synthesiser is active, the CPU and the DAC is not utilised every clock cycle. It is possible to exploit this by disabling the CPU and the DAC between samples. The low energy timer is still active, but uses less energy compared to timer1. The energy consumption is illustrated in figure 5, while the non optimized program is illustrated in figure 6.    
 
 \input{fig/LowEnergyOutput.tex}
 \input{fig/Timer1Output.tex}
@@ -22,7 +22,7 @@ As seen by comparing the figures, the gains are significant when turning off the
 
 
 \subsubsection{Running with pre-computed samples}
-When using pre-computed samples we use the same idea pointed out above. However, the result is slightly different. The number of idle cycles is increased, since the CPU does not need to perform expensive operations. This increases the time the CPU and DAC can spend in sleep mode, which reduces the overall energy consumption. This is shown in figure ??
+When using pre-computed samples we use the same idea pointed out above. However, the result is slightly different. The number of idle cycles is increased, since the CPU does not need to perform expensive operations. This increases the time the CPU and DAC can spend in sleep mode, which reduces the overall energy consumption. This is shown in figure 7.
 
 \input{fig/energyBattlefield.tex}
 
@@ -84,4 +84,4 @@ Following are test cases created to firstly test whether the button input respon
 
 \emph{Input: } Press SW5\\
 \emph{Expected output: } Play Battlefield with energy use of pre-computed samples, then drop down to idle energy use when finished playing\\
-\emph{Actual output: } as expected with running energy use of 600 (??) $\mu$A \\ and idle energy use of 2 $\mu$A \\ 
+\emph{Actual output: } as expected with running energy use of 600 $\mu$A \\ and idle energy use of 2 $\mu$A \\ 
