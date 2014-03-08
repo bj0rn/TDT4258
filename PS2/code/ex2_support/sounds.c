@@ -19,29 +19,22 @@ void disableDAC();
 
 
 /*Global variables*/
-bool timer_running;
+bool timer_running;  		/* Used to control whether the timer is running or not*/
+int duration;        		/* Keeps track of wave length */
+int notes_pos;		 		/* Keeps track of the position in the pre-sampled data */
+int pos;             		/* Keeps track of the position in the cusomized samples */ 
 
-int tone;
-int duration; //Keeps track of wave length
-int count;
-int note_pos;
-int tone_duration;
-int notes_pos;
-int pos;
+struct tone *sampleArray;   /* The sampleArray pased used in the playSong function */
+int songlength;				/* Sample lenght */
+int runBattlefield;			/* Variable used to run the battlefield intro */
 
-struct tone *sampleArray;
-int songlength;
-int runBattlefield;
-
-bool iterate=false; //Set to true if tone has been played for a specified amount of time
-int counter=0; //Keeps track of time duration of tone 
+bool iterate=false;         /* Set to true if tone has been played for a specified amount of time */
+int counter=0;				/* Keeps track of time duration of tone */ 
 
 
-// Set all variables to zero after reset
+/* Set all variables to default */
 void initSound(){
 	duration=0;
-	note_pos=0;
-	tone_duration=0;
 	notes_pos=0;
 	counter=0;
 	pos=0;
