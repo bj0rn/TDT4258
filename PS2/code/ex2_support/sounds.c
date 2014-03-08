@@ -54,7 +54,7 @@ void initSound(){
 /*
 Function to play a note for a specified amount of milliseconds
 */
-void testNotes(int note, int time){
+void playNotes(int note, int time){
 	int cycles = convert_from_ms(time); //Cycle variable corresponds to amount of milliseconds specified in time-variable
 
 	int sampling=PERIOD/note; //Create correct number of samples per waveform based on the number of samples per second 
@@ -82,7 +82,14 @@ void testNotes(int note, int time){
 	}
 }
 
-void testSawtooth(int note, int time){
+
+/* Function for creating discrete samples
+ * from sawtooth waves. Not actually used 
+ * in the main program. Decided on square waves
+ * because the sound was better. 
+ */
+
+void sawtoothWave(int note, int time){
 
 		int sampling=PERIOD/note;
 		
@@ -106,19 +113,22 @@ void testSawtooth(int note, int time){
 		}
 }
 
-/*Used in combination with the play music function*/
-void play_note(int note){
-	
-	*DAC0_CH0DATA = (note << 1);
-	*DAC0_CH1DATA = (note << 1);	
-	
-}
 
-/*Feed the DAC with already existing samples. With normal use
- * this plays 8000 samples per second*/
+
+/* Function for playing samples at 8000Hz.
+ * The function pushes a sample every time it 
+ * is called. The samples are staticially 
+ * linked in sound_data.h. At the end of
+ * the sample array the timer and DAC 
+ * are disabled. 
+ *
+ */
 void play_music(int size){
 	int note = (char)sounddata_data[notes_pos];
-	play_note(note);
+	
+	
+	*DAC0_CH0DATA = (note << 1);
+	*DAC0_CH1DATA = (note << 1);
 	
 	if(notes_pos > size){
 		notes_pos = 0;
@@ -131,19 +141,29 @@ void play_music(int size){
 
 }
 
+/* The function converts milliseconds 
+ * to the corresponding number of cycles.
+ *
+ */
 
-void silence(int time){
-	int i;
-	for(i=0; i<time;i++){
-		*DAC0_CH0DATA=0;
-		*DAC0_CH1DATA=0;
-	}
-}
 int convert_from_ms(int millis){
 	return millis * 15;
 }
+
+/* Function for playing samples.
+ * Based on the sample array, and 
+ * the current postion in the sample
+ * it calls the playNotes() function. 
+ * When end of the samples are reached
+ * the function disables the timer 
+ * and the DAC.
+ *
+ */
+
 void playSong(struct tone melody[], int size){
-	testNotes(melody[pos].note, melody[pos].time);
+	
+	playNotes(melody[pos].note, melody[pos].time);
+	
 	if(iterate==true){
         pos++;
         iterate=false;
@@ -156,12 +176,29 @@ void playSong(struct tone melody[], int size){
 	 }
 }
 
+/* Test function. 
+ * Tests the mario into.
+ * Not used in the final 
+ * version
+ */
 
 void playMario(){
 	sampleArray = mario;
 	songlength = 215;
 }
 
+
+
+/* Function to select melodies.
+ * The function selects melodies based
+ * on the button pushed. For selected
+ * song the timer and DAC is enabled.
+ * If a song is already playing. It 
+ * interrupt the song by disabling the
+ * timer and DAC before it continues
+ * selecting the new song.
+ *
+ */
 
 void select_melodies(){
 	
@@ -236,8 +273,8 @@ void select_melodies(){
 			timer_running = true;
 			setupDAC();
 			setupLowEnergyTimer();
-			sampleArray=mario;
-			songlength=215;
+			sampleArray=beep1;
+			songlength=1;
 			break;
 		case 0xbf:
 			if(timer_running){
@@ -248,8 +285,8 @@ void select_melodies(){
 			timer_running = true;
 			setupDAC();
 			setupLowEnergyTimer();
-			sampleArray=mario;
-			songlength=215;
+			sampleArray=beep2;
+			songlength=1;
 			break;
 		case 0x7f:
 			if(timer_running){
@@ -260,8 +297,8 @@ void select_melodies(){
 			timer_running = true;
 			setupDAC();
 			setupLowEnergyTimer();
-			sampleArray=mario;
-			songlength=215;
+			sampleArray=beep3;
+			songlength=1;
 			break;
 	}
 }

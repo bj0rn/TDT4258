@@ -326,4 +326,15 @@ struct tone shoot[15]={
 	{A, LENGTH_OF_TONE},
 };
 
+struct tone beep1[1] ={
+	{A, 100}
+};
+
+struct tone beep2[1] = {
+	{C, 100}
+};
+
+struct tone beep3[1] = {
+	{E, 100}
+};
 #endif
