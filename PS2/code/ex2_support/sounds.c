@@ -13,6 +13,8 @@ void setupLowEnergyTimer();
 void disableLowEnergyTimer();
 int convert_from_ms(int millis);
 void changeTopCounter(int sampleRate);
+void setupDAC();
+void disableDAC();
 
 
 
@@ -121,6 +123,7 @@ void play_music(int size){
 	if(notes_pos > size){
 		notes_pos = 0;
 		disableLowEnergyTimer();
+		disableDAC();
 		initSound();
 	}
 	
@@ -147,19 +150,30 @@ void playSong(struct tone melody[], int size){
 	}
 	else if(pos >= size){	
 		disableLowEnergyTimer();
+		disableDAC();
 		timer_running = false;
 		initSound();
 	 }
 }
+
+
+void playMario(){
+	sampleArray = mario;
+	songlength = 215;
+}
+
+
 void select_melodies(){
 	
 	switch((*GPIO_PC_DIN)){
 		case 0xfe:
 			if(timer_running){
 				disableLowEnergyTimer();
+				disableDAC();
 				initSound();
 			}
 			timer_running = true;
+			setupDAC();
 			setupLowEnergyTimer();
 			sampleArray=mario;
 			songlength=215;
@@ -167,9 +181,11 @@ void select_melodies(){
 		case 0xfd:
 			if(timer_running){
 				disableLowEnergyTimer();
+				disableDAC();
 				initSound();
 			}
 			timer_running = true;
+			setupDAC();
 			setupLowEnergyTimer();
 			sampleArray=hit_received;
 			songlength=36;			
@@ -177,9 +193,11 @@ void select_melodies(){
 		case 0xfb:
 			if(timer_running){
 				disableLowEnergyTimer();
+				disableDAC(); 
 				initSound();
 			}
 			timer_running = true;
+			setupDAC();
 			setupLowEnergyTimer();
 			sampleArray=hit_dealt;
 			songlength=41;
@@ -187,9 +205,11 @@ void select_melodies(){
 		case 0xf7:
 			if(timer_running){
 				disableLowEnergyTimer();
+				disableDAC();
 				initSound();
 			}
 			timer_running = true; 
+			setupDAC();
 			setupLowEnergyTimer();
 			sampleArray=shoot;
 			songlength=15;
@@ -197,20 +217,24 @@ void select_melodies(){
 		case 0xef:
 			if(timer_running){
 				disableLowEnergyTimer();
+				disableDAC();
 				initSound();			
 			}
 			timer_running = true;
 			runBattlefield = 1;
+			setupDAC();
 			setupLowEnergyTimer();
 			changeTopCounter(8000);
-			songlength=300000;
+			songlength=396000;
 			break;
 		case 0xdf:
 			if(timer_running){
 				disableLowEnergyTimer();
+				disableDAC();
 				initSound();			
 			}
-			timer_running = true; 
+			timer_running = true;
+			setupDAC();
 			setupLowEnergyTimer();
 			sampleArray=mario;
 			songlength=215;
@@ -218,9 +242,11 @@ void select_melodies(){
 		case 0xbf:
 			if(timer_running){
 				disableLowEnergyTimer();
+				disableDAC();
 				initSound();			
 			}
 			timer_running = true;
+			setupDAC();
 			setupLowEnergyTimer();
 			sampleArray=mario;
 			songlength=215;
@@ -228,9 +254,11 @@ void select_melodies(){
 		case 0x7f:
 			if(timer_running){
 				disableLowEnergyTimer();
+				disableDAC();
 				initSound();
 			}
 			timer_running = true;
+			setupDAC();
 			setupLowEnergyTimer();
 			sampleArray=mario;
 			songlength=215;
