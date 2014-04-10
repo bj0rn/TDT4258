@@ -8,25 +8,26 @@
 #include <linux/fs.h>
 #include <linux/module.h>
 #include <linux/cdev.h>
-
+#include <linux/device.h>
 
 
 /*Prototypes*/
-
+static int init_driver();
+static void cleanup_driver();
 static int open_driver(struct inode *node, struct file *filp);
 static int release_driver(struct inode *inode, struct file *filp);
 static ssize_t read_driver(struct file *filp, char __user *buff, size_t count, loff_t *offp);
 static ssize_t write_driver(struct file *filp, const char __user *buf, size_t count, loff_t *offp);
 
 /*Function pointers*/
-int (*open_driver)(struct inode*, struct file *);
-int (*release_driver)(struct inode *, struct file*);
-ssize_t (*read_driver)(struct file*, char __user *, size_t, loff_t); 
-ssize_t (*write_driver)(struct file*, char __user*, size_t, loff_t);
+//int (*open_driver)(struct inode*, struct file *);
+//int (*release_driver)(struct inode *, struct file*);
+//ssize_t (*read_driver)(struct file*, char __user *, size_t, loff_t); 
+//ssize_t (*write_driver)(struct file*, char __user*, size_t, loff_t);
 
 
 /*Structures*/
-struct cdev *driver_cdev;
+struct cdev driver_cdev;
 struct class *cl;
 dev_t devno;
 int tdt4258_major;
@@ -63,7 +64,7 @@ static int __init init_driver(void)
 	
 	cdev_init(&driver_cdev, &fops);  	    //Init the cdev
 	driver_cdev.owner = THIS_MODULE;
-	driver_cdev.ops = &fops;
+	//driver_cdev.ops = &fops;
 	err = cdev_add(&driver_cdev, devno, 1); //Register to kernel
 	
 
@@ -94,32 +95,33 @@ static int __init init_driver(void)
  * code from a running kernel
  */
 
-static void __exit cleanup_driverid)
+static void __exit cleanup_driver
 {
 	 printk("Short life for a small module...\n");
 }
 
-/*User program opens the driver*/
-static int open_driver(struct inode *node, struct file *filp){
 
-}
+/*User program opens the driver*/
+//static int open_driver(struct inode *node, struct file *filp){
+
+//}
 
 /*User program close the driver*/
-static int release_driver(struct inode *inode, struct file *filp){
+//static int release_driver(struct inode *inode, struct file *filp){
 
-}
+//}
 
 
 /*User program reads from the driver */
 
-static ssize_t read_driver(struct file *filp, char __user *buff, size_t count, loff_t *offp){
+//static ssize_t read_driver(struct file *filp, char __user *buff, size_t count, loff_t *offp){
 
-}
+//}
 
 
-static ssize_t write_driver(struct file *filp, const char __user *buf, size_t count, loff_t *offp){
+//static ssize_t write_driver(struct file *filp, const char __user *buf, size_t count, loff_t *offp){
 
-}
+//}
 
 
 module_init(init_driver);
