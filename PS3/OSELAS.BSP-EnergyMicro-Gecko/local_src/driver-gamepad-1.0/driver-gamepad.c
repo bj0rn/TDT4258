@@ -56,10 +56,10 @@ static struct file_operations fops = {
 
 static int __init init_driver(void)
 {
+	err = alloc_chrdev_region(&devno, 0, 1, "tdt4258");
 	
-	
-	int err, devno = MKDEV(tdt4258_major,tdt4258_minor);
-	err = register_chrdev_region(devno, 1, "tdt4258");
+	//int err, devno = MKDEV(tdt4258_major,tdt4258_minor);
+	//err = register_chrdev_region(devno, 1, "tdt4258");
 	
 	cdev_init(&driver_cdev, &fops);  	    //Init the cdev
 	driver_cdev.owner = THIS_MODULE;
@@ -68,8 +68,8 @@ static int __init init_driver(void)
 	
 
 	//Fail nicely
-	if(err){
-		printk(KERN_NOTICE"Error %d", err);
+	if(err < 0){
+		printk("Error %d", err);
 	}else {
 		printk("Device added to the kernel sucessfully\n");
 	}
