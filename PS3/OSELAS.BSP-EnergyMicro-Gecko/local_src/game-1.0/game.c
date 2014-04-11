@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "display.h"
 
 int main(int argc, char *argv[])
 {
@@ -14,16 +15,11 @@ int main(int argc, char *argv[])
 	while(1) {
 		res = getc(fp);
 		printf("test: %d\n", (int)res); 
-	}	
-
-	FILE *file=fopen("/dev/gamepad-driver", "r");
-
-	while(1){
-		
-		
-
 	}
-
+	
+	initDisplay();
+	fill_screen(34);
+	
 	exit(EXIT_SUCCESS);
 }
 
