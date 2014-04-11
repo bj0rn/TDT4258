@@ -13,8 +13,14 @@
 #include <linux/uaccess.h>
 #include <linux/interrupt.h>
 #include <asm/signal.h>
-#include <asm/irq.h>
+#include <linux/poll.h>
+#include <asm/siginfo.h>
+#include <linux/signal.h>
+#include <linux/moduleparam.h>
+#include <linux/kdev_t.h>
+
 #include "efm32gg.h"
+
 
 #define DRIVER "gamepad"
 #define GPIO_EVEN_IRC_NUM 17
@@ -29,25 +35,16 @@ static int release_driver(struct inode *inode, struct file *filp);
 static ssize_t read_driver(struct file *filp, char __user *buff, size_t count, loff_t *offp);
 static ssize_t write_driver(struct file *filp, const char __user *buf, size_t count, loff_t *offp);
 irqreturn_t GPIO_interrupt_handler(int irq, void *dev_id, struct pt_regs *regs);
+static int driver_fasync(int fd, struct file *filp, int mode);
 
-
-/*Function pointers*/
-//int (*open_driver)(struct inode*, struct file *);
-//int (*release_driver)(struct inode *, struct file*);
-//ssize_t (*read_driver)(struct file*, char __user *, size_t, loff_t); 
-//ssize_t (*write_driver)(struct file*, char __user*, size_t, loff_t);
 
 
 /*Structures*/
 struct cdev driver_cdev;
 struct class *cl;
 dev_t devno;
-int tdt4258_major;
-int tdt4258_minor;
 struct resource *resource;
-
-
-
+struct fasync_struct *async_queue;
 
 
 
@@ -56,15 +53,25 @@ static struct file_operations fops = {
 	.read = read_driver,
 	.write = write_driver,
 	.open = open_driver,
-	.release = release_driver
+	.release = release_driver,
+        .fasync = driver_fasync,
+
 };
 
 
 irqreturn_t GPIO_interrupt_handler(int irq, void *dev_id, struct pt_regs *regs){
 	
 	iowrite32(0xff, GPIO_IFC); //Clear pending interupts
-	printk("Internal interrupt\n");	
+	
+	if(async_queue){
+		kill_fasync(&async_queue, SIGIO, POLL_IN);
+	}
 	return IRQ_HANDLED;	
+}
+
+
+static int driver_fasync(int fd, struct file *filp, int mode){
+	return fasync_helper(fd, filp, mode, &async_queue);	
 }
 
 
@@ -103,7 +110,7 @@ static int __init init_driver(void)
 	device_create(cl, NULL, devno, NULL, DRIVER);
 	
 	//Request memory
-	resource = request_mem_region(GPIO_PC_BASE,32, DRIVER);
+	resource = request_mem_region(GPIO_PC_BASE,GPIO_IFC - GPIO_PA_BASE, DRIVER);
 	
 	if(resource != NULL)
 		printk("Works!");	
@@ -120,11 +127,7 @@ static int __init init_driver(void)
 	iowrite32(0xff, GPIO_EXTIRISE);
 	iowrite32(0xff, GPIO_IEN);
 
-
-
 	
-	
-	printk("Hello World, here is your module speaking or is it ?\n");
 	return 0;
 }
 
@@ -159,25 +162,7 @@ static int release_driver(struct inode *inode, struct file *filp){
 /*User program reads from the driver */
 
 static ssize_t read_driver(struct file *filp, char __user *buff, size_t count, loff_t *offp){
-	//int maxbytes; //Maximum bytes that can be read from
-	//int bytes_to_read;	//Gives the number of bytes to read
-	//int bytes_read;     //Number of bytes actually read
-	//unsigned int data;
-	
-	//maxbytes = BUFFER_SIZE - *offp;
 
-	//if(maxbytes > count){
-	//	bytes_to_read = count;
-	//}else{
-	//	bytes_to_read = maxbytes;
-	//}
-
-	//if(bytes_to_read == 0){
-	//	printk("REached end of the device\n");
-	//}
-
-	//Read data from buttons
-	
 	uint32_t data = ioread32(GPIO_PC_DIN);
 	copy_to_user(buff, &data, 1);
 	
