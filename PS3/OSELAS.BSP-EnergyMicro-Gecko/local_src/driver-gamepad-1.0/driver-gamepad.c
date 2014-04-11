@@ -6,26 +6,30 @@
 #include <linux/module.h>
 #include <linux/init.h>
 #include <linux/fs.h>
-#include <linux/module.h>
 #include <linux/cdev.h>
 #include <linux/device.h>
 #include <linux/ioport.h>
 #include <asm/io.h>
 #include <linux/uaccess.h>
-
+#include <linux/interrupt.h>
+#include <asm/signal.h>
+#include <asm/irq.h>
 #include "efm32gg.h"
 
 #define DRIVER "gamepad"
-#define BUFFER_SIZE 4 //In bytes
+#define GPIO_EVEN_IRC_NUM 17
+#define GPIO_ODD_IRC_NUM 18
 
 
 /*Prototypes*/
-//static int init_driver();
-//static void cleanup_driver();
+static int __init init_driver();
+static void __exit cleanup_driver();
 static int open_driver(struct inode *node, struct file *filp);
 static int release_driver(struct inode *inode, struct file *filp);
 static ssize_t read_driver(struct file *filp, char __user *buff, size_t count, loff_t *offp);
 static ssize_t write_driver(struct file *filp, const char __user *buf, size_t count, loff_t *offp);
+irqreturn_t GPIO_interrupt_handler(int irq, void *dev_id, struct pt_regs *regs);
+
 
 /*Function pointers*/
 //int (*open_driver)(struct inode*, struct file *);
@@ -54,6 +58,14 @@ static struct file_operations fops = {
 	.open = open_driver,
 	.release = release_driver
 };
+
+
+irqreturn_t GPIO_interrupt_handler(int irq, void *dev_id, struct pt_regs *regs){
+	
+	iowrite32(0xff, GPIO_IFC); //Clear pending interupts
+	printk("Internal interrupt\n");	
+	return IRQ_HANDLED;	
+}
 
 
 
@@ -98,6 +110,18 @@ static int __init init_driver(void)
 	
 	iowrite32(0x33333333, GPIO_PC_MODEL);
 	iowrite32(0xff, GPIO_PC_DOUT);
+
+	request_irq(GPIO_EVEN_IRC_NUM,(irq_handler_t)GPIO_interrupt_handler, 0, DRIVER, &driver_cdev);
+	request_irq(GPIO_ODD_IRC_NUM, (irq_handler_t)GPIO_interrupt_handler, 0, DRIVER, &driver_cdev);	
+
+
+	iowrite32(0x22222222, GPIO_EXTIPSELL);
+	//iowrite32(0xff, GPIO_EXTIFALL);
+	iowrite32(0xff, GPIO_EXTIRISE);
+	iowrite32(0xff, GPIO_IEN);
+
+
+
 	
 	
 	printk("Hello World, here is your module speaking or is it ?\n");
