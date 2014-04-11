@@ -11,9 +11,12 @@
 #include <linux/device.h>
 #include <linux/ioport.h>
 #include <asm/io.h>
+#include <linux/uaccess.h>
+
 #include "efm32gg.h"
 
 #define DRIVER "gamepad"
+#define BUFFER_SIZE 4 //In bytes
 
 
 /*Prototypes*/
@@ -38,6 +41,8 @@ dev_t devno;
 int tdt4258_major;
 int tdt4258_minor;
 struct resource *resource;
+
+
 
 
 
@@ -115,11 +120,14 @@ static void __exit cleanup_driver()
 
 /*User program opens the driver*/
 static int open_driver(struct inode *node, struct file *filp){
+	printk("The gamepad is ready to go\n");
+
 	return 0;
 }
 
 /*User program close the driver*/
 static int release_driver(struct inode *inode, struct file *filp){
+	printk("Finished with the driver\n");
 	return 0;
 }
 
@@ -127,7 +135,30 @@ static int release_driver(struct inode *inode, struct file *filp){
 /*User program reads from the driver */
 
 static ssize_t read_driver(struct file *filp, char __user *buff, size_t count, loff_t *offp){
-	return 0;
+	//int maxbytes; //Maximum bytes that can be read from
+	//int bytes_to_read;	//Gives the number of bytes to read
+	//int bytes_read;     //Number of bytes actually read
+	//unsigned int data;
+	
+	//maxbytes = BUFFER_SIZE - *offp;
+
+	//if(maxbytes > count){
+	//	bytes_to_read = count;
+	//}else{
+	//	bytes_to_read = maxbytes;
+	//}
+
+	//if(bytes_to_read == 0){
+	//	printk("REached end of the device\n");
+	//}
+
+	//Read data from buttons
+	
+	uint32_t data = ioread32(GPIO_PC_DIN);
+	copy_to_user(buff, &data, 1);
+	
+	return 1;
+
 }
 
 
