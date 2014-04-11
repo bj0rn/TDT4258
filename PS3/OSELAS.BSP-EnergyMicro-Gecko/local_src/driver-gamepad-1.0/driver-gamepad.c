@@ -97,7 +97,7 @@ static int __init init_driver(void)
 
 static void __exit cleanup_driver
 {
-	 printk("Short life for a small module...\n");
+	 printk("Very short life for a small module...\n");
 }
 
 
