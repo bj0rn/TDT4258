@@ -9,11 +9,16 @@
 #include <linux/module.h>
 #include <linux/cdev.h>
 #include <linux/device.h>
+#include <linux/ioport.h>
+#include <asm/io.h>
+#include "efm32gg.h"
+
+#define DRIVER "gamepad"
 
 
 /*Prototypes*/
-static int init_driver();
-static void cleanup_driver();
+//static int init_driver();
+//static void cleanup_driver();
 static int open_driver(struct inode *node, struct file *filp);
 static int release_driver(struct inode *inode, struct file *filp);
 static ssize_t read_driver(struct file *filp, char __user *buff, size_t count, loff_t *offp);
@@ -32,6 +37,7 @@ struct class *cl;
 dev_t devno;
 int tdt4258_major;
 int tdt4258_minor;
+struct resource *resource;
 
 
 
@@ -57,7 +63,7 @@ static struct file_operations fops = {
 
 static int __init init_driver(void)
 {
-	err = alloc_chrdev_region(&devno, 0, 1, "tdt4258");
+	int err = alloc_chrdev_region(&devno, 0, 1, DRIVER);
 	
 	//int err, devno = MKDEV(tdt4258_major,tdt4258_minor);
 	//err = register_chrdev_region(devno, 1, "tdt4258");
@@ -76,11 +82,17 @@ static int __init init_driver(void)
 	}
 
 	
-	cl = class_create(THIS_MODULE, "tdt4258");
-	device_create(cl, NULL, devno, NULL, "tdt4258");
+	cl = class_create(THIS_MODULE, DRIVER);
+	device_create(cl, NULL, devno, NULL, DRIVER);
 	
-
-
+	//Request memory
+	resource = request_mem_region(GPIO_PC_BASE,32, DRIVER);
+	
+	if(resource != NULL)
+		printk("Works!");	
+	
+	iowrite32(0x33333333, GPIO_PC_MODEL);
+	iowrite32(0xff, GPIO_PC_DOUT);
 	
 	
 	printk("Hello World, here is your module speaking or is it ?\n");
@@ -95,33 +107,33 @@ static int __init init_driver(void)
  * code from a running kernel
  */
 
-static void __exit cleanup_driver
+static void __exit cleanup_driver()
 {
 	 printk("Very short life for a small module...\n");
 }
 
 
 /*User program opens the driver*/
-//static int open_driver(struct inode *node, struct file *filp){
-
-//}
+static int open_driver(struct inode *node, struct file *filp){
+	return 0;
+}
 
 /*User program close the driver*/
-//static int release_driver(struct inode *inode, struct file *filp){
-
-//}
+static int release_driver(struct inode *inode, struct file *filp){
+	return 0;
+}
 
 
 /*User program reads from the driver */
 
-//static ssize_t read_driver(struct file *filp, char __user *buff, size_t count, loff_t *offp){
+static ssize_t read_driver(struct file *filp, char __user *buff, size_t count, loff_t *offp){
+	return 0;
+}
 
-//}
 
-
-//static ssize_t write_driver(struct file *filp, const char __user *buf, size_t count, loff_t *offp){
-
-//}
+static ssize_t write_driver(struct file *filp, const char __user *buf, size_t count, loff_t *offp){
+	return 0;
+}
 
 
 module_init(init_driver);
