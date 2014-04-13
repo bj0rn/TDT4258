@@ -74,24 +74,27 @@ int main(int argc, char *argv[])
 	
 	//fp = fopen("/dev/gamepad", "r");
 	
-	char res;
+	//char res;
 	
-	while(1) {
-		if(!gotdata){
-			continue;
-		}
+	//while(1) {
+	//	if(!gotdata){
+	//		continue;
+	//	}
 		
-		res = getc(fp);
-		printf("test: %d\n", (int)res); 
-	}
+	//	res = getc(fp);
+	//	printf("test: %d\n", (int)res); 
+	//}
 	
 	initDisplay();
-	fill_screen(34);
 	
-		printf("Res: %d\n", res);
-		gotdata = 0;	
+	
+    	fill_screen(34);
+	
+	
+		//printf("Res: %d\n", res);
+		//gotdata = 0;	
 			
-	}	
+	//}	
 	exit(EXIT_SUCCESS);
 }
 
