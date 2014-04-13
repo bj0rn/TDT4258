@@ -17,28 +17,65 @@ int init_gamepad();
 void gpio_handler();
 void move_paddle_up(int y, int paddle);
 void move_paddle_down(int y, int paddle);
-
+int map_buttons(int input);
 int gotdata = 0;
 FILE *fp;
 
 
-typedef struct paddle {
-	int xpos;
-	int ypos;
-	int width;
-	int height;
-}paddle_t;
-
-
 void gpio_handler(int signo){
 	
-	printf("Enter handler\n");
+	//map_buttons(getc(fp));
+	printf("Enter handler\n");	
+	if(signo == SIGIO){
+		printf("Got data\n");
+		gotdata++;
+		map_buttons(getc(fp));
+	}
 
 }
 
 
+
 void move_paddle_down(int y, int paddle){
 	
+}
+
+int map_buttons(int input){
+	printf("Input: %d\n", input);
+	switch(input){
+		case 0xFE:
+		//LEFT player 1
+		return 1;
+		
+		case 0xFB:
+		//RIGHT player 1
+		return 2;
+		case 0xFD:
+		//UP player 1	
+		return 3;
+		case 0xF7:
+		//DOWN player 1
+		return 4;
+
+		case 0xEF:
+		//Left player 2
+		return 5;
+
+		case 0xBF:
+		//Right player 2
+		return 6;
+
+
+		case 0xDF:
+		//up player 2
+		return 7;
+
+		case 0x7F:
+		//down player 2
+		return 8;
+		
+	}
+	return 0;		
 }
 
 
@@ -88,16 +125,12 @@ int main(int argc, char *argv[])
 	
 	//fp = fopen("/dev/gamepad", "r");
 	
-	//char res;
+	char res;
 	
-	//while(1) {
-	//	if(!gotdata){
-	//		continue;
-	//	}
-		
-	//	res = getc(fp);
-	//	printf("test: %d\n", (int)res); 
-	//}
+
+	//while(1) {}	
+	while(1) {
+	}
 	
 	initDisplay();
 	
