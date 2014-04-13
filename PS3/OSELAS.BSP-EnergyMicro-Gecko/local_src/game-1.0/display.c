@@ -58,3 +58,21 @@ void refresh_screen(){
 	ioctl(fp, 0x4680, &rect);
 }
 
+
+void create_paddle(int x, int y, int width, int length){ 
+	for(int i = x; i < width; i++){
+		for(int j = y; j < lenght; j++){
+			screen_values[i + j * width] = 0xFFFF; 
+		}
+
+	refresh_screen();
+}
+
+
+void create_ball(int x, int y){
+	
+}
+
+
+
+
