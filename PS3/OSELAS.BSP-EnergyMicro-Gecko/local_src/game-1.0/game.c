@@ -15,16 +15,30 @@
 /*Function prototypes*/
 int init_gamepad();
 void gpio_handler();
-
+void move_paddle_up(int y, int paddle);
+void move_paddle_down(int y, int paddle);
 
 int gotdata = 0;
 FILE *fp;
+
+
+typedef struct paddle {
+	int xpos;
+	int ypos;
+	int width;
+	int height;
+}paddle_t;
 
 
 void gpio_handler(int signo){
 	
 	printf("Enter handler\n");
 
+}
+
+
+void move_paddle_down(int y, int paddle){
+	
 }
 
 
@@ -90,6 +104,7 @@ int main(int argc, char *argv[])
 	
     	fill_screen(34);
 	
+	create_paddle(0, 0, 15, 50);
 	
 		//printf("Res: %d\n", res);
 		//gotdata = 0;	

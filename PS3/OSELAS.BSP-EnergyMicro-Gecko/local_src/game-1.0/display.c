@@ -59,18 +59,22 @@ void refresh_screen(){
 }
 
 
-void create_paddle(int x, int y, int width, int length){ 
-	for(int i = x; i < width; i++){
-		for(int j = y; j < lenght; j++){
-			screen_values[i + j * width] = 0xFFFF; 
+void create_paddle(int x, int y, int width, int height){ 
+		
+
+	printf("Create paddle\n");
+	for(int i = x; i < x + width; i++){
+		for(int j = y; j < y + height; j++){
+			screen_values[i + j * SCREEN_WIDTH] = 0xFFFF; 
 		}
+	}	
 
 	refresh_screen();
 }
 
 
 void create_ball(int x, int y){
-	
+	return;	
 }
 
 
