@@ -61,8 +61,8 @@ static struct file_operations fops = {
 
 irqreturn_t GPIO_interrupt_handler(int irq, void *dev_id, struct pt_regs *regs){
 	
-	iowrite32(ioread32(GPIO_IF), GPIO_IFC); //Clear pending interupts
-	
+	//iowrite32(ioread32(GPIO_IF), GPIO_IFC); //Clear pending interupts
+	iowrite32(0xFF, GPIO_IFC);
 	if(async_queue){
 		kill_fasync(&async_queue, SIGIO, POLL_IN);
 	}

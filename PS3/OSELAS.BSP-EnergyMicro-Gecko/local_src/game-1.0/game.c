@@ -16,8 +16,8 @@
 
 #define PADDLE_HEIGHT 50
 #define PADDLE_WIDTH 15
-#define SCREEN_HEIGHT
-#define SCREEN_WIDTH 
+#define SCREEN_HEIGHT 240
+#define SCREEN_WIDTH 320 
 
 /*Function prototypes*/
 int init_gamepad();
@@ -26,7 +26,7 @@ void move_paddle_up(int y, int paddle);
 void move_paddle_down(int y, int paddle);
 int map_buttons(int input);
 int gotdata = 0;
-FILE *fp;
+FILE *driver;
 
 
 
@@ -46,11 +46,13 @@ paddle_t player2;
 void gpio_handler(int signo){
 	
 	//map_buttons(getc(fp));
-	printf("Enter handler\n");	
+	printf("Enter handler\n");
+	int button;	
 	if(signo == SIGIO){
 		printf("Got data\n");
 		gotdata++;
-		map_buttons(getc(fp));
+		button = map_buttons((int)getc(driver));
+		printf("Button: %d\n", button);
 	}
 
 }
@@ -60,35 +62,39 @@ void gpio_handler(int signo){
 
 void init_paddle(){
 	player1.x = 0; 
-	player1.y = 0;
-	player2.width = PADDLE_WIDHT;
-	player2.height = PADDLE_HEIGHT;
+	player1.y = 100;
+	player1.width = PADDLE_WIDTH;
+	player1.height = PADDLE_HEIGHT;
 
-	player2.x = 200;
-	player2.y = 0;
-	player2.widht = PADDLE_WIDTH; 
+	player2.x = SCREEN_WIDTH - PADDLE_WIDTH;
+	player2.y = 100;
+	player2.width = PADDLE_WIDTH; 
 	player2.height = PADDLE_HEIGHT; 
 }
 
 
-void move_paddle(paddle_t player, int dir){
+void move_paddle(paddle_t *player, int dir){
 	
 	if(dir == 1){
-		player.y -= -5;
-		if(player.y <= 0){
-			player.y = 0;
+		player->y -= 5;
+		if(player->y <= 0){
+			player->y = 0;
 		}
+		printf("Y: %d\n", player->y);
 
 	}else if(dir == -1){
-		player.y += 5;
-		if(player.y >= SCREEN_HEIGHT){
-			player.y = SCREEN_HEIGHT;
+		player->y += 5;
+		if(player->y > SCREEN_HEIGHT + player->height){
+			player->y = SCREEN_HEIGHT;
 		}
+		printf("Y: %d\n", player->y);
 	}
 }
 
 int map_buttons(int input){
+	
 	printf("Input: %d\n", input);
+
 	switch(input){
 		case 0xFE:
 		//LEFT player 1
@@ -99,11 +105,15 @@ int map_buttons(int input){
 		return 2;
 		case 0xFD:
 		//UP player 1
-		move_paddle(player1, 1);
+		printf("Move up\n");
+		move_paddle(&player1, 1);
+		create_paddle(player1.x, player1.y, player1.width, player1.height);
 		return 3;
 		case 0xF7:
 		//DOWN player 1
-		move_paddle(player1, -1);
+		printf("Move down\n");
+		move_paddle(&player1, -1);
+		create_paddle(player1.x, player1.y, player1.width, player1.height);
 		return 4;
 
 		case 0xEF:
@@ -117,10 +127,14 @@ int map_buttons(int input){
 
 		case 0xDF:
 		//up player 2
+		move_paddle(&player2, 1);
+		create_paddle(player2.x, player2.y, player2.width, player2.height);
 		return 7;
 
 		case 0x7F:
 		//down player 2
+		move_paddle(&paddle2, -1);
+		create_paddle(player2.x, player2.y, player2.width, player2.height);
 		return 8;
 		
 	}
@@ -132,7 +146,7 @@ int init_gamepad(){
 	
 	printf("Init gamepad \n");
 
-	fp = fopen("/dev/gamepad", "rb");
+	driver = fopen("/dev/gamepad", "rb");
 	int oflags;
 	int err;	
 	//struct sigaction action;
@@ -146,17 +160,17 @@ int init_gamepad(){
 		printf("ERROR\n");
 	}
 	
-        if((err = fcntl(fileno(fp), F_SETOWN, getpid())) == -1){
+        if((err = fcntl(fileno(driver), F_SETOWN, getpid())) == -1){
 		printf("ERROR: 1\n");
 	}
 
 
-	if((oflags = fcntl(fileno(fp), F_GETFL)) == -1){
+	if((oflags = fcntl(fileno(driver), F_GETFL)) == -1){
 		printf("ERROR: 2\n");
 	}
 
 
-	if((err = fcntl(fileno(fp), F_SETFL, oflags | FASYNC)) == -1){
+	if((err = fcntl(fileno(driver), F_SETFL, oflags | FASYNC)) == -1){
 		printf("ERROR: 3 \n");
 	}
 
@@ -167,12 +181,13 @@ int init_gamepad(){
 
 int main(int argc, char *argv[])
 {
-	
 	init_gamepad();
 	initDisplay();
-	intpaddle();
-
-
+	fill_screen(34);
+	init_paddle();
+		
+	create_paddle(player1.x, player1.y, player1.width, player1.height);
+	create_paddle(player2.x, player2.y, player2.width, player2.height);	
 
 
 
@@ -180,17 +195,8 @@ int main(int argc, char *argv[])
 	while(1) {
 	}
 	
-	initDisplay();
 	
 	
-    	fill_screen(34);
-	
-	create_paddle(0, 0, 15, 50);
-	
-		//printf("Res: %d\n", res);
-		//gotdata = 0;	
-			
-	//}	
 	exit(EXIT_SUCCESS);
 }
 

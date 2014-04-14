@@ -59,8 +59,7 @@ void refresh_screen(){
 }
 
 
-void create_paddle(int x, int y, int width, int height){ 
-		
+void create_paddle(int x, int y, int width, int height){		
 
 	printf("Create paddle\n");
 	for(int i = x; i < x + width; i++){
