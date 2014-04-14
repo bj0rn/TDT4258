@@ -90,19 +90,19 @@ void draw_paddle(paddle_t *p, int new_y){
 }
 
 
-void static set_pixel(int x, int y){
-	screen_values[x + y * SCREEN_WIDTH] = 0xFFFF;
+void static set_pixel(int x, int y, int color){
+	screen_values[x + y * SCREEN_WIDTH] = color;
 }
 
 
 
-void draw_ball(circle_t *c){
+void draw_ball(circle_t *c, int color){
 	//Change algorithm if the simple algorithm is to slow
 	int r2 = c->r * c->r;
 	for(int x = -c->r; x <= c->r; x++){
 		int y = (int)sqrt(r2 - x*x) + 0.5;
-		set_pixel(c->x + x, c->y + y);
-		set_pixel(c->x + x, c->y -y);	
+		set_pixel(c->x + x, c->y + y, color);
+		set_pixel(c->x + x, c->y -y, color);	
 	}
 
 	refresh_screen();	

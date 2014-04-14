@@ -11,7 +11,12 @@
 #include <signal.h>
 #include <fcntl.h>
 #include <sys/types.h>
+#include <time.h>
+#include <math.h>
+#include <stdbool.h>
 
+
+#define SPEED 2
 
 /*Function prototypes*/
 int init_gamepad();
@@ -19,6 +24,7 @@ void gpio_handler();
 void move_paddle_up(int y, int paddle);
 void move_paddle_down(int y, int paddle);
 int map_buttons(int input);
+vector_t *vec_normalized(vector_t *vec);
 int gotdata = 0;
 FILE *driver;
 
@@ -47,7 +53,12 @@ void gpio_handler(int signo){
 void init_ball(){
 	ball.x = 100;
 	ball.y = 100;
-	ball.r = 10;
+	ball.r = 5;
+	ball.acc = 10;
+	ball.speed.x = 5;
+	ball.speed.y = -5;
+	vector_t *speed = vec_normalized(&ball.speed);
+	ball.speed = *speed;
 }
 
 void init_paddle(){
@@ -61,6 +72,109 @@ void init_paddle(){
 	player2.width = PADDLE_WIDTH; 
 	player2.height = PADDLE_HEIGHT; 
 }
+
+
+float vec_magnitude(vector_t *v){
+	return sqrt(v->x * v->x + v->y * v->y);
+}
+
+vector_t *vec_normalized(vector_t *v){
+	float m = vec_magnitude(v);
+	vector_t *new = (vector_t*)malloc(sizeof(vector_t));
+	new->x = v->x / m;
+	new->y = v->y / m;
+	return new;	
+}
+
+
+vector_t *intersect_rectangle_circle(vector_t *rec_pos, int w, int h, circle_t *c){
+	int top = rec_pos->y - c->y;
+	int bottom = rec_pos->y + h - c->y;
+	int left = rec_pos->x - c->x;
+	int right  = rec_pos->x + w - c->x;
+
+	bool intersecting = left <= c->r && top <= c->r && right >= -c->r && bottom >= -c->r;
+	vector_t *impulse = NULL;
+	if(intersecting){
+		impulse = vec_normalized(&c->speed);
+		if(abs(left) < c->r && impulse->x > 0){
+			impulse->x = -impulse->x;
+		}
+		if(abs(right) < c->r && impulse->x < 0){
+			impulse->x = -impulse->x;
+		}
+
+		if(abs(top) < c->r && impulse->y > 0){
+			impulse->y = -impulse->y;		
+		}
+
+		if(abs(bottom) < c->r && impulse->y < 0){
+			impulse->y = -impulse->y;
+		}
+
+		return vec_normalized(impulse);
+	}
+
+	return impulse;
+
+		
+
+	
+}
+
+
+
+
+void move_ball(circle_t *c){
+	vector_t rec_pos, *speed;
+
+	
+	//Clear old ball
+	draw_ball(c, 34);
+	
+	rec_pos.x = 0;
+	rec_pos.y = 0;
+	
+	//Collision top 
+	if((speed = intersect_rectangle_circle(&rec_pos, SCREEN_WIDTH, 0, c)) != NULL){
+		printf("Collision TOP\n");
+		ball.speed = *speed;
+	}
+
+	rec_pos.y = SCREEN_HEIGHT;
+	rec_pos.x = 0;
+
+	if((speed = intersect_rectangle_circle(&rec_pos, SCREEN_WIDTH, 0, c)) != NULL){
+		printf("Collision bottom\n");
+	}
+
+	rec_pos.y = 0;
+	rec_pos.x = SCREEN_WIDTH;
+	if((speed = intersect_rectangle_circle(&rec_pos, 0, SCREEN_HEIGHT, c)) != NULL){
+		printf("Collision right\n");
+		ball.speed = *speed;
+	}
+	
+	rec_pos.y = 0;
+	rec_pos.x = 0;
+	if((speed = intersect_rectangle_circle(&rec_pos, 0, SCREEN_HEIGHT, c)) != NULL){
+		printf("Collsion left\n");
+		ball.speed = *speed;
+	}
+	
+	
+
+	ball.x += ball.speed.x * ball.acc;
+	ball.y += ball.speed.y * ball.acc;
+
+
+	
+	
+
+	draw_ball(c, 0xFFFF);		
+}
+
+
 
 
 void move_paddle(paddle_t *player, int dir){
@@ -163,12 +277,14 @@ int main(int argc, char *argv[])
 		
 	draw_paddle(&player1, 0);
 	draw_paddle(&player2, 0);
-	draw_ball(&ball);	
+	draw_ball(&ball, 0xFFFF);	
 
 
 
 	//while(1) {}	
 	while(1) {
+		usleep(500);
+		move_ball(&ball);
 	}
 	
 	
