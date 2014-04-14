@@ -7,7 +7,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-#include <display.h>
+#include "display.h"
 
 uint16_t *screen_values;
 struct fb_copyarea rect;
@@ -57,12 +57,6 @@ void refresh_screen(){
 }
 
 
-static void clean_paddle_path(paddle_t *p, int remove_y){
-	for(int i = p->x; i < p->x + p->width; i++){
-		for(int j = p->y + length; j < p->y 
-	}
-}
-
 
 void draw_paddle(paddle_t *p, int new_y){		
 
@@ -75,12 +69,17 @@ void draw_paddle(paddle_t *p, int new_y){
 	
 	if(new_y > 0){
 		//Moving down
+		for(int i = p->x; i < p->x + p->width; i++){
+			for(int j = (p->y - new_y); j <  p->y; j++) {
+				screen_values[i + j * SCREEN_WIDTH] = 34;
+			}
+		}
 
 	
 	}else if(new_y < 0){
 		//Moving up
 		for(int i = p->x; i < p->x + p->width; i++){
-			for(int j = p->y + p->height; j < new_y; j++){
+			for(int j = (p->y + p->height); j < (p->y + p->height - new_y); j++){
 				screen_values[i + j * SCREEN_WIDTH] = 34;
 			}
 		}

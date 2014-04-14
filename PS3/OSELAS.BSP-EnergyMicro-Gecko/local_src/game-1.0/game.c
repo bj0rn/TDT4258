@@ -13,12 +13,6 @@
 #include <sys/types.h>
 
 
-
-#define PADDLE_HEIGHT 50
-#define PADDLE_WIDTH 15
-#define SCREEN_HEIGHT 240
-#define SCREEN_WIDTH 320 
-
 /*Function prototypes*/
 int init_gamepad();
 void gpio_handler();
@@ -28,16 +22,6 @@ int map_buttons(int input);
 int gotdata = 0;
 FILE *driver;
 
-
-
-/* Structures */
-
-typedef struct paddle {
-	int x;
-	int y;
-	int width;
-	int height;
-}paddle_t;
 
 paddle_t player1;
 paddle_t player2;
@@ -52,7 +36,7 @@ void gpio_handler(int signo){
 		printf("Got data\n");
 		gotdata++;
 		button = map_buttons((int)getc(driver));
-		printf("Button: %d\n", button);
+		//printf("Button: %d\n", button);
 	}
 
 }
@@ -76,14 +60,14 @@ void init_paddle(){
 void move_paddle(paddle_t *player, int dir){
 	
 	if(dir == 1){
-		player->y -= 5;
+		player->y -= MOVE_PIXELS;
 		if(player->y <= 0){
 			player->y = 0;
 		}
 		printf("Y: %d\n", player->y);
 
 	}else if(dir == -1){
-		player->y += 5;
+		player->y += MOVE_PIXELS;
 		if(player->y > SCREEN_HEIGHT + player->height){
 			player->y = SCREEN_HEIGHT;
 		}
@@ -96,45 +80,29 @@ int map_buttons(int input){
 	printf("Input: %d\n", input);
 
 	switch(input){
-		case 0xFE:
-		//LEFT player 1
-		return 1;
-		
-		case 0xFB:
-		//RIGHT player 1
-		return 2;
 		case 0xFD:
 		//UP player 1
 		printf("Move up\n");
 		move_paddle(&player1, 1);
-		create_paddle(player1.x, player1.y, player1.width, player1.height);
+		draw_paddle(&player1, -MOVE_PIXELS);
 		return 3;
 		case 0xF7:
 		//DOWN player 1
 		printf("Move down\n");
 		move_paddle(&player1, -1);
-		create_paddle(player1.x, player1.y, player1.width, player1.height);
+		draw_paddle(&player1, MOVE_PIXELS);
 		return 4;
-
-		case 0xEF:
-		//Left player 2
-		return 5;
-
-		case 0xBF:
-		//Right player 2
-		return 6;
-
 
 		case 0xDF:
 		//up player 2
 		move_paddle(&player2, 1);
-		create_paddle(player2.x, player2.y, player2.width, player2.height);
+		draw_paddle(&player2, -MOVE_PIXELS);
 		return 7;
 
 		case 0x7F:
 		//down player 2
-		move_paddle(&paddle2, -1);
-		create_paddle(player2.x, player2.y, player2.width, player2.height);
+		move_paddle(&player2, -1);
+		draw_paddle(&player2, MOVE_PIXELS);
 		return 8;
 		
 	}
@@ -186,8 +154,8 @@ int main(int argc, char *argv[])
 	fill_screen(34);
 	init_paddle();
 		
-	create_paddle(player1.x, player1.y, player1.width, player1.height);
-	create_paddle(player2.x, player2.y, player2.width, player2.height);	
+	draw_paddle(&player1, 0);
+	draw_paddle(&player2, 0);	
 
 
 
