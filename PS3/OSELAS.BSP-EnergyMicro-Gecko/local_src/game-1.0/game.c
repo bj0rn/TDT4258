@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
 	while(1) {
 		res = getc(fp);
 		printf("test: %d\n", (int)res); 
-	}	
+	}
 
 	exit(EXIT_SUCCESS);
 }
