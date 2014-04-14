@@ -7,9 +7,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-
-#define SCREEN_WIDTH 320
-#define SCREEN_HEIGHT 240
+#include <display.h>
 
 uint16_t *screen_values;
 struct fb_copyarea rect;
@@ -59,20 +57,40 @@ void refresh_screen(){
 }
 
 
-void create_paddle(int x, int y, int width, int height){		
+static void clean_paddle_path(paddle_t *p, int remove_y){
+	for(int i = p->x; i < p->x + p->width; i++){
+		for(int j = p->y + length; j < p->y 
+	}
+}
+
+
+void draw_paddle(paddle_t *p, int new_y){		
 
 	printf("Create paddle\n");
-	for(int i = x; i < x + width; i++){
-		for(int j = y; j < y + height; j++){
+	for(int i = p->x; i < p->x + p->width; i++){
+		for(int j = p->y; j < p->y + p->height; j++){
 			screen_values[i + j * SCREEN_WIDTH] = 0xFFFF; 
 		}
-	}	
+	}
+	
+	if(new_y > 0){
+		//Moving down
+
+	
+	}else if(new_y < 0){
+		//Moving up
+		for(int i = p->x; i < p->x + p->width; i++){
+			for(int j = p->y + p->height; j < new_y; j++){
+				screen_values[i + j * SCREEN_WIDTH] = 34;
+			}
+		}
+	}
 
 	refresh_screen();
 }
 
 
-void create_ball(int x, int y){
+void draw_ball(int x, int y){
 	return;	
 }
 
