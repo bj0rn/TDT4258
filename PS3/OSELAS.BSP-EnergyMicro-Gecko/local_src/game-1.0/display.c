@@ -6,6 +6,7 @@
 #include <sys/ioctl.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <math.h>
 
 #include "display.h"
 
@@ -89,7 +90,23 @@ void draw_paddle(paddle_t *p, int new_y){
 }
 
 
-void draw_ball(int x, int y){
+void static set_pixel(int x, int y){
+	screen_values[x + y * SCREEN_WIDTH] = 0xFFFF;
+}
+
+
+
+void draw_ball(circle_t *c){
+	//Change algorithm if the simple algorithm is to slow
+	int r2 = c->r * c->r;
+	for(int x = -c->r; x <= c->r; x++){
+		int y = (int)sqrt(r2 - x*x) + 0.5;
+		set_pixel(c->x + x, c->y + y);
+		set_pixel(c->x + x, c->y -y);	
+	}
+
+	refresh_screen();	
+
 	return;	
 }
 

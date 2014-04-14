@@ -13,6 +13,13 @@ typedef struct paddle {
 }paddle_t;
 
 
+typedef struct circle {
+	int x;
+	int y;
+	int r;
+}circle_t;
+
+
 
 
 void initDisplay();
@@ -20,4 +27,4 @@ void fill_screen(uint16_t);
 void refresh_screen();
 
 void draw_paddle(paddle_t *paddle, int new_y);
-void draw_ball(int x, int y);
+void draw_ball(circle_t *c);

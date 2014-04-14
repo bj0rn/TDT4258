@@ -26,6 +26,8 @@ FILE *driver;
 paddle_t player1;
 paddle_t player2;
 
+circle_t ball;
+
 
 void gpio_handler(int signo){
 	
@@ -42,7 +44,11 @@ void gpio_handler(int signo){
 }
 
 
-
+void init_ball(){
+	ball.x = 100;
+	ball.y = 100;
+	ball.r = 10;
+}
 
 void init_paddle(){
 	player1.x = 0; 
@@ -153,9 +159,11 @@ int main(int argc, char *argv[])
 	initDisplay();
 	fill_screen(34);
 	init_paddle();
+	init_ball();
 		
 	draw_paddle(&player1, 0);
-	draw_paddle(&player2, 0);	
+	draw_paddle(&player2, 0);
+	draw_ball(&ball);	
 
 
 
