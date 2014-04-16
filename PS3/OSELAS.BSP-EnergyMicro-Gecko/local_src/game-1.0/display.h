@@ -3,7 +3,7 @@
 #define PADDLE_HEIGHT 50
 #define PADDLE_WIDTH 15
 #define SCREEN_HEIGHT 240
-#define SCREEN_WIDTH 340
+#define SCREEN_WIDTH 320
 
 typedef struct paddle {
 	int x;
@@ -13,11 +13,26 @@ typedef struct paddle {
 }paddle_t;
 
 
+typedef struct vector{
+	float x;
+	float y;
+}vector_t;
+
+
+typedef struct circle {
+	int x;
+	int y;
+	int r;
+	int acc;
+	vector_t speed;
+}circle_t;
+
+
 
 
 void initDisplay();
 void fill_screen(uint16_t);
 void refresh_screen();
 
-void draw_paddle(padle_t *paddle, int new_y);
-void draw_ball(int x, int y);
+void draw_paddle(paddle_t *paddle, int new_y);
+void draw_ball(circle_t *c, int color);

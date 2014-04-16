@@ -6,8 +6,9 @@
 #include <sys/ioctl.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <math.h>
 
-#include <display.h>
+#include "display.h"
 
 uint16_t *screen_values;
 struct fb_copyarea rect;
@@ -57,12 +58,6 @@ void refresh_screen(){
 }
 
 
-static void clean_paddle_path(paddle_t *p, int remove_y){
-	for(int i = p->x; i < p->x + p->width; i++){
-		for(int j = p->y + length; j < p->y 
-	}
-}
-
 
 void draw_paddle(paddle_t *p, int new_y){		
 
@@ -75,12 +70,17 @@ void draw_paddle(paddle_t *p, int new_y){
 	
 	if(new_y > 0){
 		//Moving down
+		for(int i = p->x; i < p->x + p->width; i++){
+			for(int j = (p->y - new_y); j <  p->y; j++) {
+				screen_values[i + j * SCREEN_WIDTH] = 34;
+			}
+		}
 
 	
 	}else if(new_y < 0){
 		//Moving up
 		for(int i = p->x; i < p->x + p->width; i++){
-			for(int j = p->y + p->height; j < new_y; j++){
+			for(int j = (p->y + p->height); j < (p->y + p->height - new_y); j++){
 				screen_values[i + j * SCREEN_WIDTH] = 34;
 			}
 		}
@@ -90,7 +90,23 @@ void draw_paddle(paddle_t *p, int new_y){
 }
 
 
-void draw_ball(int x, int y){
+void static set_pixel(int x, int y, int color){
+	screen_values[x + y * SCREEN_WIDTH] = color;
+}
+
+
+
+void draw_ball(circle_t *c, int color){
+	//Change algorithm if the simple algorithm is to slow
+	int r2 = c->r * c->r;
+	for(int x = -c->r; x <= c->r; x++){
+		int y = (int)sqrt(r2 - x*x) + 0.5;
+		set_pixel(c->x + x, c->y + y, color);
+		set_pixel(c->x + x, c->y -y, color);	
+	}
+
+	refresh_screen();	
+
 	return;	
 }
 
