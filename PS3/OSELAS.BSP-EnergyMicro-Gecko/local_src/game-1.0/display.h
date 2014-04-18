@@ -10,6 +10,7 @@ typedef struct paddle {
 	int y;
 	int width;
 	int height;
+	int id;
 }paddle_t;
 
 

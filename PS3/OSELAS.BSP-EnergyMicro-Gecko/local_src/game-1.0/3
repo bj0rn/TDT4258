@@ -96,44 +96,8 @@ void pad_collision(paddle_t *p,circle_t *c, int heigth, int width){
 	bool intersecting = left <= c->r && top <= c->r && right >= -(c->r) && bottom >= -(c->r);
 	vector_t *impulse = NULL;
 	if(intersecting){
-		draw_ball(c, 34);
-		if(p->id == 1){
-			c->x = p->x + p->width + c->r;
-			if(c->y <= p->y + 10){
-				c->speed.x = 0.9;
-				c->speed.y = -0.5;
-			}else if(c->y <= p->y + 20){
-				c->speed.x = 0.70;
-				c->speed.y = -0.70;
-			}else if(c->y <= p->y + 30){
-				c->speed.x = 1.0;
-				c->speed.y = 0;
-			}else if(c->y <= p->y + 40){
-				c->speed.x = 0.70;
-				c->speed.y = 0.70;
-			}else if(c->y <= p->y + 50){
-				c->speed.x = 0.90;
-				c->speed.y = 0.90;
-			}
-					
-		}else if(p->id == 2){
-			c->x = p->x - p->width;
-			if(c->y <= p->y + 10){
-				c->speed.x = -0.9;
-				c->speed.y = -0.5;
-			}else if(c->y <= p->y + 20){
-				c->speed.x = -0.70;
-				c->speed.y = -0.70;
-			}else if(c->y <= p->y + 30){
-				c->speed.x = -1.0;
-			}else if(c->y <= p->y + 40){
-				c->speed.x = -0.70;
-				c->speed.y = 0.70;	
-			}else if(c->y <= p->y + 50){
-				c->speed.x = -0.90;
-				c->speed.y = 0.50;
-			}
-		}			
+
+				
 			
 	}
 
@@ -152,7 +116,7 @@ vector_t *intersect_rectangle_circle(vector_t *rec_pos, int w, int h, circle_t *
 	if(intersecting){
 		impulse = vec_normalized(&c->speed);
 		//impulse = &c->speed;
-		
+
 		if(abs(left) <= c->r && impulse->x < 0){
 			impulse->x = -impulse->x;
 		}
@@ -161,6 +125,7 @@ vector_t *intersect_rectangle_circle(vector_t *rec_pos, int w, int h, circle_t *
 		}
 
 		if(abs(top) <= c->r && impulse->y > 0){
+
 			impulse->y = -impulse->y;		
 		}
 
@@ -195,7 +160,7 @@ void move_ball(circle_t *c){
 	if((speed = intersect_rectangle_circle(&rec_pos, SCREEN_WIDTH, 0, c)) != NULL){
 		//Top
 		c->speed = *speed;
-		c->y = c->r;
+		//c->speed.y = -c->speed.y;
 	}
 
 	rec_pos.y = SCREEN_HEIGHT;
@@ -204,7 +169,6 @@ void move_ball(circle_t *c){
 	if((speed = intersect_rectangle_circle(&rec_pos, SCREEN_WIDTH, SCREEN_HEIGHT, c)) != NULL){
 		//Bottom
 		c->speed = *speed;
-		c->y = SCREEN_HEIGHT - c->r;
 	}
 
 	rec_pos.y = 0;
@@ -212,7 +176,6 @@ void move_ball(circle_t *c){
 	if((speed = intersect_rectangle_circle(&rec_pos, 0, SCREEN_HEIGHT, c)) != NULL){
 		//Right
 		c->speed = *speed;
-		c->x = SCREEN_WIDTH - c->r;
 	}
 	
 	rec_pos.y = 0;
@@ -221,12 +184,14 @@ void move_ball(circle_t *c){
 		//Left
 		c->speed = *speed;
 		c->speed.x = -c->speed.x;
-		c->x = c->r;
 	}
-		
+	
+	
 
 	ball.x += ball.speed.x * ball.acc;
-	ball.y += ball.speed.y * ball.acc;	
+	ball.y += ball.speed.y * ball.acc;
+
+	
 
 	draw_ball(c, 0xFFFF);		
 }
@@ -326,10 +291,8 @@ int main(int argc, char *argv[])
 	fill_screen(34);
 	init_paddle();
 	init_ball();
-	
-	player1.id = 1;
+		
 	draw_paddle(&player1, 0);
-	player2.id = 2;
 	draw_paddle(&player2, 0);
 	draw_ball(&ball, 0xFFFF);
 	//while(1) {}	
