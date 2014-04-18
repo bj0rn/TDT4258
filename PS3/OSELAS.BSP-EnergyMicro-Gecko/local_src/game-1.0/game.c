@@ -54,7 +54,7 @@ void init_ball(){
 	ball.r = 5;
 	ball.acc = 15;
 	ball.speed.x = 5;
-	ball.speed.y = 0;
+	ball.speed.y = -5;
 	vector_t *speed = vec_normalized(&ball.speed);
 	ball.speed = *speed;
 }
@@ -87,29 +87,7 @@ vector_t *vec_normalized(vector_t *v){
 
 void pad_collision(paddle_t *p,circle_t *c){
 	vector_t *speed;
-	vector_t rec_pos;
 
-	rec_pos.x = p->x;
-	rec_pos.y = p->y;
-
-	//Player 1
-	if((speed = intersect_rectangle_circle(&rec_pos, PADDLE_WIDTH, PADDLE_HEIGHT, c)) != NULL){
-		printf("Collsion with paddle\n");
-		
-		if(p->y + 10 > c->y){
-			c->speed.x = -1.0;
-		} else if(p->y + 20 > c->y){
-			c->speed.x = -0.8;
-		}else if(p->y + 30 > c->y){
-			c->speed.y = 0;
-			c->speed.x = -1.0;
-		}else if(p->y + 40 > c->y){
-			c->speed.x = -0.8;
-		}else if(p->y + 50 > c->y){
-			c->speed.x = -1.0;
-		}
-		
-	}	
 
 	return;
 }
@@ -124,24 +102,22 @@ vector_t *intersect_rectangle_circle(vector_t *rec_pos, int w, int h, circle_t *
 	vector_t *impulse = NULL;
 	if(intersecting){
 		impulse = vec_normalized(&c->speed);
-		if(abs(left) < c->r && impulse->x > 0){
+
+		if(abs(left) <= c->r && impulse->x < 0){
 			impulse->x = -impulse->x;
 		}
-		if(abs(right) < c->r && impulse->x < 0){
+		if(abs(right) <= c->r && impulse->x > 0){
 			impulse->x = -impulse->x;
 		}
 
-		if(abs(top) < c->r && impulse->y > 0){
+		if(abs(top) <= c->r && impulse->y > 0){
+
 			impulse->y = -impulse->y;		
 		}
 
-		if(abs(bottom) < c->r && impulse->y < 0){
+		if(abs(bottom) <= c->r && impulse->y < 0){
 			impulse->y = -impulse->y;
 		}
-
-
-		printf("Impulse x: %f\n", impulse->x);
-		printf("Impulse y: %f\n", impulse->y);
 
 		return impulse;
 	}
@@ -168,7 +144,7 @@ void move_ball(circle_t *c){
 	
 	//Collision top 
 	if((speed = intersect_rectangle_circle(&rec_pos, SCREEN_WIDTH, 0, c)) != NULL){
-		printf("Collision top\n");
+		//Top
 		c->speed = *speed;
 		//c->speed.y = -c->speed.y;
 	}
@@ -176,24 +152,22 @@ void move_ball(circle_t *c){
 	rec_pos.y = SCREEN_HEIGHT;
 	rec_pos.x = 0;
 
-	if((speed = intersect_rectangle_circle(&rec_pos, SCREEN_WIDTH, 0, c)) != NULL){
+	if((speed = intersect_rectangle_circle(&rec_pos, SCREEN_WIDTH, SCREEN_HEIGHT, c)) != NULL){
+		//Bottom
 		c->speed = *speed;
-		printf("Colsision right\n");
-		//c->speed.y = -c->speed.y;
 	}
 
 	rec_pos.y = 0;
 	rec_pos.x = SCREEN_WIDTH;
 	if((speed = intersect_rectangle_circle(&rec_pos, 0, SCREEN_HEIGHT, c)) != NULL){
-		
-		printf("Collison right\n");
+		//Right
 		c->speed = *speed;
-		//c->speed.x = -c->speed.x;
 	}
 	
 	rec_pos.y = 0;
 	rec_pos.x = 0;
 	if((speed = intersect_rectangle_circle(&rec_pos, 0, SCREEN_HEIGHT, c)) != NULL){
+		//Left
 		c->speed = *speed;
 		c->speed.x = -c->speed.x;
 	}
