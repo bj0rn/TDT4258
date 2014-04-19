@@ -61,7 +61,6 @@ void refresh_screen(){
 
 void draw_paddle(paddle_t *p, int new_y){		
 
-	printf("Create paddle\n");
 	for(int i = p->x; i < p->x + p->width; i++){
 		for(int j = p->y; j < p->y + p->height; j++){
 			screen_values[i + j * SCREEN_WIDTH] = 0xFFFF; 
@@ -95,7 +94,7 @@ void static set_pixel(int x, int y, int color){
 }
 
 
-
+/*
 void draw_ball(circle_t *c, int color){
 	//Change algorithm if the simple algorithm is to slow
 	int r2 = c->r * c->r;
@@ -109,7 +108,52 @@ void draw_ball(circle_t *c, int color){
 
 	return;	
 }
+*/
 
+void draw_ball(circle_t *c, int color){
+	int x, y, r2;
+
+	r2 = c->r * c->r;
+
+	set_pixel(c->x, c->y + c->r, color);
+	set_pixel(c->x, c->y - c->r, color);
+	set_pixel(c->x + c->r, c->y, color);
+	set_pixel(c->x - c->r, c->y, color);
+
+	y = c->r;
+	x = 1;
+	y = (int)sqrt(r2 - 1) + 0.5;
+	
+	while(x < y){
+		set_pixel(c->x + x, c->y + y, color);
+		set_pixel(c->x + x, c->y - y, color);
+		set_pixel(c->x - x, c->y + y, color);
+		set_pixel(c->x - x, c->y - y, color);
+		
+		set_pixel(c->x + y, c->y + x, color);
+		set_pixel(c->x + y, c->y - x, color);
+		set_pixel(c->x - y, c->y + x, color);
+		set_pixel(c->x - y, c->y - x, color);
+
+		x+=1;
+		y = (int) sqrt(r2 - x * x) + 0.5; 
+	}
+
+	if(x == y){
+		set_pixel(c->x + x, c->y + y, color);
+		set_pixel(c->x + x, c->y - y, color);
+		set_pixel(c->x - x, c->y + y, color);
+		set_pixel(c->x - x, c->y - y, color);
+	}
+
+	refresh_screen();
+}
+
+
+void refresh_ball(circle_t *c,int *matrix,  int color){
+	return;
+
+}
 
 
 

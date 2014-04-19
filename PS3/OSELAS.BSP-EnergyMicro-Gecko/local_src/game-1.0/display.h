@@ -1,5 +1,5 @@
 
-#define MOVE_PIXELS 5
+#define MOVE_PIXELS 20
 #define PADDLE_HEIGHT 50
 #define PADDLE_WIDTH 15
 #define SCREEN_HEIGHT 240
@@ -10,6 +10,7 @@ typedef struct paddle {
 	int y;
 	int width;
 	int height;
+	int id;
 }paddle_t;
 
 
@@ -36,3 +37,6 @@ void refresh_screen();
 
 void draw_paddle(paddle_t *paddle, int new_y);
 void draw_ball(circle_t *c, int color);
+
+int *test_draw_ball(circle_t *c, int color);
+void refresh_ball(circle_t *c, int *matrix, int color);
