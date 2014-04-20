@@ -110,6 +110,40 @@ void draw_ball(circle_t *c, int color){
 }
 */
 
+
+void draw_filled_circle(circle_t *c, int color){
+	int x = c->r;
+	int y = 0;
+	int xchange = 1 - (c->r << 1);
+	int ychange = 0;
+	int radius_error = 0;
+
+
+	while(x >= y){
+		
+		for(int i = c->x - x; i <= c->x + x; i++){
+			set_pixel(i, c->y+y, color);
+			set_pixel(i, c->y-y, color);
+		}
+
+		for(int i = c->x - y; i <= c->x + y; i++){
+			set_pixel(i, c->y + x, color);
+			set_pixel(i, c->y - x, color);
+		}
+		
+		y++;
+		radius_error += ychange;
+		ychange += 2;
+		
+		if(((radius_error << 1) + xchange) > 0){
+			x--;
+			radius_error += xchange;
+			xchange += 2;
+		}
+		
+	}
+}
+
 void draw_ball(circle_t *c, int color){
 	int x, y, r2;
 

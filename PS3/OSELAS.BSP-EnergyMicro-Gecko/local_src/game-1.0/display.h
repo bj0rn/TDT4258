@@ -40,3 +40,5 @@ void draw_ball(circle_t *c, int color);
 
 int *test_draw_ball(circle_t *c, int color);
 void refresh_ball(circle_t *c, int *matrix, int color);
+
+void draw_filled_circle(circle_t *c, int color);
