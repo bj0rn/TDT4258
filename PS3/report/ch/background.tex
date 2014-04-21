@@ -1,3 +1,13 @@
 \subsection{Background}
+A device driver is a small program that interfaces some external hardware. The driver provides a software device to the hardware, enabling operating systems and other computer programs to access hardware functions without needing details of the hardware. It can be viewed as an abstraction to make interaction between software and hardware easier. The program acts as an translator between the hardware and the software layer. 
+
+Device drivers usually require low-level access to hardware functions in order to operate. They typically operates in a highly privileged environment. Note that an normal computer operating system is divided into different security layers. Each layer corresponds to a set of rules specifying the mode of operation. These layers are enforced by the operating system and supported by the CPU. In context of the CPU the different security layers are deferred to as rings. In case of this report we will not focus that much on these levels, other than introducing {\bf Kernel Mode} and {\bf User Mode}. 
+
+When a program runs in kernel mode it is assumed to executing trusted software. In this mode it is possible to access any instruction and reference any memory address. The kernel has complete control of every aspect of the system. All other programs are considered to be untrusted programs. Thus, all user mode software must request the user of the kernel by means of system call in order to perform privileged instructions. 
+
+
+This usually implies restricting access to a set of privileged functions, like handling memory. 
+
+
 
 
