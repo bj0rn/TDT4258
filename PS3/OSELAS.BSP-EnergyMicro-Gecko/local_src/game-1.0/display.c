@@ -53,6 +53,17 @@ void fill_screen(uint16_t value){
 }
 
 
+void draw_image(image_t *image){
+	for(int i = 0; i < SCREEN_WIDTH * SCREEN_HEIGHT; i++){
+		color_t col;
+		col.r = image->pixel[i].pix[0];
+		col.g = image->pixel[i].pix[1];
+		col.r = image->pixel[i].pix[2];
+		screen_values[i] = (uint16_t)col; 
+	}
+}
+
+
 void refresh_screen(){
 	ioctl(fp, 0x4680, &rect);
 }
@@ -108,6 +119,36 @@ void draw_ball(circle_t *c, int color){
 	return;	
 }
 */
+
+
+image_t *load_image(int fp, int height, int width){
+	lseek(fp, IMG_HEADER_LENGHT, SEEK_SET);
+
+	int num_pix = height * width;
+
+	image->height = height;
+	image->width = width;
+
+
+	image_t *image = (image_t *)malloc(sizeof(image_t));
+	image->pixel = (pixel_t *)malloc(sizeof(pixel_t) * num_pix);
+
+
+	for(int i = 0; i < num_pix; i++){
+		for(int j = 0; j < 3; j++){
+			char c;
+			read(fp, &c, 1);
+			image->pixel[i].pix[j] = c;
+		} 
+	}	
+
+	close(fp);
+
+	return image;
+}
+
+
+
 
 
 void draw_filled_circle(circle_t *c, int color){
