@@ -15,7 +15,6 @@
 #include <math.h>
 #include <stdbool.h> 
 
-
 #define SPEED 2
 
 /*Function prototypes*/
@@ -192,6 +191,9 @@ void move_ball(circle_t *c){
 	rec_pos.x = 0;
 	rec_pos.y = 0;
 	
+
+
+	
 	//Collision top 
 	if((speed = intersect_rectangle_circle(&rec_pos, SCREEN_WIDTH, 0, c)) != NULL){
 		//Top
@@ -223,8 +225,7 @@ void move_ball(circle_t *c){
 		c->speed = *speed;
 		c->speed.x = -c->speed.x;
 		c->x = c->r;
-	}
-		
+	}	
 
 	ball.x += ball.speed.x * ball.acc;
 	ball.y += ball.speed.y * ball.acc;	
@@ -247,7 +248,7 @@ void move_paddle(paddle_t *player, int dir){
 	}else if(dir == -1){
 		player->y += MOVE_PIXELS;
 		if(player->y > SCREEN_HEIGHT + player->height){
-			player->y = SCREEN_HEIGHT;
+			player->y = SCREEN_HEIGHT - player->height;
 		}
 	}
 }
@@ -259,24 +260,24 @@ int map_buttons(int input){
 		case 0xFD:
 		//UP player 1
 		move_paddle(&player1, 1);
-		draw_paddle(&player1, -MOVE_PIXELS);
+		draw_paddle(&player1, -MOVE_PIXELS, 0xFF00);
 		return 3;
 		case 0xF7:
 		//DOWN player 1
 		move_paddle(&player1, -1);
-		draw_paddle(&player1, MOVE_PIXELS);
+		draw_paddle(&player1, MOVE_PIXELS, 0xFF00);
 		return 4;
 
 		case 0xDF:
 		//up player 2
 		move_paddle(&player2, 1);
-		draw_paddle(&player2, -MOVE_PIXELS);
+		draw_paddle(&player2, -MOVE_PIXELS, 0x00FF);
 		return 7;
 
 		case 0x7F:
 		//down player 2
 		move_paddle(&player2, -1);
-		draw_paddle(&player2, MOVE_PIXELS);
+		draw_paddle(&player2, MOVE_PIXELS, 0x00FF);
 		return 8;
 		
 	}
@@ -332,9 +333,9 @@ int main(int argc, char *argv[])
 	//draw_filled_circle(&ball, 0xFFFF);
 	
 	player1.id = 1;
-	draw_paddle(&player1, 0);
+	draw_paddle(&player1, 0, 0xFF00);
 	player2.id = 2;
-	draw_paddle(&player2, 0);
+	draw_paddle(&player2, 0, 0x00FF);
 	//draw_ball(&ball, 0xFFFF);
 	//while(1) {}	
 	while(1) {
@@ -343,8 +344,9 @@ int main(int argc, char *argv[])
 		move_ball(&ball);
 		pad_collision(&player1, &ball, SCREEN_HEIGHT, SCREEN_WIDTH);
 		pad_collision(&player2, &ball, SCREEN_HEIGHT, SCREEN_WIDTH);
+		refresh_screen();
 
-		//usleep(200);
+		usleep(300);
 	}
 	
 	
