@@ -10,6 +10,9 @@
 
 #include "display.h"
 
+
+#define IMG_HEADER_LENGTH 18 
+
 uint16_t *screen_values;
 struct fb_copyarea rect;
 struct fb_var_screeninfo screen_info;
@@ -56,10 +59,10 @@ void fill_screen(uint16_t value){
 void draw_image(image_t *image){
 	for(int i = 0; i < SCREEN_WIDTH * SCREEN_HEIGHT; i++){
 		color_t col;
-		col.r = image->pixel[i].pix[0];
-		col.g = image->pixel[i].pix[1];
-		col.r = image->pixel[i].pix[2];
-		screen_values[i] = (uint16_t)col; 
+		col.r = (unsigned int)image->pixel[i].pix[0];
+		col.g = (unsigned int)image->pixel[i].pix[1];
+		col.b = (unsigned int)image->pixel[i].pix[2];
+		screen_values[i] = *((uint16_t*)&col);
 	}
 }
 
@@ -68,7 +71,43 @@ void refresh_screen(){
 	ioctl(fp, 0x4680, &rect);
 }
 
+void draw_rect(int x, int y, int color){
+	for(int i = x; i < x + 10; i++){
+		for(int j = 0; j < y + 10; j++){
+			screen_values[i + j * SCREEN_WIDTH] = color;
+		}
+	}
+}
 
+
+void draw_text(char *matrix){
+	int color = 34;
+	for(int i = 0; i < 32; i++){
+		for(int j = 0; j < 24; j++){
+			switch(matrix[i + j * 24]){
+				case 'X':
+				color =0x0000;
+				break;
+				case 'Y':
+				color = 0xFF00;
+				break;
+				case 'G':
+				color = 0x0080;
+				break;
+				case 'B':
+				color = 0x00FF;
+				break;
+				case 'R':
+				color = 0xF000;
+				break; 
+				default:
+				break; 
+			}	
+
+			draw_rect(i*10, j*10, color);
+		}
+	}
+}
 
 void draw_paddle(paddle_t *p, int new_y, int color){		
 
@@ -122,20 +161,19 @@ void draw_ball(circle_t *c, int color){
 
 
 image_t *load_image(int fp, int height, int width){
-	lseek(fp, IMG_HEADER_LENGHT, SEEK_SET);
+	lseek(fp, IMG_HEADER_LENGTH, SEEK_SET);
 
 	int num_pix = height * width;
-
-	image->height = height;
-	image->width = width;
 
 
 	image_t *image = (image_t *)malloc(sizeof(image_t));
 	image->pixel = (pixel_t *)malloc(sizeof(pixel_t) * num_pix);
-
+	
+	image->height = height;
+	image->width = width;
 
 	for(int i = 0; i < num_pix; i++){
-		for(int j = 0; j < 3; j++){
+		for(int j = 0; j < 4; j++){
 			char c;
 			read(fp, &c, 1);
 			image->pixel[i].pix[j] = c;

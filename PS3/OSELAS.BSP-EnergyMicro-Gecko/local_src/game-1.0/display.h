@@ -1,3 +1,5 @@
+#include <stdint.h>
+
 
 #define MOVE_PIXELS 20
 #define PADDLE_HEIGHT 50
@@ -30,26 +32,29 @@ typedef struct circle {
 
 
 typedef struct pixel{
-	uint8_t pix[3];
+	uint8_t pix[4];
 }pixel_t;
 
 typedef struct image{
-	int height,
-	int width,
+	int height;
+	int width;
 	pixel_t *pixel;
 
 }image_t;
 
 
-typedef struct color {
+typedef struct {
 	unsigned int r : 5;
 	unsigned int g : 6;
 	unsigned int b : 5;
+	unsigned int a : 8;
 	
 }color_t;
 
+void draw_text(char *matrix);
+
 void draw_image(image_t *image);
-void load_image(int fp, int height, int width);
+image_t *load_image(int fp, int height, int width);
 void initDisplay();
 void fill_screen(uint16_t);
 void refresh_screen();

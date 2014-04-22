@@ -337,7 +337,24 @@ int main(int argc, char *argv[])
 	player2.id = 2;
 	draw_paddle(&player2, 0, 0x00FF);
 	//draw_ball(&ball, 0xFFFF);
-	//while(1) {}	
+	//while(1) {}
+
+
+	//int img = open("/usr/bin/introScreen.tga", O_RDONLY);
+
+	//if(img == -1){
+	//	printf("Error\n");
+	//}
+	//image_t *image = load_image(img, 320, 240);
+	//draw_image(image);
+
+	//refresh_screen();
+
+	//printf("Finish\n");
+
+	//while(1){};		
+
+	
 	while(1) {
 		//int b = getc(driver);
 		//map_buttons(b);
