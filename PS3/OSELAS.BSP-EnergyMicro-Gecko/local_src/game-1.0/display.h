@@ -35,7 +35,7 @@ void initDisplay();
 void fill_screen(uint16_t);
 void refresh_screen();
 
-void draw_paddle(paddle_t *paddle, int new_y);
+void draw_paddle(paddle_t *paddle, int new_y, int color);
 void draw_ball(circle_t *c, int color);
 
 int *test_draw_ball(circle_t *c, int color);

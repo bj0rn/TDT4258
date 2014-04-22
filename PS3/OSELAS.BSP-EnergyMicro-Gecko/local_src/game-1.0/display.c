@@ -59,11 +59,11 @@ void refresh_screen(){
 
 
 
-void draw_paddle(paddle_t *p, int new_y){		
+void draw_paddle(paddle_t *p, int new_y, int color){		
 
 	for(int i = p->x; i < p->x + p->width; i++){
 		for(int j = p->y; j < p->y + p->height; j++){
-			screen_values[i + j * SCREEN_WIDTH] = 0xFFFF; 
+			screen_values[i + j * SCREEN_WIDTH] = color; 
 		}
 	}
 	
@@ -85,7 +85,6 @@ void draw_paddle(paddle_t *p, int new_y){
 		}
 	}
 
-	refresh_screen();
 }
 
 
@@ -180,7 +179,7 @@ void draw_ball(circle_t *c, int color){
 		set_pixel(c->x - x, c->y - y, color);
 	}
 
-	refresh_screen();
+//	refresh_screen();
 }
 
 
