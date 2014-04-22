@@ -187,7 +187,8 @@ void move_ball(circle_t *c){
 	
 	//Clear old ball
 	draw_ball(c, 34);
-	
+	//draw_filled_circle(c, 34);	
+
 	rec_pos.x = 0;
 	rec_pos.y = 0;
 	
@@ -228,7 +229,8 @@ void move_ball(circle_t *c){
 	ball.x += ball.speed.x * ball.acc;
 	ball.y += ball.speed.y * ball.acc;	
 
-	draw_ball(c, 0xFFFF);		
+	draw_ball(c, 0xFFFF);
+	//draw_filled_circle(c, 0xFFFF);		
 }
 
 
@@ -326,12 +328,14 @@ int main(int argc, char *argv[])
 	fill_screen(34);
 	init_paddle();
 	init_ball();
+
+	//draw_filled_circle(&ball, 0xFFFF);
 	
 	player1.id = 1;
 	draw_paddle(&player1, 0);
 	player2.id = 2;
 	draw_paddle(&player2, 0);
-	draw_ball(&ball, 0xFFFF);
+	//draw_ball(&ball, 0xFFFF);
 	//while(1) {}	
 	while(1) {
 		//int b = getc(driver);
@@ -340,7 +344,7 @@ int main(int argc, char *argv[])
 		pad_collision(&player1, &ball, SCREEN_HEIGHT, SCREEN_WIDTH);
 		pad_collision(&player2, &ball, SCREEN_HEIGHT, SCREEN_WIDTH);
 
-		usleep(200);
+		//usleep(200);
 	}
 	
 	
