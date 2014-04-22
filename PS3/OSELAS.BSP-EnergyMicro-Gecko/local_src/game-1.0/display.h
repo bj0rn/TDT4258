@@ -29,8 +29,27 @@ typedef struct circle {
 }circle_t;
 
 
+typedef struct pixel{
+	uint8_t pix[3];
+}pixel_t;
+
+typedef struct image{
+	int height,
+	int width,
+	pixel_t *pixel;
+
+}image_t;
 
 
+typedef struct color {
+	unsigned int r : 5;
+	unsigned int g : 6;
+	unsigned int b : 5;
+	
+}color_t;
+
+void draw_image(image_t *image);
+void load_image(int fp, int height, int width);
 void initDisplay();
 void fill_screen(uint16_t);
 void refresh_screen();
