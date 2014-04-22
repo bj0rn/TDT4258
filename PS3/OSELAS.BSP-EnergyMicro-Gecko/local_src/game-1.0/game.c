@@ -13,7 +13,10 @@
 #include <sys/types.h>
 #include <time.h>
 #include <math.h>
-#include <stdbool.h> 
+#include <stdbool.h>
+
+
+#include "fonts.h" 
 
 #define SPEED 2
 
@@ -38,11 +41,17 @@ paddle_t player2;
 
 circle_t ball;
 
+
+bool start;
+bool game_over;
+
 void gpio_handler(int signo){
 	
 	int button;	
 	if(signo == SIGIO){
 		button = map_buttons((int)getc(driver));
+		start = false;
+
 	}
 
 }
@@ -324,35 +333,28 @@ int init_gamepad(){
 
 int main(int argc, char *argv[])
 {
-	init_gamepad();
+	
+		
+	start = true;
 	initDisplay();
+	init_gamepad();
+	draw_text(&intro);
+	refresh_screen();
+	
+	while(start){
+		usleep(1000);
+	}
+
+
 	fill_screen(34);
 	init_paddle();
 	init_ball();
 
-	//draw_filled_circle(&ball, 0xFFFF);
 	
 	player1.id = 1;
 	draw_paddle(&player1, 0, 0xFF00);
 	player2.id = 2;
 	draw_paddle(&player2, 0, 0x00FF);
-	//draw_ball(&ball, 0xFFFF);
-	//while(1) {}
-
-
-	//int img = open("/usr/bin/introScreen.tga", O_RDONLY);
-
-	//if(img == -1){
-	//	printf("Error\n");
-	//}
-	//image_t *image = load_image(img, 320, 240);
-	//draw_image(image);
-
-	//refresh_screen();
-
-	//printf("Finish\n");
-
-	//while(1){};		
 
 	
 	while(1) {

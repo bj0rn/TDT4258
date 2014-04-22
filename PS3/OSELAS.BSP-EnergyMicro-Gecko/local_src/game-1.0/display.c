@@ -73,7 +73,7 @@ void refresh_screen(){
 
 void draw_rect(int x, int y, int color){
 	for(int i = x; i < x + 10; i++){
-		for(int j = 0; j < y + 10; j++){
+		for(int j = y; j < y + 10; j++){
 			screen_values[i + j * SCREEN_WIDTH] = color;
 		}
 	}
@@ -84,7 +84,7 @@ void draw_text(char *matrix){
 	int color = 34;
 	for(int i = 0; i < 32; i++){
 		for(int j = 0; j < 24; j++){
-			switch(matrix[i + j * 24]){
+			switch(matrix[i + j * 32]){
 				case 'X':
 				color =0x0000;
 				break;
@@ -92,7 +92,7 @@ void draw_text(char *matrix){
 				color = 0xFF00;
 				break;
 				case 'G':
-				color = 0x0080;
+				color = 0x008F;
 				break;
 				case 'B':
 				color = 0x00FF;
