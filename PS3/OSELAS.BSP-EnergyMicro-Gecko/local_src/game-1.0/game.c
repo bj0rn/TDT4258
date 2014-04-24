@@ -338,7 +338,7 @@ int main(int argc, char *argv[])
 	start = true;
 	initDisplay();
 	init_gamepad();
-	draw_text(&intro);
+	draw_text(intro);
 	refresh_screen();
 	
 	while(start){

@@ -79,6 +79,22 @@ void draw_rect(int x, int y, int color){
 	}
 }
 
+void draw_score(char *matrix, int startX, int startY){
+	int color=0;
+	for(int i=0; i<3; i++){
+		for(int j=0; j<8; j++){
+			switch(matrix[i + j * 3]){
+				case 'W':
+				color =0xFFFF;
+				break;
+				case 'X':
+				color = 0x0000;
+				break;
+			}
+			draw_rect((i+startX)*10, (j+startX)*10, color);
+		}
+	}
+}
 
 void draw_text(char *matrix){
 	int color = 34;
