@@ -1,5 +1,23 @@
 \subsection{Linux Driver}
-In linux/Unix nearly everything is represented as files. This also involves device drivers. The interaction with the drivers occurs by reading/writing to this file. More specific the drivers is accessed  using common functions for I/O. Each driver file is identified by a unique number, which allows the system to know the type of the file. More precisely, the drivers is identified based on two numbers, \emph major and \emph minor. The major number is used to defer to the device driver being used. All devices controlled by the same device driver has the same device number. The minor numbers are used to distinguish between different devices and their controllers. 
+Interface between kernel and modules. In order initialise and de-initalize the driver the kernel need to implement two functions, one init function and one exit function. These functions are called when the module is loaded and un-loaded, respectively. The init function sets up everything necessary to load the module. The exit function de-allocate everything allocated in the init function. 
+
+The following steps are taken in order to initialize the driver:
+
+\begin{enumerate}
+    \item Make the driver as a kernel module.
+    \item Allocate and memory map access to the I/O hardware registers which will be used. 
+    \item Initialize hardware
+    \item Allocate character device structure. 
+    \item Activate the driver.
+\end{enumerate}
+
+
+
+
+
+
+
+In linux/Unix nearly everything is represented as files. This also involves device drivers. The interaction with the drivers occurs by reading/writing to this file. More specific the drivers is accessed  using common functions for I/O. Each driver file is identified by a unique number, which allows the system to know the type of the file. The number is split into a \emph major and \emph minor number. The major number is used to defer to the device driver being used. All devices controlled by the same device driver has the same device number. The minor numbers are used to distinguish between different devices and their controllers. 
 
 
 
@@ -25,7 +43,7 @@ Making the driver visible to user space. User programs communicate with the driv
 The memory of the microcontroller is memory-mapped. This implies that techniques regarding virtual memory is ignored. The driver is developed for working with the gamepad for this specific micro controller. 
 
 \subsection{Input Handling}
-The compendium describes three different ways of implementing the input handling from the gamepad. This methods represent different degree of technical difficulty and efficiency. For completeness all of these methods have been implemented following an iterative approach of learning. E.g start simple and extend it to more advanced techniques as the code is confirmed to work. 
+The compendium describes three different ways of implementing the input handling from the gamepad. This methods represent different degree of technical difficulty and efficiency. For completeness all of these methods have been implemented following an iterative approach of learning. We started simple with polling and worked ourself up to the more advanced features like interrupts.  
 
 The different approaches have dedicated sections explaining the techniques used. The techniques are realised by implementing different versions of I/O operations in the file.  
 
