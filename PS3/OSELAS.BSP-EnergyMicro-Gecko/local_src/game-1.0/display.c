@@ -47,12 +47,12 @@ void initDisplay(){
 }
 
 void fill_screen(uint16_t value){
-	for(int i=0; i<SCREEN_WIDTH*SCREEN_HEIGHT; i++){
+	for(int i=0; i<SCREEN_WIDTH * SCREEN_HEIGHT; i++){
 		screen_values[i]=value;
 	}
 	
 	//comand driver to update display
-	ioctl(fp, 0x4680, &rect);
+	refresh_screen();
 }
 
 
@@ -91,7 +91,7 @@ void draw_score(char *matrix, int startX, int startY){
 				color = 0x0000;
 				break;
 			}
-			draw_rect((i+startX)*10, (j+startX)*10, color);
+			draw_rect((i+startX)*10, (j+startY)*10, color);
 		}
 	}
 }
@@ -115,7 +115,9 @@ void draw_text(char *matrix){
 				break;
 				case 'R':
 				color = 0xF000;
-				break; 
+				break;
+				case 'W':
+				color = 0xFFFF;
 				default:
 				break; 
 			}	
@@ -123,6 +125,7 @@ void draw_text(char *matrix){
 			draw_rect(i*10, j*10, color);
 		}
 	}
+	refresh_screen();
 }
 
 void draw_paddle(paddle_t *p, int new_y, int color){		
