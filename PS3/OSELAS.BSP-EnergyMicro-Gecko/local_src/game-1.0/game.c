@@ -30,6 +30,9 @@ vector_t *vec_normalized(vector_t *vec);
 void move_ball(circle_t *c);
 vector_t *intersect_rectangle_circle(vector_t *rec_pos, int w, int h, circle_t *c);
 void pad_collision(paddle_t *p, circle_t *c, int height, int width);
+char* get_score_array(int score);
+void wall_collision(circle_t *c);
+void display_current_score();
 
 FILE *driver;
 
@@ -44,6 +47,13 @@ circle_t ball;
 
 bool start;
 bool game_over;
+
+bool collision_wall=false;
+bool collision_left=false;
+bool collision_right=false;
+
+player1_score=0;
+player2_score=0;
 
 void gpio_handler(int signo){
 	
@@ -141,12 +151,71 @@ void pad_collision(paddle_t *p,circle_t *c, int heigth, int width){
 				c->speed.x = -0.90;
 				c->speed.y = 0.50;
 			}
-		}			
+		}		
 			
 	}
 
 
 	return;
+}
+
+void wall_collision(circle_t *c){
+	if(c->x < PADDLE_WIDTH){
+		collision_wall=true;
+		collision_left=true;
+		player2_score++;
+	}
+	else if(c->x > (SCREEN_WIDTH - PADDLE_WIDTH)){
+		collision_wall=true;
+		collision_right=true;
+		player1_score++;
+	}
+}
+void display_current_score(){
+	draw_score(get_score_array(player1_score), 10, 10);
+	draw_score(dash, 15, 10);
+	draw_score(get_score_array(player2_score), 20, 10);
+	
+	refresh_screen();
+}
+
+char* get_score_array(int score){
+	char* matrix;
+	switch(score){
+		case 1:
+			matrix=one;
+			break;
+		case 2:
+			matrix=two;
+			break;
+		case 3:
+			matrix=three;
+			break;
+		case 4:
+			matrix=four;
+			break;
+		case 5:
+			matrix=five;
+			break;
+		case 6:
+			matrix=six;
+			break;
+		case 7:
+			matrix=seven;
+			break;
+		case 8:
+			matrix=eight;
+			break;
+		case 9:
+			matrix=nine;
+			break;
+		case 0:
+			matrix=zero;
+			break;
+		default:
+			break;							
+	}
+	return matrix;
 }
 
 vector_t *intersect_rectangle_circle(vector_t *rec_pos, int w, int h, circle_t *c){
@@ -293,7 +362,6 @@ int map_buttons(int input){
 	return 0;		
 }
 
-
 int init_gamepad(){
 	
 	printf("Init gamepad \n");
@@ -364,6 +432,59 @@ int main(int argc, char *argv[])
 		pad_collision(&player1, &ball, SCREEN_HEIGHT, SCREEN_WIDTH);
 		pad_collision(&player2, &ball, SCREEN_HEIGHT, SCREEN_WIDTH);
 		refresh_screen();
+		
+		wall_collision(&ball);
+		
+		if(collision_wall){
+			collision_right=false;
+			collision_left=false;
+			collision_wall=false;
+			
+			fill_screen(34);
+			
+			display_current_score();
+			
+			sleep(2);
+			
+			fill_screen(34);
+			init_ball();
+			init_paddle();
+			
+				
+			player1.id = 1;
+			draw_paddle(&player1, 0, 0xFF00);
+			player2.id = 2;
+			draw_paddle(&player2, 0, 0x00FF);
+			
+			refresh_screen();
+		}
+
+		if(player1_score>3 || player2_score>3){
+			if(player1_score>3){
+				draw_text(victory_player1);
+				player1_score=0;
+			}
+			else if(player2_score>3){
+				draw_text(victory_player2);
+				player2_score=0;
+			}
+			start=true;
+			
+			while(start){
+				usleep(1000);
+			}
+			
+			fill_screen(34);
+			init_paddle();
+			init_ball();
+
+	
+			player1.id = 1;
+			draw_paddle(&player1, 0, 0xFF00);
+			player2.id = 2;
+			draw_paddle(&player2, 0, 0x00FF);
+		}
+
 
 		usleep(300);
 	}
