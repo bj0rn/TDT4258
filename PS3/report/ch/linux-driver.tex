@@ -5,17 +5,26 @@ The following steps are taken in order to initialize the driver:
 
 \begin{enumerate}
     \item Make the driver as a kernel module.
+    \item Allocate character device structure and register the device. 
+    \item Making the driver visible for user space.
     \item Allocate and memory map access to the I/O hardware registers which will be used. 
     \item Initialize hardware
-    \item Allocate character device structure. 
-    \item Activate the driver.
 \end{enumerate}
+
+{\bf modify this list}
 
 In linux/Unix nearly everything is represented as files. This also involves device drivers. The interaction with the drivers occurs by reading/writing to this file. More specific the drivers is accessed  using common functions for I/O. Each driver file is identified by a unique number, which allows the system to know the type of the file. The number is split into a \emph major and \emph minor number. The major number is used to defer to the device driver being used. All devices controlled by the same device driver has the same device number. The minor numbers are used to distinguish between different devices and their controllers. The first thing we do is allocate a MAJOR and MINOR number for the device driver. The function $alloc\_chrdev\_region()$ is used to allocate this dynamically. This function dynamically chooses the major number. The minor number is set to 0, since we only use one device. The use of minor number would be more relevant if we had several devices using the same driver. 
 
 By now we have reserved some device numbers, but we have not connected any operations to those numbers. The next step consists of activating the char device structure. The file operation structure is initialised with all the functions that is to be supported by the kernel module. Each field in the structure points to the function in the driver that implements the specific operation. The initialization of the structure can be seen in code listing ??. {\bf create code listing}.
 
-The kernel uses structures of type struct cdev to represent char devices internally in the kernel. Before we can invoke any device operations we need to represent the operations internally in the kernel. This is accomplished by using the $cdev\_intit()$ function. This takes the file\_operation structure as parameter and initialises the cdev structure needed for representing the char driver. The next step involves registering the device to the kernel by adding the cdev structure to the kernel. This is accomplished using the following function, $cdev\_add()$. This function registers the driver to the kernel module. {\bf more explicit} We have now completed the first step in initializing the driver. 
+The kernel uses structures of type struct cdev to represent char devices internally in the kernel. Before we can invoke any device operations we need to represent the operations internally in the kernel. This is accomplished by using the $cdev\_intit()$ function. This takes the file\_operation structure as parameter and initialises the cdev structure needed for representing the char driver. The next step involves registering the device to the kernel by adding the cdev structure to the kernel. This is accomplished using the following function, $cdev\_add()$. This function registers the driver to the kernel module. {\bf more explicit} 
+
+The next step is making the driver visible for user space. User space programs communicate with the driver by opening a special file in the /dev directory. In order to make this possible we must make the driver visible in this directory. This is accomplished by using two functions, $class\_create()$ and $device\_create()$. This functions create a device node. The first function initializes the class structure for the dev node. The second function creates a device and registers it with \emph sysfs. \emph Sysfs is a virtual file system in linux. Sysfs exports information about devices and drivers from the kernel to user space. 
+
+
+The next step involves configuring the access to the gamepad controller. This involves configuring the GPIO. 
+
+
 
 
 
