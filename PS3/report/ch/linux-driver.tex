@@ -17,5 +17,8 @@ In linux/Unix nearly everything is represented as files. This also involves devi
 \subsubsection{Interrupts}
 
 \subsubsection{Kernel Mode Vs User Mode}
+An operating system has two different modes: kernel mode and user mode. In user mode, code cannot directly access hardware or reference memory, and must do so by delegating to system APIs. Running code in user mode is considered quite safe, and crashes are almost always recoverable. Due to this, most of the code on a computer runs in user space. 
 
-
+In kernel mode, the code has access to all underlying hardware and can access all parts of memory. In other words, there are no restrictions in kernel space. This means that kernel mode crashes can potentially be catastrophic, and only the most trusted functions of an operating system runs in kernel mode. 
+	
+As mentioned, one can only access hardware or reference memory through system APIs. In many cases, these APIs are device drivers, and work as an interface between kernel and user mode. These drivers sare the main topic of this exercise.
