@@ -43,7 +43,8 @@ The next step involves configuring access to the gamepad controller. This involv
 
 
 \subsubsection{Cleaning up after the driver}
-{\bf Write me}
+The exit function is called when the module stops being used. In this step we need to deallocate everything initialized in the init function. In particular we need de-allocate every structure used, and free every resource reserved by the driver. 
+
 
 
 
@@ -107,9 +108,6 @@ iowrite32(0xff, GPIO_IEN);
 
 
 
-
-
-
 Here we see that we register the interrupt handler $GPIO\_interrupt\_handler$ to listen to interrupts from {\emph even} and {\emph odd} pins. We also see that we pass the necessary information to reserve this lines for this specific driver. With this configuration we are able to sense interrupts at the kernel level. It is easy to confirm that interrupts does in fact occur by just printing a message when an interrupt occurs in the interrupt handler. However, keep in mind that the interrupt must be cleared by writing to the $GPIO\_IFC$ register. Failing to do so will cause a continuos calls to the interrupt handler. Know when an interrupt occur we can write some small logic that reads the button status and store it. Then the user program can poll the driver to get the button status. 
 
 
@@ -120,7 +118,20 @@ More precisely the user program need to perform the following steps in order to 
 
 However, for this signal to be sent in the first place we need to modify the driver side as well. The driver must also implement asynchronous notification. Fortunately for us, this is quite simple. The linux kernel contains a set of functions to aid the implementation of asynchronous notification. "The general implementation offered by linux is based on one data structure and two functions." The data structure is of type $struct fasync\_struct$. This structured  is registered to the kernel by using a helper function, $fasync\_helper()$. This function is called when the user program sets the FASYNC flag. More precisely, we can say that this method is invoked to add or to remove entries from the list of interested processes when the FASYNC flag changes for an open file. This is implemented by adding a new function to the device driver that works as an wrapper around the helper function. This can be seen in code listing ??.
 
-The signal themselves are sent to the user program by using the function, $kill\_fasync()$. When this function is executed all interested processes will receive an SIGIO signal. It arguments are signal to send (in this case SIGIO) and the band, which is POLL\_IN. The call to $kill\_fasync()$ is handled in the interrupt handler effectively ensuring that the user program receives a signal when the data changes, E.g the buttons are pushed. A code listing for the interrupt handler can be seen in listing ??.
+The signal themselves are sent to the user program by using the function, $kill\_fasync()$. When this function is executed all interested processes will receive an SIGIO signal. It arguments are signal to send (in this case SIGIO) and the band, which is POLL\_IN. The call to $kill\_fasync()$ is handled in the interrupt handler effectively ensuring that the user program receives a signal when the data changes, E.g the buttons are pushed. A code listing for the interrupt handler can be seen in listing \ref{code:interrupt}.
+
+
+\begin{lstlisting}[caption=Interrupt handler, label=code:interrupt]
+irqreturn_t GPIO_interrupt_handler(int irq, void *dev_id, struct pt_regs *regs){
+    iowrite32(0xFF, GPIO_IFC);
+    if(async_queue){
+        kill_fasync(&async_queue, SIGIO, POLL_IN);
+    }
+    
+    return IRQ_HANDLED;
+}
+\end{lstlisting}
+
 
 
 
