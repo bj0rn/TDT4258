@@ -1,6 +1,9 @@
 \subsection{Linux Driver}
 Interface between kernel and modules. In order initialise and de-initalize the driver the kernel need to implement two functions, one init function and one exit function. These functions are called when the module is loaded and un-loaded, respectively. The init function sets up everything necessary to load the module. The exit function de-allocate everything allocated in the init function. 
 
+
+\subsubsection{Initialization of the driver}
+
 The following steps are taken in order to initialize the driver:
 
 \begin{enumerate}
@@ -15,7 +18,21 @@ The following steps are taken in order to initialize the driver:
 
 In linux/Unix nearly everything is represented as files. This also involves device drivers. The interaction with the drivers occurs by reading/writing to this file. More specific the drivers is accessed  using common functions for I/O. Each driver file is identified by a unique number, which allows the system to know the type of the file. The number is split into a \emph major and \emph minor number. The major number is used to defer to the device driver being used. All devices controlled by the same device driver has the same device number. The minor numbers are used to distinguish between different devices and their controllers. The first thing we do is allocate a MAJOR and MINOR number for the device driver. The function $alloc\_chrdev\_region()$ is used to allocate this dynamically. This function dynamically chooses the major number. The minor number is set to 0, since we only use one device. The use of minor number would be more relevant if we had several devices using the same driver. 
 
-By now we have reserved some device numbers, but we have not connected any operations to those numbers. The next step consists of activating the char device structure. The file operation structure is initialised with all the functions that is to be supported by the kernel module. Each field in the structure points to the function in the driver that implements the specific operation. The initialization of the structure can be seen in code listing ??. {\bf create code listing}.
+By now we have reserved some device numbers, but we have not connected any operations to those numbers. The next step consists of activating the char device structure. The file operation structure is initialised with all the functions that is to be supported by the kernel module. Each field in the structure points to the function in the driver that implements the specific operation. The initialization of the structure can be seen in code listing \ref{code:struct}. 
+
+\begin{lstlisting}[caption=file operations, label=code:struct]
+static struct file_operations fops = {
+    .owner = THIS_MODULE,
+    .read = read_driver,
+    .write = write_driver,
+    .open = open_driver,
+    .release = release_driver,
+    .fasync = driver_fasync,
+};
+\end{lstlisting}
+
+
+
 
 The kernel uses structures of type struct cdev to represent char devices internally in the kernel. Before we can invoke any device operations we need to represent the operations internally in the kernel. This is accomplished by using the $cdev\_intit()$ function. This takes the file\_operation structure as parameter and initialises the cdev structure needed for representing the char driver. The next step involves registering the device to the kernel by adding the cdev structure to the kernel. This is accomplished using the following function, $cdev\_add()$. This function registers the driver to the kernel module. {\bf more explicit} 
 
@@ -23,6 +40,11 @@ The next step is making the driver visible for user space. User space programs c
 
 
 The next step involves configuring the access to the gamepad controller. This involves configuring the GPIO pins of the development board by writing to the GPIO registers. However, before configuring GPIO we need to make sure that we have exclusive access to these registers. In this application this is not really necessary, but it is consider good practice. This is accomplished by requesting the memory region where the GPIO registers are located. Note that the memory is memory-mapped. For this purpose we use the function $request\_mem\_region()$. This ensures that the drivers as exclusive access to the memory locations occupied by the GPIO registers. Then we can start configuring the GPIO registers. However, we cannot configuring them directly like we did in exercise 1 and 2. For the purpose we writing and reading I/O registers we need to use a set of wrapper functions, provided by the kernel, $ioreadXX()$ and $iowriteXX()$. The write function takes the address and value as argument, while the read function takes the address. 
+
+
+
+\subsubsection{Cleaning up after the driver}
+{\bf Write me}
 
 
 
