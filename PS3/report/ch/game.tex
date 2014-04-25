@@ -17,10 +17,13 @@ The logic for updating the various parts of the display lies in the display.c-fi
 
 \subsubsection{Images}
 
-Other than the game itself, an intro screen and an ending screen as well as display for showing the game score were created. The original idea was to create 320x240px images in a .tga format and load them onto the screen. However, we had a lot of issues with this, as not only would the images not load correctly, but also, the amount of the spent refreshing the screen after trying to load the images took an unreasonable amount of time. Therefore, we decided to create our own images instead by creating arrays of chars, where each char would represent a 10x10px area on the screen and a specific color ('X'=black, 'W'=white, etc...). Functions such as . 
+Other than the game itself, an intro screen and an ending screen as well as display for showing the game score were created. The original idea was to create 320x240px images in a .tga format and load them onto the screen. However, we had a lot of issues with this, as not only would the images not load correctly, but also, the amount of the spent refreshing the screen after trying to load the images took an unreasonable amount of time. Therefore, we decided to create our own images instead by creating arrays of chars, where each char would represent a 10x10px area on the screen and a specific color ('X'=black, 'W'=white, etc...). Functions such as \emph{$draw_rect$}, \emph{$draw_score$}, and \emph{$draw_text$} were responsible for display these on the appropriate positions on the screen. The char-arrays themselves can be viewed in the \emph{fonts.h}-file.
 
 
 \subsubsection{Optimizations}
+
+Due to the limited resources on the EFM32GG-DK3750, certain optimization techniques had to be used. For instance, when drawing circular objects, such as the pong ball, one would normally use a square root function, which demands a lot of computational resources. Instead of using a traditional circle-drawing algorithm, an 8-way symmetry algorithm was implemented instead CITATION. This algorithm requires only 1/4 as much computational power as a naïve circle drawing algorithm, which in length saves a lot of resources as the circle is drawn many times per second.
+	Another optimization technique used was to only redraw the part of the screen that had changed from one instance to another, so that the entire screen wouldn't be redrawn every time something on the map were to change.  
 
 Circle drawing (8-way symmetry circle drawing algorithm)
 
