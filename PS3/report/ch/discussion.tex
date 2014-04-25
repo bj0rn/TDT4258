@@ -1,1 +1,14 @@
 \section{Discussion}
+
+
+\subsection{The linux driver}
+The driver explained in the previous sections employ the old techniques for developing a driver. In a modern approach the driver should be structured in an other way. Modern linux drivers are implemented as platform drivers. In the old approach the driver performs most of its initialization in the init function, and it assumes that the hardware is located at some specific address. The new way of structuring drivers does not make any assumption about such things. Instead, the driver is made more dynamic. The driver just informs the kernel what kind of hardware it can handle. Then it waits until the kernel decides to activate the driver. The kernel only activates the device driver if the device exists. When the driver decides to activate the driver, all information about the device is gathered through querying the device. The advantage with this method is that the driver becomes more generic. It does not rely that much on hardcoded addresses. The platform method is realised by moving the initialising  of the driver to a set of probing functions. 
+
+We have not implemented this approach. We found it more important to understand the old approach of developing a linux driver. This due that fact that the curriculum covers this approach in great depth. 
+
+{\bf more more...}
+
+
+
+
+
