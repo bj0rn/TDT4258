@@ -9,7 +9,7 @@ As the main focus of this exercise is the devide driver, not too much focus is p
 
 \subsubsection{Game logic}
 
-As mentioned, most of the game logic lies in the game.c-file. The functions in this file are responsible for opening the gamepad driver, handling gamepad input and updating the ball and paddle positions. This is done in the functions such as \emph{$init_gamepad$}, \emph{$map_buttons$}, \emph{$move_ball$} and \emph{$move_paddle$}. \emph{$*intersect_rectangle_circle$} is responsible for detection collisions between the ball and the paddles, and thus adjusting the direction and speed of the ball accordingly.
+As mentioned, most of the game logic lies in the game.c-file. The functions in this file are responsible for opening the gamepad driver, handling gamepad input and updating the ball and paddle positions. This is done in the functions such as \emph{$init\_gamepad$}, \emph{$map\_buttons$}, \emph{$move\_ball$} and \emph{$move\_paddle$}. \emph{$*intersect\_rectangle\_circle$} is responsible for detection collisions between the ball and the paddles, and thus adjusting the direction and speed of the ball accordingly.
 
 \subsubsection{Display logic}
 
@@ -17,7 +17,7 @@ The logic for updating the various parts of the display lies in the display.c-fi
 
 \subsubsection{Images}
 
-Other than the game itself, an intro screen and an ending screen as well as display for showing the game score were created. The original idea was to create 320x240px images in a .tga format and load them onto the screen. However, we had a lot of issues with this, as not only would the images not load correctly, but also, the amount of the spent refreshing the screen after trying to load the images took an unreasonable amount of time. Therefore, we decided to create our own images instead by creating arrays of chars, where each char would represent a 10x10px area on the screen and a specific color ('X'=black, 'W'=white, etc...). Functions such as \emph{$draw_rect$}, \emph{$draw_score$}, and \emph{$draw_text$} were responsible for display these on the appropriate positions on the screen. The char-arrays themselves can be viewed in the \emph{fonts.h}-file.
+Other than the game itself, an intro screen and an ending screen as well as display for showing the game score were created. The original idea was to create 320x240px images in a .tga format and load them onto the screen. However, we had a lot of issues with this, as not only would the images not load correctly, but also, the amount of the spent refreshing the screen after trying to load the images took an unreasonable amount of time. Therefore, we decided to create our own images instead by creating arrays of chars, where each char would represent a 10x10px area on the screen and a specific color ('X'=black, 'W'=white, etc...). Functions such as \emph{$draw\_rect$}, \emph{$draw\_score$}, and \emph{$draw\_text$} were responsible for display these on the appropriate positions on the screen. The char-arrays themselves can be viewed in the \emph{fonts.h}-file.
 
 
 \subsubsection{Optimizations}

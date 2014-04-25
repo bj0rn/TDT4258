@@ -3,18 +3,20 @@
 \contentsline {subsection}{\numberline {2.1}Background}{2}{subsection.0.2.1}
 \contentsline {subsection}{\numberline {2.2}Linux}{3}{subsection.0.2.2}
 \contentsline {subsection}{\numberline {2.3}Linux Driver}{3}{subsection.0.2.3}
+\contentsline {subsubsection}{\numberline {2.3.1}Initialization of the driver}{3}{subsubsection.0.2.3.1}
+\contentsline {subsubsection}{\numberline {2.3.2}Cleaning up after the driver}{5}{subsubsection.0.2.3.2}
 \contentsline {subsection}{\numberline {2.4}Input Handling}{5}{subsection.0.2.4}
-\contentsline {subsubsection}{\numberline {2.4.1}I/O operations}{5}{subsubsection.0.2.4.1}
-\contentsline {subsubsection}{\numberline {2.4.2}Polling}{6}{subsubsection.0.2.4.2}
-\contentsline {subsubsection}{\numberline {2.4.3}Half Interrupt}{6}{subsubsection.0.2.4.3}
-\contentsline {subsubsection}{\numberline {2.4.4}Full interrupts}{7}{subsubsection.0.2.4.4}
-\contentsline {subsection}{\numberline {2.5}Pong}{7}{subsection.0.2.5}
-\contentsline {subsubsection}{\numberline {2.5.1}Game description}{7}{subsubsection.0.2.5.1}
-\contentsline {subsubsection}{\numberline {2.5.2}Game logic}{8}{subsubsection.0.2.5.2}
-\contentsline {subsubsection}{\numberline {2.5.3}Display logic}{8}{subsubsection.0.2.5.3}
-\contentsline {subsubsection}{\numberline {2.5.4}Images}{9}{subsubsection.0.2.5.4}
-\contentsline {subsubsection}{\numberline {2.5.5}Optimizations}{9}{subsubsection.0.2.5.5}
-\contentsline {section}{\numberline {3}Results And Tests}{9}{section.0.3}
-\contentsline {section}{\numberline {4}Discussion}{9}{section.0.4}
-\contentsline {section}{\numberline {5}Evaluation}{9}{section.0.5}
-\contentsline {section}{\numberline {6}Conclusion}{9}{section.0.6}
+\contentsline {subsubsection}{\numberline {2.4.1}I/O operations}{6}{subsubsection.0.2.4.1}
+\contentsline {subsubsection}{\numberline {2.4.2}Polling}{7}{subsubsection.0.2.4.2}
+\contentsline {subsubsection}{\numberline {2.4.3}Half Interrupt}{7}{subsubsection.0.2.4.3}
+\contentsline {subsubsection}{\numberline {2.4.4}Full interrupts}{9}{subsubsection.0.2.4.4}
+\contentsline {subsection}{\numberline {2.5}Pong}{10}{subsection.0.2.5}
+\contentsline {subsubsection}{\numberline {2.5.1}Game description}{10}{subsubsection.0.2.5.1}
+\contentsline {subsubsection}{\numberline {2.5.2}Game logic}{10}{subsubsection.0.2.5.2}
+\contentsline {subsubsection}{\numberline {2.5.3}Display logic}{11}{subsubsection.0.2.5.3}
+\contentsline {subsubsection}{\numberline {2.5.4}Images}{11}{subsubsection.0.2.5.4}
+\contentsline {subsubsection}{\numberline {2.5.5}Optimizations}{11}{subsubsection.0.2.5.5}
+\contentsline {section}{\numberline {3}Results And Tests}{12}{section.0.3}
+\contentsline {section}{\numberline {4}Discussion}{12}{section.0.4}
+\contentsline {section}{\numberline {5}Evaluation}{12}{section.0.5}
+\contentsline {section}{\numberline {6}Conclusion}{12}{section.0.6}
