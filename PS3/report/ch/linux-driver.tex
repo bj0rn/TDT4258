@@ -77,6 +77,23 @@ Here we see that we register the interrupt handler $GPIO\_interrupt\_handler$ to
 
 
 \subsubsection{Full interrupts}
+To avoid polling altogether we can further develop the techniques discussed above. Instead of just handling the interrupt in the driver we need a way to notify the user program that an interrupt has occurred. By enabling asynchronous notifications the user program can receive signal whenever data becomes available and need not to use polling. This require some changes in the driver and some extensions in the user program. When adding support for asynchronous notification most of the work need actually to be done on the user side. In particular, the user program must register itself as a listener and create an signal handler that is executed when the program receives a signal. 
+
+More precisely the user program need to perform the following steps in order to activate asynchronous notifications. First the program must specify itself as an "owner" of the file. "When a process invokes the F\_SETOWN command using the {\emph fcntl} system call, the process ID of the owner process is saved in the filp->owner for later use. This step is necessary for the kernel to know what process to notify. In order to actually enable asynchronous notification, the user programs must set the FASYNC flag in the device by means of the F\_SETFL {\emph fcntl} flag. After these two calls have been executed, the input file can request delivery of a SIGIO signal whenever new data arrives."
+
+However, for this signal to be sent in the first place we need to modify the driver side as well. The driver must also implement asynchronous notification. Fortunately for us, this is quite simple. The linux kernel contains a set of functions to aid the implementation of asynchronous notification. "The general implementation offered by linux is based on one data structure and two functions." The data structure is of type $struct fasync\_struct$. This structured  is registered to the kernel by using a helper function, $fasync\_helper()$. This function is called when the user program sets the FASYNC flag. More precisely, we can say that this method is invoked to add or to remove entries from the list of interested processes when the FASYNC flag changes for an open file. This is implemented by adding a new function to the device driver that works as an wrapper around the helper function. This can be seen in code listing ??.
+
+The signal themselves are sent to the user program by using the function, $kill\_fasync()$. When this function is executed all interested processes will receive an SIGIO signal. It arguments are signal to send (in this case SIGIO) and the band, which is POLL\_IN. The call to $kill\_fasync()$ is handled in the interrupt handler effectively ensuring that the user program receives a signal when the data changes, E.g the buttons are pushed. A code listing for the interrupt handler can be seen in listing ??.
+
+
+
+ 
+
+
+
+
+
+
 
 
 
