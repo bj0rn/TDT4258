@@ -1,11 +1,14 @@
 \contentsline {section}{\numberline {1}Introduction}{2}{section.0.1}
 \contentsline {section}{\numberline {2}Description And Methodology}{2}{section.0.2}
 \contentsline {subsection}{\numberline {2.1}Background}{2}{subsection.0.2.1}
-\contentsline {subsection}{\numberline {2.2}Linux Driver}{2}{subsection.0.2.2}
-\contentsline {subsubsection}{\numberline {2.2.1}Character Driver}{3}{subsubsection.0.2.2.1}
-\contentsline {subsubsection}{\numberline {2.2.2}Polling}{3}{subsubsection.0.2.2.2}
-\contentsline {subsubsection}{\numberline {2.2.3}Interrupts}{3}{subsubsection.0.2.2.3}
-\contentsline {subsubsection}{\numberline {2.2.4}Kernel Mode Vs User Mode}{3}{subsubsection.0.2.2.4}
-\contentsline {section}{\numberline {3}Results And Tests}{3}{section.0.3}
-\contentsline {section}{\numberline {4}Evaluation}{3}{section.0.4}
-\contentsline {section}{\numberline {5}Conclusion}{3}{section.0.5}
+\contentsline {subsection}{\numberline {2.2}Linux Driver}{3}{subsection.0.2.2}
+\contentsline {subsection}{\numberline {2.3}Input Handling}{5}{subsection.0.2.3}
+\contentsline {subsubsection}{\numberline {2.3.1}Polling}{5}{subsubsection.0.2.3.1}
+\contentsline {subsubsection}{\numberline {2.3.2}Half Interrupt}{5}{subsubsection.0.2.3.2}
+\contentsline {subsubsection}{\numberline {2.3.3}Full interrupts}{5}{subsubsection.0.2.3.3}
+\contentsline {subsection}{\numberline {2.4}Ping-Pong}{5}{subsection.0.2.4}
+\contentsline {subsubsection}{\numberline {2.4.1}Optimizations}{5}{subsubsection.0.2.4.1}
+\contentsline {section}{\numberline {3}Results And Tests}{6}{section.0.3}
+\contentsline {section}{\numberline {4}Discussion}{6}{section.0.4}
+\contentsline {section}{\numberline {5}Evaluation}{6}{section.0.5}
+\contentsline {section}{\numberline {6}Conclusion}{6}{section.0.6}
