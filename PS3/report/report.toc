@@ -6,9 +6,13 @@
 \contentsline {subsubsection}{\numberline {2.3.1}Polling}{5}{subsubsection.0.2.3.1}
 \contentsline {subsubsection}{\numberline {2.3.2}Half Interrupt}{5}{subsubsection.0.2.3.2}
 \contentsline {subsubsection}{\numberline {2.3.3}Full interrupts}{5}{subsubsection.0.2.3.3}
-\contentsline {subsection}{\numberline {2.4}Ping-Pong}{5}{subsection.0.2.4}
-\contentsline {subsubsection}{\numberline {2.4.1}Optimizations}{5}{subsubsection.0.2.4.1}
-\contentsline {section}{\numberline {3}Results And Tests}{6}{section.0.3}
-\contentsline {section}{\numberline {4}Discussion}{6}{section.0.4}
-\contentsline {section}{\numberline {5}Evaluation}{6}{section.0.5}
-\contentsline {section}{\numberline {6}Conclusion}{6}{section.0.6}
+\contentsline {subsection}{\numberline {2.4}Pong}{5}{subsection.0.2.4}
+\contentsline {subsubsection}{\numberline {2.4.1}Game description}{5}{subsubsection.0.2.4.1}
+\contentsline {subsubsection}{\numberline {2.4.2}Game logic}{6}{subsubsection.0.2.4.2}
+\contentsline {subsubsection}{\numberline {2.4.3}Display logic}{6}{subsubsection.0.2.4.3}
+\contentsline {subsubsection}{\numberline {2.4.4}Images}{6}{subsubsection.0.2.4.4}
+\contentsline {subsubsection}{\numberline {2.4.5}Optimizations}{7}{subsubsection.0.2.4.5}
+\contentsline {section}{\numberline {3}Results And Tests}{7}{section.0.3}
+\contentsline {section}{\numberline {4}Discussion}{7}{section.0.4}
+\contentsline {section}{\numberline {5}Evaluation}{7}{section.0.5}
+\contentsline {section}{\numberline {6}Conclusion}{7}{section.0.6}
