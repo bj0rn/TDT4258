@@ -44,7 +44,8 @@ The next step involves configuring the access to the gamepad controller. This in
 
 
 \subsubsection{Cleaning up after the driver}
-{\bf Write me}
+The exit function is called when the module stops being used. In this step we need to deallocate everything initialized in the init function. In particular we need de-allocate every structure used, and free every resource reserved by the driver. 
+
 
 
 
@@ -105,9 +106,6 @@ iowrite32(0x22222222, GPIO_EXTIPSELL);
 iowrite32(0xff, GPIO_EXTIFALL);
 iowrite32(0xff, GPIO_IEN);
 \end{lstlisting}
-
-
-
 
 
 
