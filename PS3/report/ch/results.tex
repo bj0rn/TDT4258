@@ -1,5 +1,14 @@
 \section{Results And Tests}
-Tests of both the device driver and the game were carried out continuously as the development progressed. These tests were all simple test to verify correctness. These can be presented as simple unit tests. A summary of some of the tests can be seen below.  
+Tests of both the device driver and the game were carried out continuously as the development progressed. These tests were all simple test to verify correctness. These can be presented as simple unit tests. A summary of some of the tests can be seen below.
+
+\subsection{Energy usage results}
+
+\input{fig/runningIdle.tex}
+\input{fig/running.tex}
+\input{fig/Victoryscreen-idle.tex}
+\input{fig/Victory.tex}
+
+
 
 \subsection{Tests}
 
@@ -38,7 +47,7 @@ The following unit tests are based on the gamepad driver having already been suc
 \emph{Actual result: } As expected. 
 
 \emph{Input: } Start the game module through the miniterm.py command line interface by running the command "game"\\
-\emph{Expected output: } LCD scren on development kit display the text "PONG" in various colors\\
+\emph{Expected output: } LCD scren on development kit display the colorful text "PONG"\\
 \emph{Actual output: } As expected \\
 
 \emph{Input: } Press any button on the gamepad controller\\
