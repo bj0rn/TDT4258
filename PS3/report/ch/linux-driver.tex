@@ -127,7 +127,7 @@ static int driver_fasync(int fd, struct file *filp, int mode){
 
 
 
-The signal themselves are sent to the user program by using the function $kill\_fasync()$. When this function is executed, all interested processes will receive a SIGIO signal. Its arguments are which signal to send (in this case SIGIO), and the band, which is POLL\_IN. The call to $kill\_fasync()$ is handled in the interrupt handler to effectively ensure that the user program receives a signal when the data changes, e.g when the buttons are pushed. A code listing for the interrupt handler can be seen in listing \ref{code:interrupt}.
+The signal themselves are sent to the user program by using the function $kill\_fasync()$. When this function is executed, all interested processes will receive a SIGIO signal. Its arguments are which signal to send (in this case SIGIO), and the band, which is POLL\_IN. The POLL\_IN flags signals that the data is available. The call to $kill\_fasync()$ is handled in the interrupt handler to effectively ensure that the user program receives a signal when the data changes, e.g when the buttons are pushed. A code listing for the interrupt handler can be seen in listing \ref{code:interrupt}.
 
 
 \begin{lstlisting}[caption=Interrupt handler, label=code:interrupt]
