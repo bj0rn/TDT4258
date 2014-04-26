@@ -1,5 +1,9 @@
 \section{Discussion}
 
+\subsection{Green linux}
+One approach of energy optimization is configure the operating system to consume less power. It is possible to tweak the kernel configuration to increase the idle time and/or use the time idle more efficiently. One way of achieving this is introducing tickless idle. Linux is configured with a timer that is periodically invoked in order to handle OS tasks like process accounting, scheduler load balancing, and maintaining per-CPU timer events. The disadvantage with this approach is that these timer ticks occur regardless off CPU state. This imply that even if the CPU is in idle state it will be interrupted by this ticks. By enabling "tickless idle", the linux can eliminate this periodic behaviour when the CPU is idle. This allow the CPU to be in a power saving state a longer period of time, thereby decreasing the overall power consumption. 
+
+
 
 \subsection{The linux driver}
 The driver explained in the previous sections employ the old techniques for developing a driver. In a modern approach the driver should be structured in an other way. Modern linux drivers are implemented as platform drivers. In the old approach the driver performs most of its initialization in the init function, and it assumes that the hardware is located at some specific address. The new way of structuring drivers does not make any assumption about such things. Instead, the driver is made more dynamic. The driver just informs the kernel what kind of hardware it can handle. Then it waits until the kernel decides to activate the driver. The kernel only activates the device driver if the device exists. When the driver decides to activate the driver, all information about the device is gathered through querying the device. The advantage with this method is that the driver becomes more generic. It does not rely that much on hardcoded addresses. The platform method is realised by moving the initialising  of the driver to a set of probing functions. 
@@ -12,6 +16,8 @@ We have not implemented this approach. We found it more important to understand 
 
 \subsection{The Game}
 The Pong is game where the ball is in constant movement. This makes the energy optimizations particular hard. For each movement of the ball we need to perform a large range of collision detection tests. This imply that the CPU is utilised most of the time which affect the energy consumption of the program. We have tried to limit the time of computation by optimising the operations in the code. A more focus on energy efficiency could better have been achieved by developing a game that is updated less frequently. 
+
+However, it should be possible to decrease the power consumption on the existing game. This may be achieved by optimizing the operations in the game even further. In particular, we should remove the use of floating point numbers. This should able us to reduce the time spent performing computations. This allow the CPU to be sleeping more frequently. We have already tried taking some measures, but we could have done even more. 
 
 
 
