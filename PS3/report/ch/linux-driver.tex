@@ -88,14 +88,13 @@ Polling is the simplest approach in developing and interacting with the driver. 
 
 
 \subsubsection{Half Interrupt}
-The driver handles interrupts and copies the content of the GPIO register into a memory location reachable though the {\emph devnode}. The user application polls the driver and reads the data from the devnode. This method is still quite inefficient, but introduces new concepts that we can further improve to achieve higher efficiency. 
+The driver handles interrupts and copies the content of the GPIO register into a memory location reachable through the {\emph devnode}. The user application polls the driver and reads the data from the devnode. This method is still quite inefficient, but introduces new concepts that we can further improve to achieve higher efficiency. 
 
-In order to achieve interrupts at the driver side we need to change the initialization of the gamepad driver. In particular, we need to configure interrupts both in the kernel and on the development board itself. An interrupt is simply as signal sent by the hardware device when it needs the CPUs attention. In linux interrupts are handled by registering a handler for the device's interrupt and handle them properly when they occur. 
+In order to achieve interrupts on the driver side, we need to change the initialization of the gamepad driver by configuring interrupts both in the kernel and on the development board itself. An interrupt is simply a signal sent by the hardware device when it needs the CPUs attention. In linux, interrupts are handled by registering a handler for the device's interrupt and handling them properly when they occur. 
 
-The configuring of interrupts on the hardware levels in achieved in much the same way we are used to 
-in exercise 1 and 2. But we need to keep in mind that it is not enough to generate interrupts only at the hardware level. We need to actually "see" that these interrupts are generated, so the software layer must be configured to. The kernel keeps a registry of interrupt lines similar to what we are used to in the microcontroller. "A module is expected to request an interrupt channel before using it and to release it when finished. This is accomplished with the two functions: $request\_irc()$ and $free\_irc$. The first function registers the interrupt to the kernel while the second removes the registration. 
+Configuring interrupts on the hardware levels is achieved in much the same way we are used to in exercise one and two, but we need to keep in mind that it is not enough to generate interrupts only at the hardware level. We need to actually "see" that these interrupts are generated, so the software layer must be configured as well. The kernel keeps a registry of interrupt lines similar to what we are used to in the microcontroller. "A module is expected to request an interrupt channel before using it and to release it when finished. This is accomplished with the two functions: $request\_irc()$ and $free\_irc$. The first function registers the interrupt to the kernel while the second removes the registration. 
 
-One of the most challenging thing of registering interrupts can be how to determine the IRQ line that is going to be used by the device. The driver needs this information in order to correctly install the handler. Fortunately, this is already done for us in the compendium. From here we see that the handler for {\emph even} and {\emph odd} numbers are located at 17 and 18, respectively. From here it easy to register an interrupt handler for these interrupt lines. For completeness the code for activating interrupts can be seen in code listing \ref{code:interrupt}.
+One of the most challenging aspects of registering interrupts can be how to determine the IRQ line that is going to be used by the device. The driver needs this information in order to correctly install the handler. Fortunately, this information is provided in the compendium. Here we see that the handler for {\emph even} and {\emph odd} numbers are located at IRQ number 17 and 18, respectively. From here it easy to register an interrupt handler for these interrupt lines. The code for activating interrupts can be seen in the following code listing \ref{code:interrupt}.
 
 \begin{lstlisting}[caption=Activate interupts, label=code:interrupt]
 request_irc(GPIO_EVEN_IRQ_NUM, (irq_handler_t)GPIO_interrupt_handler, 0, DRIVER, &driver_cdev);
@@ -108,17 +107,17 @@ iowrite32(0xff, GPIO_IEN);
 
 
 
-Here we see that we register the interrupt handler $GPIO\_interrupt\_handler$ to listen to interrupts from {\emph even} and {\emph odd} pins. We also see that we pass the necessary information to reserve this lines for this specific driver. With this configuration we are able to sense interrupts at the kernel level. It is easy to confirm that interrupts does in fact occur by just printing a message when an interrupt occurs in the interrupt handler. However, keep in mind that the interrupt must be cleared by writing to the $GPIO\_IFC$ register. Failing to do so will cause a continuos calls to the interrupt handler. Know when an interrupt occur we can write some small logic that reads the button status and store it. Then the user program can poll the driver to get the button status. 
+This causes the $GPIO\_interrupt\_handler$-register to listen to interrupts from {\emph even} and {\emph odd} pins. With this configuration we are able to sense interrupts at the kernel level. It is easy to confirm that interrupts does in fact occur by just printing a message when an interrupt occurs in the interrupt handler. The interrupt must, however, be cleared by writing to the $GPIO\_IFC$ register, as failing to do so will cause a continuos call to the interrupt handler. The interrupt can then be handled by writing some logic that reads the button status and store it, so the user program then can poll the driver to get the button status. 
 
 
 \subsubsection{Full interrupts}
-To avoid polling altogether we can further develop the techniques discussed above. Instead of just handling the interrupt in the driver we need a way to notify the user program that an interrupt has occurred. By enabling asynchronous notifications the user program can receive signal whenever data becomes available and need not to use polling. This require some changes in the driver and some extensions in the user program. When adding support for asynchronous notification most of the work need actually to be done on the user side. In particular, the user program must register itself as a listener and create an signal handler that is executed when the program receives a signal. 
+To avoid polling altogether we can further develop the techniques discussed above. Instead of just handling the interrupt in the driver we need a way to notify the user program that an interrupt has occurred. By enabling asynchronous notifications, the user program can receive a signal whenever data becomes available instead of using polling. Doing this requires some changes in the driver, and some extensions in the user program. When adding support for asynchronous notification, most of the work needs to be done on the user side. In particular, the user program must register itself as a listener and create an signal handler that is executed when the program receives a signal. 
 
-More precisely the user program need to perform the following steps in order to activate asynchronous notifications. First the program must specify itself as an "owner" of the file. "When a process invokes the F\_SETOWN command using the {\emph fcntl} system call, the process ID of the owner process is saved in the filp->owner for later use. This step is necessary for the kernel to know what process to notify. In order to actually enable asynchronous notification, the user programs must set the FASYNC flag in the device by means of the F\_SETFL {\emph fcntl} flag. After these two calls have been executed, the input file can request delivery of a SIGIO signal whenever new data arrives."
+The user program needs to perform several steps in order to activate asynchronous notifications. The program must specify itself as an "owner" of the file. "When a process invokes the F\_SETOWN command using the {\emph fcntl} system call, the process ID of the owner process is saved in the filp->owner for later use. This step is necessary for the kernel to know what process to notify. In order to actually enable asynchronous notification, the user programs must set the FASYNC flag in the device by means of the F\_SETFL {\emph fcntl} flag. After these two calls have been executed, the input file can request delivery of a SIGIO signal whenever new data arrives."
 
-However, for this signal to be sent in the first place we need to modify the driver side as well. The driver must also implement asynchronous notification. Fortunately for us, this is quite simple. The linux kernel contains a set of functions to aid the implementation of asynchronous notification. "The general implementation offered by linux is based on one data structure and two functions." The data structure is of type $struct fasync\_struct$. This structured  is registered to the kernel by using a helper function, $fasync\_helper()$. This function is called when the user program sets the FASYNC flag. More precisely, we can say that this method is invoked to add or to remove entries from the list of interested processes when the FASYNC flag changes for an open file. This is implemented by adding a new function to the device driver that works as an wrapper around the helper function. This can be seen in code listing ??.
+However, for this signal to be sent in the first place we need to modify the driver side as well. The driver must also implement asynchronous notification. Fortunately for us, this is quite simple, as the linux kernel contains a set of functions to aid the implementation of asynchronous notification. "The general implementation offered by linux is based on one data structure and two functions." The data structure is of type $struct fasync\_struct$. This structure  is registered to the kernel by using a helper function, $fasync\_helper()$. This function is called when the user program sets the FASYNC flag. More precisely, we can say that this method is invoked to add or to remove entries from the list of interested processes when the FASYNC flag changes for an open file. This is implemented by adding a new function to the device driver that works as an wrapper around the helper function. This can be seen in code listing ??.
 
-The signal themselves are sent to the user program by using the function, $kill\_fasync()$. When this function is executed all interested processes will receive an SIGIO signal. It arguments are signal to send (in this case SIGIO) and the band, which is POLL\_IN. The call to $kill\_fasync()$ is handled in the interrupt handler effectively ensuring that the user program receives a signal when the data changes, E.g the buttons are pushed. A code listing for the interrupt handler can be seen in listing \ref{code:interrupt}.
+The signal themselves are sent to the user program by using the function $kill\_fasync()$. When this function is executed, all interested processes will receive a SIGIO signal. Its arguments are which signal to send (in this case SIGIO), and the band, which is POLL\_IN. The call to $kill\_fasync()$ is handled in the interrupt handler to effectively ensure that the user program receives a signal when the data changes, e.g when the buttons are pushed. A code listing for the interrupt handler can be seen in listing \ref{code:interrupt}.
 
 
 \begin{lstlisting}[caption=Interrupt handler, label=code:interrupt]
@@ -131,17 +130,6 @@ irqreturn_t GPIO_interrupt_handler(int irq, void *dev_id, struct pt_regs *regs){
     return IRQ_HANDLED;
 }
 \end{lstlisting}
-
-
-
-
- 
-
-
-
-
-
-
 
 
 
