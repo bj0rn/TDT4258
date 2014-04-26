@@ -24,11 +24,29 @@ Following are test cases to see if the driver and the game behaves as expected
 \emph{Expected output: } Gamepad driver is successfully unloaded, displaying message "Device added to the kernel sucessfully"\\
 \emph{Actual output: } As expected\\
 
+\emph{Input: } Load the driver through miniterm.py command line interface with the command "modprobe" driver-gamepad". Each button is pushed one by one.\\
+\emph{Initial setup: } The interrupt handler is configured to print "Interrupt" for each interrupt.\\
+\emph{Expected output: } The gamepad driver should be able to sense interrupt.\\
+\emph{Actual output: } As expected. \\ 
+
+\emph{Input: } Start the game through miniterm.py  \\
+\emph{Initial setup: } The gamepad driver is loaded. Print message when FASYNC flag is set.\\
+\emph{Expected output: } The device driver should detect that the FASYNC flag is set, E.g $fasync\_handler()$ is called.\\ 
+\emph{Actual output: } As expected. \\
+
+
+
+
 
 
 \subsubsection{Game tests}
 
 The following unit tests are based on the gamepad driver having already been successfully added to the kernel, and takes a complete run-through of the game.
+
+\emph{Input: } Start the game through miniterm.py\\
+\emph{Initial setup: } The game driver is loaded. The signal handler is configured to print "Signal..."\\
+\emph{Expected result: } The message "signal.." is printed when a button is pushed. \\
+\emph{Actual result: } As expected. 
 
 \emph{Input: } Start the game module through the miniterm.py command line interface by running the command "game"\\
 \emph{Expected output: } LCD scren on development kit display the colorful text "PONG"\\
