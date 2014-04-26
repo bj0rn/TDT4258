@@ -1,8 +1,42 @@
 \section{Results And Tests}
 Tests of both the device driver and the game were carried out continuously as the development progressed. These tests were all simple test to verify correctness. These can be presented as simple unit tests. A summary of some of the tests can be seen below.  
 
+\subsection{Tests}
+
+Following are test cases to see if the driver and the game behaves as expected
+
+\subsubsection{Driver tests}
+
+\emph{Input: } Load driver through the miniterm.py command line interface with the command "modprobe driver-gamepad"\\
+\emph{Expected output: } Gamepad driver is successfully loaded, displaying message "Device added to the kernel sucessfully"\\
+\emph{Actual output: } As expected\\
+
+\emph{Input: } Unload driver through the miniterm.py command line interface with the command "rmmod driver-gamepad"\\
+\emph{Expected output: } Gamepad driver is successfully unloaded, displaying message "Device added to the kernel sucessfully"\\
+\emph{Actual output: } As expected\\
 
 
 
+\subsubsection{Game tests}
 
+The following unit tests are based on the gamepad driver having already been successfully added to the kernel, and takes a complete run-through of the game.
 
+\emph{Input: } Start the game module through the miniterm.py command line interface by running the command "game"\\
+\emph{Expected output: } LCD scren on development kit display the text "PONG" in various colors\\
+\emph{Actual output: } As expected \\
+
+\emph{Input: } Press any button on the gamepad controller\\
+\emph{Expected output: } Pong game is started\\
+\emph{Actual output: } As expected \\
+
+\emph{Input: } Let ball hit wall of screen\\
+\emph{Expected output: } Incremented score is displayed on the screen, and game starts again after 2 seconds\\
+\emph{Actual output: } As expected \\
+
+\emph{Input: } Let one player reach a score of 9\\
+\emph{Expected output: } Victory screen is displayed\\
+\emph{Actual output: } As expected \\
+
+\emph{Input: } Press any button when victory screen is displayed\\
+\emph{Expected output: } Game is restarted with score reset\\
+\emph{Actual output: } As expected \\
