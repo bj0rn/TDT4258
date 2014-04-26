@@ -9,7 +9,7 @@
 \contentsline {subsubsection}{\numberline {2.4.1}I/O operations}{6}{subsubsection.0.2.4.1}
 \contentsline {subsubsection}{\numberline {2.4.2}Polling}{7}{subsubsection.0.2.4.2}
 \contentsline {subsubsection}{\numberline {2.4.3}Half Interrupt}{7}{subsubsection.0.2.4.3}
-\contentsline {subsubsection}{\numberline {2.4.4}Full interrupts}{9}{subsubsection.0.2.4.4}
+\contentsline {subsubsection}{\numberline {2.4.4}Full interrupts}{8}{subsubsection.0.2.4.4}
 \contentsline {subsection}{\numberline {2.5}Pong}{10}{subsection.0.2.5}
 \contentsline {subsubsection}{\numberline {2.5.1}Game description}{10}{subsubsection.0.2.5.1}
 \contentsline {subsubsection}{\numberline {2.5.2}Game logic}{10}{subsubsection.0.2.5.2}
@@ -18,5 +18,7 @@
 \contentsline {subsubsection}{\numberline {2.5.5}Optimizations}{11}{subsubsection.0.2.5.5}
 \contentsline {section}{\numberline {3}Results And Tests}{12}{section.0.3}
 \contentsline {section}{\numberline {4}Discussion}{12}{section.0.4}
-\contentsline {section}{\numberline {5}Evaluation}{12}{section.0.5}
-\contentsline {section}{\numberline {6}Conclusion}{12}{section.0.6}
+\contentsline {subsection}{\numberline {4.1}The linux driver}{12}{subsection.0.4.1}
+\contentsline {subsection}{\numberline {4.2}The Game}{13}{subsection.0.4.2}
+\contentsline {section}{\numberline {5}Evaluation}{13}{section.0.5}
+\contentsline {section}{\numberline {6}Conclusion}{13}{section.0.6}
