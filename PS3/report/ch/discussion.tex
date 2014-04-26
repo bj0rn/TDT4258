@@ -1,7 +1,7 @@
 \section{Discussion}
 
 \subsection{Green linux}
-One approach of energy optimization is configure the operating system to consume less power. It is possible to tweak the kernel configuration to increase the idle time and/or use the time idle more efficiently. One way of achieving this is introducing tickless idle. Linux is configured with a timer that is periodically invoked in order to handle OS tasks like process accounting, scheduler load balancing, and maintaining per-CPU timer events. The disadvantage with this approach is that these timer ticks occur regardless off CPU state. This imply that even if the CPU is in idle state it will be interrupted by this ticks. By enabling "tickless idle", the linux can eliminate this periodic behaviour when the CPU is idle. This allow the CPU to be in a power saving state a longer period of time, thereby decreasing the overall power consumption. 
+One approach of energy optimization is configure the operating system to consume less power. It is possible to tweak the kernel configuration to increase the idle time and/or use the time idle more efficiently. One way of achieving this is introducing tickless idle. Linux is configured with a timer that is periodically invoked in order to handle OS tasks like process accounting, scheduler load balancing, and maintaining per-CPU timer events. The disadvantage with this approach is that these timer ticks occur regardless off CPU state. This imply that even if the CPU is in idle state it will be interrupted by this ticks. By enabling "tickless idle", the linux can eliminate this periodic behaviour when the CPU is idle. This allow the CPU to be in a power saving state a longer period of time, thereby decreasing the overall power consumption\cite{tick}.
 
 
 
