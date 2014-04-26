@@ -19,12 +19,12 @@
 \contentsline {subsubsection}{\numberline {2.4.5}Optimizations}{13}{subsubsection.0.2.4.5}
 \contentsline {section}{\numberline {3}Results And Tests}{13}{section.0.3}
 \contentsline {subsection}{\numberline {3.1}Energy usage results}{14}{subsection.0.3.1}
-\contentsline {subsection}{\numberline {3.2}Tests}{15}{subsection.0.3.2}
+\contentsline {subsection}{\numberline {3.2}Tests}{16}{subsection.0.3.2}
 \contentsline {subsubsection}{\numberline {3.2.1}Driver tests}{16}{subsubsection.0.3.2.1}
-\contentsline {subsubsection}{\numberline {3.2.2}Game tests}{16}{subsubsection.0.3.2.2}
-\contentsline {section}{\numberline {4}Discussion}{17}{section.0.4}
-\contentsline {subsection}{\numberline {4.1}Green linux}{17}{subsection.0.4.1}
-\contentsline {subsection}{\numberline {4.2}The linux driver}{17}{subsection.0.4.2}
-\contentsline {subsection}{\numberline {4.3}The Game}{18}{subsection.0.4.3}
-\contentsline {section}{\numberline {5}Evaluation}{19}{section.0.5}
-\contentsline {section}{\numberline {6}Conclusion}{19}{section.0.6}
+\contentsline {subsubsection}{\numberline {3.2.2}Game tests}{17}{subsubsection.0.3.2.2}
+\contentsline {section}{\numberline {4}Discussion}{18}{section.0.4}
+\contentsline {subsection}{\numberline {4.1}Green linux}{18}{subsection.0.4.1}
+\contentsline {subsection}{\numberline {4.2}The linux driver}{19}{subsection.0.4.2}
+\contentsline {subsection}{\numberline {4.3}The Game}{20}{subsection.0.4.3}
+\contentsline {section}{\numberline {5}Evaluation}{20}{section.0.5}
+\contentsline {section}{\numberline {6}Conclusion}{21}{section.0.6}

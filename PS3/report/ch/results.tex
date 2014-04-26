@@ -3,12 +3,14 @@ Tests of both the device driver and the game were carried out continuously as th
 
 \subsection{Energy usage results}
 
-\input{fig/runningIdle.tex}
+As mentioned previously, certain optimization techniques were used to make the program more efficient. In order to improve energy usage even further, compiling the kernel with tickless idle mode was also attempted, and the results can be seen in the following figures:
+
 \input{fig/running.tex}
+\input{fig/runningIdle.tex}
 \input{fig/Victoryscreen-idle.tex}
 \input{fig/Victory.tex}
 
-
+As can be seen, there is a 1.22mA improvement when using tickless idle when the victory screen is displayed (e.g. when the screen is not constantly updating). There is, however, only a 0.02mA-improvement when the game is actually running and the screen is constantly updating, as one would expect, since the program is getting a lot less time to sleep.
 
 \subsection{Tests}
 
@@ -21,7 +23,7 @@ Following are test cases to see if the driver and the game behaves as expected
 \emph{Actual output: } As expected\\
 
 \emph{Input: } Unload driver through the miniterm.py command line interface with the command "rmmod driver-gamepad"\\
-\emph{Expected output: } Gamepad driver is successfully unloaded, displaying message "Device added to the kernel sucessfully"\\
+\emph{Expected output: } Gamepad driver is successfully unloaded, displaying message "Finished with cleanup"\\
 \emph{Actual output: } As expected\\
 
 \emph{Input: } Load the driver through miniterm.py command line interface with the command "modprobe" driver-gamepad". Each button is pushed one by one.\\
@@ -55,6 +57,19 @@ The following unit tests are based on the gamepad driver having already been suc
 \emph{Input: } Press any button on the gamepad controller\\
 \emph{Expected output: } Pong game is started\\
 \emph{Actual output: } As expected \\
+
+\emph{Input: } Press button SW2, then SW4\\
+\emph{Expected output: } Paddle for player one moves up, then down\\
+\emph{Actual output: } As expected \\
+
+\emph{Input: } Press button SW6, then SW8\\
+\emph{Expected output: } Paddle for player two moves up, then down\\
+\emph{Actual output: } As expected \\
+
+\emph{Input: } Let ball hit wall of screen\\
+\emph{Expected output: } Incremented score is displayed on the screen, and game starts again after 2 seconds\\
+\emph{Actual output: } As expected \\
+
 
 \emph{Input: } Let ball hit wall of screen\\
 \emph{Expected output: } Incremented score is displayed on the screen, and game starts again after 2 seconds\\
