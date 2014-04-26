@@ -43,7 +43,7 @@ The next step involves configuring access to the gamepad controller. This involv
 
 
 \subsubsection{Cleaning up after the driver}
-The exit function is called when the module stops being used. In this step we need to deallocate everything initialized in the init function. In particular we need de-allocate every structure used, and free every resource reserved by the driver. 
+The exit function is called when the module stops being used. In this step we need to deallocate everything initialized in the init function. In particular we need de-allocate every structure used, and free every resource reserved by the driver. Each of the of the functions that allocate structures and reserve resource have functions to reverse the operation. 
 
 
 
@@ -115,9 +115,19 @@ To avoid polling altogether we can further develop the techniques discussed abov
 
 The user program needs to perform several steps in order to activate asynchronous notifications. The program must specify itself as an "owner" of the file. "When a process invokes the F\_SETOWN command using the {\emph fcntl} system call, the process ID of the owner process is saved in the filp->owner for later use. This step is necessary for the kernel to know what process to notify. In order to actually enable asynchronous notification, the user programs must set the FASYNC flag in the device by means of the F\_SETFL {\emph fcntl} flag. After these two calls have been executed, the input file can request delivery of a SIGIO signal whenever new data arrives."
 
-However, for this signal to be sent in the first place we need to modify the driver side as well. The driver must also implement asynchronous notification. Fortunately for us, this is quite simple, as the linux kernel contains a set of functions to aid the implementation of asynchronous notification. "The general implementation offered by linux is based on one data structure and two functions." The data structure is of type $struct fasync\_struct$. This structure  is registered to the kernel by using a helper function, $fasync\_helper()$. This function is called when the user program sets the FASYNC flag. More precisely, we can say that this method is invoked to add or to remove entries from the list of interested processes when the FASYNC flag changes for an open file. This is implemented by adding a new function to the device driver that works as an wrapper around the helper function. This can be seen in code listing ??.
+However, for this signal to be sent in the first place we need to modify the driver side as well. The driver must also implement asynchronous notification. Fortunately for us, this is quite simple, as the linux kernel contains a set of functions to aid the implementation of asynchronous notification. "The general implementation offered by linux is based on one data structure and two functions." The data structure is of type $struct fasync\_struct$. This structure  is registered to the kernel by using a helper function, $fasync\_helper()$. This function is called when the user program sets the FASYNC flag. More precisely, we can say that this method is invoked to add or to remove entries from the list of interested processes when the FASYNC flag changes for an open file. This is implemented by adding a new function to the device driver that works as an wrapper around the helper function. This can be seen in code listing \ref{code:async}.
 
-The signal themselves are sent to the user program by using the function $kill\_fasync()$. When this function is executed, all interested processes will receive a SIGIO signal. Its arguments are which signal to send (in this case SIGIO), and the band, which is POLL\_IN. The call to $kill\_fasync()$ is handled in the interrupt handler to effectively ensure that the user program receives a signal when the data changes, e.g when the buttons are pushed. A code listing for the interrupt handler can be seen in listing \ref{code:interrupt}.
+\begin{lstlisting}[caption=Activate process as listener, label=code:async]
+static int driver_fasync(int fd, struct file *filp, int mode){
+    return fasync_helper(fd, filp, mode, &async_queue);
+}
+\end{lstlisting}
+
+
+
+
+
+The signal themselves are sent to the user program by using the function $kill\_fasync()$. When this function is executed, all interested processes will receive a SIGIO signal. Its arguments are which signal to send (in this case SIGIO), and the band, which is POLL\_IN. The POLL\_IN flags signals that the data is available. The call to $kill\_fasync()$ is handled in the interrupt handler to effectively ensure that the user program receives a signal when the data changes, e.g when the buttons are pushed. A code listing for the interrupt handler can be seen in listing \ref{code:interrupt}.
 
 
 \begin{lstlisting}[caption=Interrupt handler, label=code:interrupt]
