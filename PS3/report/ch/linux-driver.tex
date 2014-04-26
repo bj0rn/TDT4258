@@ -1,5 +1,5 @@
 \subsection{Linux Driver}
-A linux driver works as an interface between the kernel and the modules. In order initialise and de-initalize a driver, the kernel needs to implement two functions: one init function and one exit function. These functions are called when the module is loaded and un-loaded, respectively. The init function sets up everything necessary to load the module, while the exit function handles deallocation. 
+A linux driver works as an interface between the kernel and the modules. In order initialize and de-initalize a driver, the kernel needs to implement two functions: one init function and one exit function. These functions are called when the module is loaded and un-loaded. The init function sets up everything necessary to load the module, while the exit function handles deallocation. 
 
 
 \subsubsection{Initialization of the driver}
@@ -9,8 +9,8 @@ The following steps are taken in order to initialize the driver:
 \begin{enumerate}
     \item Make the driver as a kernel module.
     \item Allocate character device structure and register the device. 
-    \item Making the driver visible for user space.
-    \item Allocate and memory map access to the I/O hardware registers which will be used. 
+    \item Make the driver visible for user space.
+    \item Allocate and memory map access to the relevant I/O hardware registers. 
     \item Initialize hardware
 \end{enumerate}
 
@@ -78,7 +78,7 @@ Open is the first function that is called when interacting with the driver. The 
 
 The \emph read function is used to retrieve data from the device driver. This function needs to return the information from the GPIO button registers. This is accomplished by reading the $GPIO\_PC\_DIN$ register. This is a 32-bit register and contains the status of the buttons. This register value resides in kernel mode, and by using the  $copy\_to\_user()$-function, this value is copied to user mode. Since we are only interested in the higher 8-bits of the GPIO register we only need to transfer one byte. This byte contains sufficient information to determine the status of the buttons. 
 
-The \emph write function is used to send data to the device. Since the gamepad driver does not need any information from user space, this function does not need to be implemented. The fasync (???) function is discussed in greater detail when discussing asynchronous notifications. 
+The \emph write function is used to send data to the device. Since the gamepad driver does not need any information from user space, this function does not need to be implemented. The fasync function is discussed in greater detail when discussing asynchronous notifications. 
 
 
 
@@ -113,19 +113,15 @@ This causes the $GPIO\_interrupt\_handler$-register to listen to interrupts from
 \subsubsection{Full interrupts}
 To avoid polling altogether we can further develop the techniques discussed above. Instead of just handling the interrupt in the driver we need a way to notify the user program that an interrupt has occurred. By enabling asynchronous notifications, the user program can receive a signal whenever data becomes available instead of using polling. Doing this requires some changes in the driver, and some extensions in the user program. When adding support for asynchronous notification, most of the work needs to be done on the user side. In particular, the user program must register itself as a listener and create an signal handler that is executed when the program receives a signal. 
 
-The user program needs to perform several steps in order to activate asynchronous notifications. The program must specify itself as an "owner" of the file. "When a process invokes the F\_SETOWN command using the {\emph fcntl} system call, the process ID of the owner process is saved in the filp->owner for later use. This step is necessary for the kernel to know what process to notify. In order to actually enable asynchronous notification, the user programs must set the FASYNC flag in the device by means of the F\_SETFL {\emph fcntl} flag. After these two calls have been executed, the input file can request delivery of a SIGIO signal whenever new data arrives."
+The user program needs to perform several steps in order to activate asynchronous notifications. The program must specify itself as an "owner" of the file by invoking the F\_SETOWN command using the {\emph fcntl} system call, whcih causes the process ID of the owner process to be saved in the filp->owner for later use. This needs to be done for the kernel to know which process to notify. In order to enable asynchronous notification, the user programs must set the FASYNC flag in the device by means of the F\_SETFL {\emph fcntl} flag. After these two calls have been executed, the input file can request delivery of a SIGIO signal whenever new data arrives \cite{linux}.
 
-However, for this signal to be sent in the first place we need to modify the driver side as well. The driver must also implement asynchronous notification. Fortunately for us, this is quite simple, as the linux kernel contains a set of functions to aid the implementation of asynchronous notification. "The general implementation offered by linux is based on one data structure and two functions." The data structure is of type $struct fasync\_struct$. This structure  is registered to the kernel by using a helper function, $fasync\_helper()$. This function is called when the user program sets the FASYNC flag. More precisely, we can say that this method is invoked to add or to remove entries from the list of interested processes when the FASYNC flag changes for an open file. This is implemented by adding a new function to the device driver that works as an wrapper around the helper function. This can be seen in code listing \ref{code:async}.
+In order for this signal to be sent in the first place, the driver side needs to be modified as well. The driver must also implement asynchronous notification. Fortunately, this is quite simple, as the linux kernel contains a structure of type $struct fasync\_struct$, and  two functions to aid the implementation of asynchronous notification. This structure  is registered to the kernel by using a helper function, $fasync\_helper()$. This function is called when the user program sets the FASYNC flag. More precisely, we can say that this method is invoked to add or to remove entries from the list of interested processes when the FASYNC flag changes for an open file. This is implemented by adding a new function to the device driver that works as an wrapper around the helper function, and can be seen in the following code listing: \ref{code:async}.
 
 \begin{lstlisting}[caption=Activate process as listener, label=code:async]
 static int driver_fasync(int fd, struct file *filp, int mode){
     return fasync_helper(fd, filp, mode, &async_queue);
 }
 \end{lstlisting}
-
-
-
-
 
 The signal themselves are sent to the user program by using the function $kill\_fasync()$. When this function is executed, all interested processes will receive a SIGIO signal. Its arguments are which signal to send (in this case SIGIO), and the band, which is POLL\_IN. The POLL\_IN flags signals that the data is available. The call to $kill\_fasync()$ is handled in the interrupt handler to effectively ensure that the user program receives a signal when the data changes, e.g when the buttons are pushed. A code listing for the interrupt handler can be seen in listing \ref{code:interrupt}.
 
@@ -140,6 +136,3 @@ irqreturn_t GPIO_interrupt_handler(int irq, void *dev_id, struct pt_regs *regs){
     return IRQ_HANDLED;
 }
 \end{lstlisting}
-
-
-
