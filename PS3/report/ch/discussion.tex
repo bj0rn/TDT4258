@@ -8,7 +8,7 @@ One approach of energy optimization is configure the operating system to consume
 \subsection{The linux driver}
 The driver explained in the previous sections employ the old techniques for developing a driver. In a modern approach the driver should be structured in an other way. Modern linux drivers are implemented as platform drivers. In the old approach the driver performs most of its initialization in the init function, and it assumes that the hardware is located at some specific address. The new way of structuring drivers does not make any assumption about such things. Instead, the driver is made more dynamic. The driver just informs the kernel what kind of hardware it can handle. Then it waits until the kernel decides to activate the driver. The kernel only activates the device driver if the device exists. When the driver decides to activate the driver, all information about the device is gathered through querying the device. The advantage with this method is that the driver becomes more generic. It does not rely that much on hardcoded addresses. The platform method is realised by moving the initialising  of the driver to a set of probing functions. 
 
-We have not implemented this approach. We found it more important to understand the old approach of developing a linux driver. This due that fact that the curriculum covers this approach in great depth. The same principles apply in the platform approach, and it should be easy to re-write the driver to a platform based driver. The conversion of the driver was considered low priority. 
+We have not implemented this approach. We found it more important to understand the old approach of developing a linux driver. This due that fact that the curriculum covers this approach in great depth. The same principles apply in the platform approach, and it should be easy to re-write the driver to a platform based driver. However, the conversion of the driver was considered low priority. 
 
 {\bf more more...}
 
@@ -17,7 +17,7 @@ We have not implemented this approach. We found it more important to understand 
 \subsection{The Game}
 The Pong is game where the ball is in constant movement. This makes the energy optimizations particular hard. For each movement of the ball we need to perform a large range of collision detection tests. This imply that the CPU is utilised most of the time which affect the energy consumption of the program. We have tried to limit the time of computation by optimising the operations in the code. A more focus on energy efficiency could better have been achieved by developing a game that is updated less frequently. 
 
-However, it should be possible to decrease the power consumption on the existing game. This may be achieved by optimizing the operations in the game even further. In particular, we should remove the use of floating point numbers. This should able us to reduce the time spent performing computations. This allow the CPU to be sleeping more frequently. We have already tried taking some measures, but we could have done even more. 
+However, it should be possible to decrease the power consumption on the existing game. This may be achieved by optimizing the operations in the game even further. In particular, we should remove the use of floating point numbers. This would able us to reduce the time spent performing computations, and allow the CPU to sleep more frequently. We have already tried taking some measures regarding optimization, but we could have done even more. 
 
 
 
