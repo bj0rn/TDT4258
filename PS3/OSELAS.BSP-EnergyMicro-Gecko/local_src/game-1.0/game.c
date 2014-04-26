@@ -1,6 +1,6 @@
 #ifndef _POSIX_C_SOURCE 
 #define _POSIX_C_SOURCE 1
-#define _GNU_SOURCE 1 
+#define _GNU_SOURCE 1
 #endif
 
 #include <stdio.h>
@@ -19,6 +19,7 @@
 #include "fonts.h" 
 
 #define SPEED 2
+#define MAX_SCORE 3
 
 /*Function prototypes*/
 int init_gamepad();
@@ -90,6 +91,12 @@ void init_paddle(){
 	player2.height = PADDLE_HEIGHT; 
 }
 
+void init_display_components(){
+	player1.id = 1;
+	draw_paddle(&player1, 0, 0xFF00);
+	player2.id = 2;
+	draw_paddle(&player2, 0, 0x00FF);
+}
 
 float vec_magnitude(vector_t *v){
 	return sqrt(v->x * v->x + v->y * v->y);
@@ -325,7 +332,7 @@ void move_paddle(paddle_t *player, int dir){
 
 	}else if(dir == -1){
 		player->y += MOVE_PIXELS;
-		if(player->y > SCREEN_HEIGHT + player->height){
+		if(player->y > SCREEN_HEIGHT - player->height){
 			player->y = SCREEN_HEIGHT - player->height;
 		}
 	}
@@ -419,10 +426,7 @@ int main(int argc, char *argv[])
 	init_ball();
 
 	
-	player1.id = 1;
-	draw_paddle(&player1, 0, 0xFF00);
-	player2.id = 2;
-	draw_paddle(&player2, 0, 0x00FF);
+	init_display_components();
 
 	
 	while(1) {
@@ -450,21 +454,18 @@ int main(int argc, char *argv[])
 			init_ball();
 			init_paddle();
 			
-				
-			player1.id = 1;
-			draw_paddle(&player1, 0, 0xFF00);
-			player2.id = 2;
-			draw_paddle(&player2, 0, 0x00FF);
-			
-			refresh_screen();
+			if (player1_score<MAX_SCORE && player2_score<MAX_SCORE){
+				init_display_components();
+				refresh_screen();
+			}
 		}
 
-		if(player1_score>3 || player2_score>3){
-			if(player1_score>3){
+		if(player1_score>=MAX_SCORE || player2_score>=MAX_SCORE){
+			if(player1_score>=MAX_SCORE){
 				draw_text(victory_player1);
 				player1_score=0;
 			}
-			else if(player2_score>3){
+			else if(player2_score>=MAX_SCORE){
 				draw_text(victory_player2);
 				player2_score=0;
 			}
@@ -479,10 +480,7 @@ int main(int argc, char *argv[])
 			init_ball();
 
 	
-			player1.id = 1;
-			draw_paddle(&player1, 0, 0xFF00);
-			player2.id = 2;
-			draw_paddle(&player2, 0, 0x00FF);
+			init_display_components();
 		}
 
 
