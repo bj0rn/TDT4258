@@ -87,44 +87,50 @@ static int driver_fasync(int fd, struct file *filp, int mode){
 
 static int __init init_driver(void)
 {
+	
+	
+	/* Get a major number for the device, minor default 0 */
 	int err = alloc_chrdev_region(&devno, 0, 1, DRIVER);
 	
-	//int err, devno = MKDEV(tdt4258_major,tdt4258_minor);
-	//err = register_chrdev_region(devno, 1, "tdt4258");
-	
+	/* Initialize the char device structure */
 	cdev_init(&driver_cdev, &fops);  	    //Init the cdev
 	driver_cdev.owner = THIS_MODULE;
-	//driver_cdev.ops = &fops;
-	err = cdev_add(&driver_cdev, devno, 1); //Register to kernel
+	
+	
+	/* Register char device structure to the kernel*/
+	err = cdev_add(&driver_cdev, devno, 1);
 	
 
-	//Fail nicely
+	/* Error check */
 	if(err < 0){
 		printk("Error %d", err);
 	}else {
 		printk("Device added to the kernel sucessfully\n");
 	}
 
-	
+	/*Make device visible in user space */
 	cl = class_create(THIS_MODULE, DRIVER);
 	device_create(cl, NULL, devno, NULL, DRIVER);
 	
-	//Request memory
+	/* Request memory region of the GPIO registers */
 	resource = request_mem_region(GPIO_PC_BASE,GPIO_IFC - GPIO_PA_BASE, DRIVER);
 	
-	if(resource != NULL)
-		printk("Works!");	
+	if(resource != NULL){
+		printk("Got requested memory region\n");
+	}
 	
+	
+	/*Configure buttons for output*/
 	iowrite32(0x33333333, GPIO_PC_MODEL);
 	iowrite32(0xff, GPIO_PC_DOUT);
 
+	/* Register interrupt handler */
 	request_irq(GPIO_EVEN_IRC_NUM,(irq_handler_t)GPIO_interrupt_handler, 0, DRIVER, &driver_cdev);
 	request_irq(GPIO_ODD_IRC_NUM, (irq_handler_t)GPIO_interrupt_handler, 0, DRIVER, &driver_cdev);	
 
-
+	/* Configure hardware interrupt */
 	iowrite32(0x22222222, GPIO_EXTIPSELL);
 	iowrite32(0xff, GPIO_EXTIFALL);
-	//iowrite32(0xff, GPIO_EXTIRISE);
 	iowrite32(0xff, GPIO_IEN);
 
 	
@@ -141,7 +147,17 @@ static int __init init_driver(void)
 
 static void __exit cleanup_driver()
 {
-	 printk("Very short life for a small module...\n");
+	 /* Remove the cdev structure from the system */
+	 cdev_del(&driver_cdev);
+
+	 /* Free the requested memory region */
+	 release_mem_region(GPIO_PC_BASE, GPIO_IFC - GPIO_PA_BASE);
+
+	 /*Unregister the interrupt handler and disable the interrupt line*/
+	 free_irq(GPIO_EVEN_IRQ_NUM, &driver_cdev);
+	 free_irq(GPIO_ODD_IRQ_NUM, &driver_cdev);
+	
+	printk("Finished with cleanup\n");
 }
 
 
@@ -160,7 +176,6 @@ static int release_driver(struct inode *inode, struct file *filp){
 
 
 /*User program reads from the driver */
-
 static ssize_t read_driver(struct file *filp, char __user *buff, size_t count, loff_t *offp){
 
 	uint32_t data = ioread32(GPIO_PC_DIN);
@@ -175,7 +190,7 @@ static ssize_t write_driver(struct file *filp, const char __user *buf, size_t co
 	return 0;
 }
 
-
+/* Notify the kernel of the init and exit function */
 module_init(init_driver);
 module_exit(cleanup_driver);
 
