@@ -14,8 +14,6 @@ The following steps are taken in order to initialize the driver:
     \item Initialize hardware
 \end{enumerate}
 
-{\bf modify this list}
-
 In linux/Unix, nearly everything is represented as files. This also involves device drivers. The interaction with the drivers occurs by reading/writing to this file. More specifically, the drivers are accessed using common I/O functions. Each driver file is identified by a unique number, which allows the system to know the file type. The number is split into a \emph major and \emph minor number. The major number is used to refer to the device driver being used. All devices controlled by the same device driver has the same major number. The minor numbers are used to distinguish between different devices and their controllers. Allocating a MAJOR and MINOR number for the device driver is done by using the $alloc\_chrdev\_region()$. This function dynamically chooses the major number. The minor number is set to 0, since we only use one device. The use of minor number would be more relevant if we had several devices using the same driver \cite{linux}. 
 
 By now we have reserved some device numbers, but we have not connected any operations to those numbers. The next step consists of activating the char device structure knows as the \emph{fops}-struct. This struct is initialized with all the functions that is to be supported by the kernel module. Each field in the structure points to the function in the driver that implements the specific operation. The initialization of the structure can be seen in code listing below: \ref{code:struct}. 
@@ -34,21 +32,14 @@ static struct file_operations fops = {
 
 
 
-Before we can invoke any device operations we need to represent the operations internally in the kernel. This is accomplished by using the $cdev\_intit()$ function. This takes the file\_operation structure as parameter and initialises the cdev structure needed for representing the char driver. The next step involves registering the device to the kernel by adding the cdev structure to the kernel. This is done using the $cdev\_add()$-function, which registers the driver to the kernel module. 
+Before we can invoke any device operations we need to represent the operations internally in the kernel. This is accomplished by using the $cdev\_init()$ function. This takes the file\_operation structure as parameter and initialises the cdev structure needed for representing the char driver. The next step involves registering the device to the kernel by adding the cdev structure to the kernel. This is done using the $cdev\_add()$-function, which registers the driver to the kernel module. 
 
 User space programs communicate with the driver by opening a special file in the /dev directory. In order to make the driver visible in this directory, one must use two functions: $class\_create()$, which initializes the class structure for the dev node, and $device\_create()$ which creates a device and registers it with \emph sysfs, a virtual file system in linux that exports information about devices and drivers from the kernel to user space. 
 
-The next step involves configuring access to the gamepad controller. This involves configuring the GPIO pins of the development board by writing to the GPIO registers. However, before configuring the GPIO, one needs to make sure that one has exclusive access to these registers. In this program this is not really necessary (WHY?), but it is consider good practice, and is is accomplished by requesting the memory region where the GPIO registers are located by using the  $request\_mem\_region()$-function. This ensures that the drivers have exclusive access to the memory locations occupied by the GPIO registers. When this is done successfully, one can start configuring the GPIO registers. However, we cannot configure them directly like we did in exercise one and two, but must instead, for the purpose of  reading and writing to I/O registers, use $ioreadXX()$ and $iowriteXX()$, which are a set of wrapper functions, provided by the kernel. The read function takes an address as argument, while the write function takes an address and a value. 
-
-
+The next step involves configuring access to the gamepad controller. This involves configuring the GPIO pins of the development board by writing to the GPIO registers. However, before configuring the GPIO, one needs to make sure that one has exclusive access to these registers. In this program this is not really necessary since the microcontroller is memory mapped, and no other program tries to use these memory position and the driver could just as easily just have taken the memory without informing the kernel \cite{EFM32GG-rm}. It is, however, considered good practice. This is accomplished by requesting the memory region where the GPIO registers are located by using the  $request\_mem\_region()$-function. This ensures that the drivers have exclusive access to the memory locations occupied by the GPIO registers. When this is done successfully, one can start configuring the GPIO registers. However, we cannot configure them directly like we did in exercise one and two, but must instead, for the purpose of  reading and writing to I/O registers, use $ioreadXX()$ and $iowriteXX()$, which are a set of wrapper functions, provided by the kernel. The read function takes an address as argument, while the write function takes an address and a value. 
 
 \subsubsection{Cleaning up after the driver}
-The exit function is called when the module stops being used. In this step we need to deallocate everything initialized in the init function. In particular we need de-allocate every structure used, and free every resource reserved by the driver. Each of the of the functions that allocate structures and reserve resource have functions to reverse the operation. 
-
-
-
-
-
+The exit function is called when the module stops being used. In this step we need to deallocate everything initialized in the init function. In particular, we need to de-allocate every structure used, and free every resource reserved by the driver. Each of the of the functions that allocate structures and reserve resources have functions to reverse the operation.
 
 \subsection{Input Handling}
 The compendium describes three different ways of implementing the input handling from the gamepad. These methods represent a different degree of technical difficulty and efficiency. For completeness, all of these methods have been implemented following an iterative approach of learning. We started simple with polling and worked ourself up to the more advanced features like interrupts.
@@ -84,7 +75,7 @@ The \emph write function is used to send data to the device. Since the gamepad d
 
 
 \subsubsection{Polling}
-Polling is the simplest approach in developing and interacting with the driver. With approach, the user application continuously reads the driver through devnode (explain?). Each time the driver is polled, it reads the buttons and returns them to the user application. This, however, is a very energy inefficient approach, as the button status does not change that often. A far better approach is utilising interrupts. 
+Polling is the simplest approach in developing and interacting with the driver. With approach, the user application continuously reads the driver through the devnode. Each time the driver is polled, it reads the buttons and returns them to the user application. This, however, is a very energy inefficient approach, as the button status does not change that often. A far better approach is utilising interrupts. 
 
 
 \subsubsection{Half Interrupt}
@@ -107,7 +98,7 @@ iowrite32(0xff, GPIO_IEN);
 
 
 
-This causes the $GPIO\_interrupt\_handler$-register to listen to interrupts from {\emph even} and {\emph odd} pins. With this configuration we are able to sense interrupts at the kernel level. It is easy to confirm that interrupts does in fact occur by just printing a message when an interrupt occurs in the interrupt handler. The interrupt must, however, be cleared by writing to the $GPIO\_IFC$ register, as failing to do so will cause a continuos call to the interrupt handler. The interrupt can then be handled by writing some logic that reads the button status and store it, so the user program then can poll the driver to get the button status. 
+This causes the $GPIO\_interrupt\_handler$-register to listen to interrupts from {\emph even} and {\emph odd} pins. With this configuration we are able to sense interrupts at the kernel level. It is easy to confirm that interrupts does in fact occur by just printing a message when an interrupt occurs in the interrupt handler. The interrupt must, however, be cleared by writing to the $GPIO\_IFC$ register, as failing to do so will cause a continuous call to the interrupt handler. The interrupt can then be handled by writing some logic that reads the button status and store it, so the user program then can poll the driver to get the button status. 
 
 
 \subsubsection{Full interrupts}

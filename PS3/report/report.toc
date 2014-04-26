@@ -23,8 +23,8 @@
 \contentsline {subsubsection}{\numberline {3.2.1}Driver tests}{16}{subsubsection.0.3.2.1}
 \contentsline {subsubsection}{\numberline {3.2.2}Game tests}{17}{subsubsection.0.3.2.2}
 \contentsline {section}{\numberline {4}Discussion}{18}{section.0.4}
-\contentsline {subsection}{\numberline {4.1}Green linux}{18}{subsection.0.4.1}
-\contentsline {subsection}{\numberline {4.2}The linux driver}{18}{subsection.0.4.2}
+\contentsline {subsection}{\numberline {4.1}Tickless idle}{18}{subsection.0.4.1}
+\contentsline {subsection}{\numberline {4.2}The linux driver}{19}{subsection.0.4.2}
 \contentsline {subsection}{\numberline {4.3}The Game}{19}{subsection.0.4.3}
 \contentsline {section}{\numberline {5}Evaluation}{20}{section.0.5}
 \contentsline {section}{\numberline {6}Conclusion}{20}{section.0.6}

@@ -1,9 +1,8 @@
 \section{Results And Tests}
-Tests of both the device driver and the game were carried out continuously as the development progressed. These tests were all simple test to verify correctness. These can be presented as simple unit tests. A summary of some of the tests can be seen below.
 
 \subsection{Energy usage results}
 
-As mentioned previously, certain optimization techniques were used to make the program more efficient. In order to improve energy usage even further, compiling the kernel with tickless idle mode was also attempted, and the results can be seen in the following figures:
+As mentioned previously, certain optimization techniques were used to make the program more efficient. In order to improve energy usage even further, compiling the kernel with tickless idle mode was also attempted, and the results can be seen in the following measurements taken with the eAProfiler program:
 
 \input{fig/running.tex}
 \input{fig/runningIdle.tex}
@@ -13,6 +12,9 @@ As mentioned previously, certain optimization techniques were used to make the p
 As can be seen, there is a 1.22mA improvement when using tickless idle when the victory screen is displayed (e.g. when the screen is not constantly updating). There is, however, only a 0.02mA-improvement when the game is actually running and the screen is constantly updating, as one would expect, since the program is getting a lot less time to sleep.
 
 \subsection{Tests}
+
+Tests of both the device driver and the game were carried out continuously as the development progressed. These tests were all simple test to verify correctness. These can be presented as simple unit tests. A summary of some of the tests can be seen below.
+
 
 Following are test cases to see if the driver and the game behaves as expected
 
