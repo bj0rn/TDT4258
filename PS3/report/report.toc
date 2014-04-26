@@ -17,9 +17,10 @@
 \contentsline {subsubsection}{\numberline {2.5.3}Display logic}{11}{subsubsection.0.2.5.3}
 \contentsline {subsubsection}{\numberline {2.5.4}Images}{12}{subsubsection.0.2.5.4}
 \contentsline {subsubsection}{\numberline {2.5.5}Optimizations}{12}{subsubsection.0.2.5.5}
-\contentsline {section}{\numberline {3}Results And Tests}{13}{section.0.3}
+\contentsline {section}{\numberline {3}Results And Tests}{12}{section.0.3}
 \contentsline {section}{\numberline {4}Discussion}{13}{section.0.4}
-\contentsline {subsection}{\numberline {4.1}The linux driver}{13}{subsection.0.4.1}
-\contentsline {subsection}{\numberline {4.2}The Game}{13}{subsection.0.4.2}
+\contentsline {subsection}{\numberline {4.1}Green linux}{13}{subsection.0.4.1}
+\contentsline {subsection}{\numberline {4.2}The linux driver}{13}{subsection.0.4.2}
+\contentsline {subsection}{\numberline {4.3}The Game}{14}{subsection.0.4.3}
 \contentsline {section}{\numberline {5}Evaluation}{14}{section.0.5}
-\contentsline {section}{\numberline {6}Conclusion}{14}{section.0.6}
+\contentsline {section}{\numberline {6}Conclusion}{15}{section.0.6}
