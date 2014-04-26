@@ -1,26 +1,30 @@
-\contentsline {section}{\numberline {1}Introduction}{2}{section.0.1}
-\contentsline {section}{\numberline {2}Description And Methodology}{2}{section.0.2}
-\contentsline {subsection}{\numberline {2.1}Background}{2}{subsection.0.2.1}
-\contentsline {subsubsection}{\numberline {2.1.1}User mode vs kernel mode}{3}{subsubsection.0.2.1.1}
-\contentsline {subsection}{\numberline {2.2}Build system}{3}{subsection.0.2.2}
-\contentsline {subsection}{\numberline {2.3}Linux Driver}{3}{subsection.0.2.3}
-\contentsline {subsubsection}{\numberline {2.3.1}Initialization of the driver}{4}{subsubsection.0.2.3.1}
-\contentsline {subsubsection}{\numberline {2.3.2}Cleaning up after the driver}{5}{subsubsection.0.2.3.2}
-\contentsline {subsection}{\numberline {2.4}Input Handling}{6}{subsection.0.2.4}
-\contentsline {subsubsection}{\numberline {2.4.1}I/O operations}{6}{subsubsection.0.2.4.1}
-\contentsline {subsubsection}{\numberline {2.4.2}Polling}{7}{subsubsection.0.2.4.2}
-\contentsline {subsubsection}{\numberline {2.4.3}Half Interrupt}{7}{subsubsection.0.2.4.3}
-\contentsline {subsubsection}{\numberline {2.4.4}Full interrupts}{9}{subsubsection.0.2.4.4}
-\contentsline {subsection}{\numberline {2.5}Pong}{10}{subsection.0.2.5}
-\contentsline {subsubsection}{\numberline {2.5.1}Game description}{10}{subsubsection.0.2.5.1}
-\contentsline {subsubsection}{\numberline {2.5.2}Game logic}{11}{subsubsection.0.2.5.2}
-\contentsline {subsubsection}{\numberline {2.5.3}Display logic}{11}{subsubsection.0.2.5.3}
-\contentsline {subsubsection}{\numberline {2.5.4}Images}{12}{subsubsection.0.2.5.4}
-\contentsline {subsubsection}{\numberline {2.5.5}Optimizations}{12}{subsubsection.0.2.5.5}
-\contentsline {section}{\numberline {3}Results And Tests}{12}{section.0.3}
-\contentsline {section}{\numberline {4}Discussion}{13}{section.0.4}
-\contentsline {subsection}{\numberline {4.1}Green linux}{13}{subsection.0.4.1}
-\contentsline {subsection}{\numberline {4.2}The linux driver}{13}{subsection.0.4.2}
-\contentsline {subsection}{\numberline {4.3}The Game}{14}{subsection.0.4.3}
-\contentsline {section}{\numberline {5}Evaluation}{14}{section.0.5}
-\contentsline {section}{\numberline {6}Conclusion}{15}{section.0.6}
+\contentsline {section}{\numberline {1}Introduction}{3}{section.0.1}
+\contentsline {section}{\numberline {2}Description And Methodology}{3}{section.0.2}
+\contentsline {subsection}{\numberline {2.1}Background}{3}{subsection.0.2.1}
+\contentsline {subsubsection}{\numberline {2.1.1}User mode vs kernel mode}{4}{subsubsection.0.2.1.1}
+\contentsline {subsubsection}{\numberline {2.1.2}Build system}{4}{subsubsection.0.2.1.2}
+\contentsline {subsection}{\numberline {2.2}Linux Driver}{4}{subsection.0.2.2}
+\contentsline {subsubsection}{\numberline {2.2.1}Initialization of the driver}{5}{subsubsection.0.2.2.1}
+\contentsline {subsubsection}{\numberline {2.2.2}Cleaning up after the driver}{6}{subsubsection.0.2.2.2}
+\contentsline {subsection}{\numberline {2.3}Input Handling}{7}{subsection.0.2.3}
+\contentsline {subsubsection}{\numberline {2.3.1}I/O operations}{7}{subsubsection.0.2.3.1}
+\contentsline {subsubsection}{\numberline {2.3.2}Polling}{8}{subsubsection.0.2.3.2}
+\contentsline {subsubsection}{\numberline {2.3.3}Half Interrupt}{8}{subsubsection.0.2.3.3}
+\contentsline {subsubsection}{\numberline {2.3.4}Full interrupts}{10}{subsubsection.0.2.3.4}
+\contentsline {subsection}{\numberline {2.4}Pong}{11}{subsection.0.2.4}
+\contentsline {subsubsection}{\numberline {2.4.1}Game description}{11}{subsubsection.0.2.4.1}
+\contentsline {subsubsection}{\numberline {2.4.2}Game logic}{12}{subsubsection.0.2.4.2}
+\contentsline {subsubsection}{\numberline {2.4.3}Display logic}{12}{subsubsection.0.2.4.3}
+\contentsline {subsubsection}{\numberline {2.4.4}Images}{13}{subsubsection.0.2.4.4}
+\contentsline {subsubsection}{\numberline {2.4.5}Optimizations}{13}{subsubsection.0.2.4.5}
+\contentsline {section}{\numberline {3}Results And Tests}{13}{section.0.3}
+\contentsline {subsection}{\numberline {3.1}Energy usage results}{14}{subsection.0.3.1}
+\contentsline {subsection}{\numberline {3.2}Tests}{15}{subsection.0.3.2}
+\contentsline {subsubsection}{\numberline {3.2.1}Driver tests}{16}{subsubsection.0.3.2.1}
+\contentsline {subsubsection}{\numberline {3.2.2}Game tests}{16}{subsubsection.0.3.2.2}
+\contentsline {section}{\numberline {4}Discussion}{17}{section.0.4}
+\contentsline {subsection}{\numberline {4.1}Green linux}{17}{subsection.0.4.1}
+\contentsline {subsection}{\numberline {4.2}The linux driver}{17}{subsection.0.4.2}
+\contentsline {subsection}{\numberline {4.3}The Game}{18}{subsection.0.4.3}
+\contentsline {section}{\numberline {5}Evaluation}{19}{section.0.5}
+\contentsline {section}{\numberline {6}Conclusion}{19}{section.0.6}
