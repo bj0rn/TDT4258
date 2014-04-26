@@ -34,7 +34,7 @@ static struct file_operations fops = {
 
 
 
-Before we can invoke any device operations we need to represent the operations internally in the kernel. This is accomplished by using the $cdev\_intit()$ function. This takes the file\_operation structure as parameter and initialises the cdev structure needed for representing the char driver. The next step involves registering the device to the kernel by adding the cdev structure to the kernel. This is done using the $cdev\_add()$-function, which registers the driver to the kernel module. {\bf more explicit} 
+Before we can invoke any device operations we need to represent the operations internally in the kernel. This is accomplished by using the $cdev\_intit()$ function. This takes the file\_operation structure as parameter and initialises the cdev structure needed for representing the char driver. The next step involves registering the device to the kernel by adding the cdev structure to the kernel. This is done using the $cdev\_add()$-function, which registers the driver to the kernel module. 
 
 User space programs communicate with the driver by opening a special file in the /dev directory. In order to make the driver visible in this directory, one must use two functions: $class\_create()$, which initializes the class structure for the dev node, and $device\_create()$ which creates a device and registers it with \emph sysfs, a virtual file system in linux that exports information about devices and drivers from the kernel to user space. 
 
